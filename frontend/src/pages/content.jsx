@@ -21,19 +21,42 @@ export default function Content() {
             const projectContainerId = modalType === 'whiteboard' ? 'whiteboardProjects' : 'documentProjects';
             const projectContainer = document.getElementById(projectContainerId);
             
-            const projectElement = `
-                <div class="bg-gray-200 p-4 w-64 rounded-lg">
-                    <img src="https://placehold.co/300x150" alt="Placeholder image of a ${projectName} project" class="rounded-lg mb-2">
-                    <h4 class="font-semibold mb-1">${projectName}</h4>
-                    <p class="text-sm mb-2">Uploaded by You</p>
-                    <button class="text-blue-500 text-sm font-semibold">VIEW ALL</button>
-                </div>
-            `;
-            projectContainer.innerHTML += projectElement;
+            // Create elements
+            const projectDiv = document.createElement('div');
+            projectDiv.className = "bg-gray-200 p-4 rounded-lg";
+            
+            const img = document.createElement('img');
+            img.src = "https://placehold.co/300x150";
+            img.alt = `Placeholder image of a ${projectName} project`;
+            img.className = "rounded-lg mb-2";
+            img.style.width = '100%'; // Ensure the image is responsive and fits the container
+            img.style.height = 'auto';
+            
+            const projectNameH4 = document.createElement('h4');
+            projectNameH4.className = "font-semibold mb-1";
+            projectNameH4.textContent = projectName;
+            
+            const uploadedByP = document.createElement('p');
+            uploadedByP.className = "text-sm mb-2";
+            uploadedByP.textContent = "Uploaded by You";
+            
+            const viewAllButton = document.createElement('button');
+            viewAllButton.className = "text-blue-500 text-sm font-semibold";
+            viewAllButton.textContent = "VIEW ALL";
+    
+            // Append elements
+            projectDiv.appendChild(img);
+            projectDiv.appendChild(projectNameH4);
+            projectDiv.appendChild(uploadedByP);
+            projectDiv.appendChild(viewAllButton);
+    
+            // Append the projectDiv to the container
+            projectContainer.appendChild(projectDiv);
         }
-
+    
         closeModal();
     };
+    
 
 
     return (
