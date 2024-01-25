@@ -15,6 +15,7 @@ import Dashboard from './pages/Dashboard'
 import Content from './pages/content'
 import Group from './pages/Group'
 import Video from './pages/video'
+import ContentIn from './pages/content-in'
 
 // axios.defaults.baseURL= 'http://localhost:3000';
 // axios.defaults.withCredentials= true;
@@ -25,7 +26,6 @@ function App() {
   return (
     <AuthProvider>
       <Toaster position='bottom-right' toastOptions={{duration:2000}} />
-      <Navbar />
       <Routes>
         <Route path='/' element={<Landing />} />
         <Route path='/login' element={<Login />} />
@@ -35,6 +35,7 @@ function App() {
         <Route path='/forgotpassword' element={<ForgotPassword/>} />
         <Route path='/group' element={<Group/>} />
         <Route path='/video' element={<Video/>} />
+        <Route path='/content-in' element={<ContentIn/>} />
       </Routes>
     </AuthProvider>
   )

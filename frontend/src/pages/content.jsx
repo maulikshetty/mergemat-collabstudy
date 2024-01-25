@@ -1,124 +1,102 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar.jsx';
+import NotificationBar from '../components/Notificationbar.jsx';
 import './styles/content.css';
-import CanvasDraw from "react-canvas-draw";
 
-const Content = () => {
-  return (
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Store Website Low-Fid</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-      </head>
-      <body>
-        <div className="flex flex-col md:flex-row h-screen">
-          {/* Sidebar */}
+export default function Content() {
+    const [modalType, setModalType] = useState('');
+    const [projectName, setProjectName] = useState('');
+
+    const openModal = (type) => {
+        setModalType(type);
+        setProjectName('');
+    };
+
+    const closeModal = () => {
+        setModalType('');
+    };
+
+    const addProject = () => {
+        if (projectName.trim() !== '') {
+            const projectContainerId = modalType === 'whiteboard' ? 'whiteboardProjects' : 'documentProjects';
+            const projectContainer = document.getElementById(projectContainerId);
+            
+            const projectElement = `
+                <div class="bg-gray-200 p-4 w-64 rounded-lg">
+                    <img src="https://placehold.co/300x150" alt="Placeholder image of a ${projectName} project" class="rounded-lg mb-2">
+                    <h4 class="font-semibold mb-1">${projectName}</h4>
+                    <p class="text-sm mb-2">Uploaded by You</p>
+                    <button class="text-blue-500 text-sm font-semibold">VIEW ALL</button>
+                </div>
+            `;
+            projectContainer.innerHTML += projectElement;
+        }
+
+        closeModal();
+    };
+
+
+    return (
+        <div className="flex min-h-screen bg-gray-100">
+
             <Sidebar />
 
-          {/* Main content */}
-          <div className="flex-1 p-4 md:p-8 overflow-auto">
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center">
-                <a href="#" className="text-gray-600 text-sm mr-4"><i className="fas fa-arrow-left"></i></a>
+      
+          <div className="flex-grow px-6 py-8"> {/* Main content grows to fill the space */}
+            <div className="bg-white p-4 rounded-lg shadow mb-6">
+                <h2 className="text-xl font-semibold mb-4">Your Content</h2>
+                <div className="mb-6">
+                    <ul className="flex space-x-4 mb-4">
+                        <li className="text-blue-500 font-semibold">Recently viewed</li>
+                        <li>Shared files</li>
+                        <li>Shared projects</li>
+                    </ul>
+                    <div className="flex justify-between items-center mb-2">
+                        <h3 className="font-semibold text-lg">Whiteboard projects</h3>
+                        <button className="text-blue-500 text-sm font-semibold" onClick={() => openModal('whiteboard')}>+ New Whiteboard</button>
+                    </div>
+                    <div id="whiteboardProjects" className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Whiteboard projects will be added here */}
+                    </div>
+                </div>
                 <div>
-                  <h1 className="text-2xl font-semibold">Store Website Low-Fid</h1>
-                  <p className="text-gray-500 text-sm">Part of Software Development</p>
+                    <div className="flex justify-between items-center mb-2">
+                        <h3 className="font-semibold text-lg">Documents</h3>
+                        <button className="text-blue-500 text-sm font-semibold" onClick={() => openModal('document')}>+ New Document</button>
+                    </div>
+                    <div id="documentProjects" className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Document projects will be added here */}
+                    </div>
                 </div>
-              </div>
-              <div className="flex items-center">
-                <div className="flex space-x-2 mr-4">
-                  <img src="https://placehold.co/24x24" alt="User profile picture" className="rounded-full" />
-                  <img src="https://placehold.co/24x24" alt="User profile picture" className="rounded-full" />
-                  <img src="https://placehold.co/24x24" alt="User profile picture" className="rounded-full" />
-                </div>
-                <div className="relative">
-                  <input type="text" placeholder="Search" className="border border-gray-300 rounded-full py-2 px-4 text-sm" />
-                  <i className="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-                </div>
-                <button className="ml-4 bg-blue-600 text-white rounded-full py-2 px-4 text-sm">Share</button>
-              </div>
-            </div>
-
-            {/* Toolbar */}
-            <div class="bg-white shadow rounded-lg p-4 flex items-center justify-between mb-4">
-                <div class="flex space-x-2">
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-bold text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-italic text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-underline text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-link text-gray-600"></i>
-                    </button>
-
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-arrow-up text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-arrow-down text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-arrow-left text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-arrow-right text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-font text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-paint-brush text-gray-600"></i>
-                    </button>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <select class="border border-gray-300 rounded-full text-sm py-1 px-3">
-                        <option>14</option>
-                    </select>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-align-left text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-align-center text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-align-right text-gray-600"></i>
-                    </button>
-                    <button class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-align-justify text-gray-600"></i>
-                    </button>
-                </div>
-            </div>
-
-            {/* Whiteboard */}
-            <div className="whiteboard p-4">
-                <CanvasDraw
-                    className="whiteboard"
-                    brushColor="#000000"
-                    brushRadius={2}
-                    lazyRadius={0}
-                    canvasWidth={1000}
-                    canvasHeight={500}
-                    hideGrid={true} // This prop might not exist; it's illustrative
-                    style={{
-                        background: 'radial-gradient(circle, #000 1px, rgba(255, 255, 255, 0) 1px)',
-                        backgroundSize: '28px 28px',
-                        border: '1px solid #E5E7EB',
-                        borderRadius: '8px',
-                    }}
-                />
             </div>
           </div>
+      
+          <div className="w-64"> {/* Adjust width as needed */}
+            <NotificationBar />
+          </div>
+      
+          {/* Modal */}
+          <div id="modal" className={`fixed inset-0 bg-black bg-opacity-50 ${modalType ? '' : 'hidden'} flex justify-center items-center`} style={{ zIndex: 1000 }}>
+          <div className="bg-white p-6 rounded-lg w-full max-w-xs mx-auto relative">
+                    <button onClick={closeModal} className="absolute top-0 right-0 mt-2 mr-2 text-black text-lg font-semibold">
+                        &times;
+                    </button>
+                    <h3 className="font-semibold text-lg mb-4 text-center">{modalType === 'whiteboard' ? 'Enter Whiteboard Project Name' : 'Enter Document Name'}</h3>
+                    <input 
+                        type="text" 
+                        className="border p-2 rounded w-full mb-4" 
+                        placeholder="Name"
+                        value={projectName}
+                        onChange={(e) => setProjectName(e.target.value)}
+                    />
+                    <div className="text-center">
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={addProject}>Add Project</button>
+                    </div>
+                </div>
+          </div>
         </div>
-      </body>
-    </html>
-  );
+      );
+      
+    
+        
 }
-
-export default Content;
