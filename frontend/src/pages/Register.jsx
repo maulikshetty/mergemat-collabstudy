@@ -21,18 +21,7 @@ export default function Register() {
   const confirmpasswordref= useRef();
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
- /* const [data,setData] = useState({
-    email:'',
-    firstname:'',
-    lastname:'',
-    password:'',
-  })*/
 
-  // const [password,setpassword] = useState("");
-  // const [email,setemail] = useState("");
-  // const registeruser = async () =>{
-  //   await createUserWithEmailAndPassword(auth,email,password);
-  // }
   async function handleSubmit(e){
     e.preventDefault()
     

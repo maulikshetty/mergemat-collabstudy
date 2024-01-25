@@ -1,8 +1,23 @@
 import React from 'react';
-
+import { useAuth } from '../appcontext/Authcontext'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
     
 export default function Sidebar() {
+    const { currentUser, logout } = useAuth();
+    const [error, setError] = useState('')
+    const nav = useNavigate();
+
+    async function handleLogout() {
+        setError('')
+        try {
+            await logout()
+            nav('/login')
+        } catch {
+            setError('Failed to log out')
+        }
+    }
   return (
 
     <div class="bg-white p-6 space-y-6 w-full lg:w-64" >
@@ -15,7 +30,7 @@ export default function Sidebar() {
             <span class="font-bold text-lg">MergeMat</span>
             </div>
             <div>
-            <div class="text-sm font-semibold text-black-400">Aditya Lolip</div>
+            <div class="text-sm font-semibold text-black-400"> {currentUser.firstname} </div>
             <div class="flex space-x-1 text-xs text-gray-400">
                 <span>Favorites</span>
                 <span>Recently</span>
@@ -70,7 +85,7 @@ export default function Sidebar() {
             </div>
             <div class="flex items-center space-x-2 text-red-600">
                 <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
+                <button onClick={handleLogout} >Logout</button>
             </div>
             </div>
         </div>
