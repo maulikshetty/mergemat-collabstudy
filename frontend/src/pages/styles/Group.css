@@ -1,0 +1,9 @@
+.custom-icon {
+    color: #4b5563;
+    cursor: pointer;
+}
+
+.custom-icon:hover {
+    color: red;
+
+}
