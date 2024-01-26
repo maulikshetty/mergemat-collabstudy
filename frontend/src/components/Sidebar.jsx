@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '../appcontext/Authcontext'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import logo from '../imgs/merge.png'
 
     
 export default function Sidebar() {
@@ -25,7 +26,7 @@ export default function Sidebar() {
             <img
                 alt="MergeMat logo placeholder"
                 class="h-8 w-8"
-                src="https://placehold.co/32x32"
+                src={logo}
             />
             <span class="font-bold text-lg">MergeMat</span>
             </div>
