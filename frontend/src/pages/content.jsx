@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import NotificationBar from '../components/Notificationbar.jsx';
 import './styles/content.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Content() {
     const [modalType, setModalType] = useState('');
     const [projectName, setProjectName] = useState('');
+    const [projects, setProjects] = useState([]);
+    const navigate = useNavigate();
 
     const openModal = (type) => {
         setModalType(type);
@@ -43,6 +46,7 @@ export default function Content() {
             const viewAllButton = document.createElement('button');
             viewAllButton.className = "text-blue-500 text-sm font-semibold";
             viewAllButton.textContent = "VIEW ALL";
+            viewAllButton.onclick = () => navigate('/content-in'); // Add the click event
     
             // Append elements
             projectDiv.appendChild(img);
