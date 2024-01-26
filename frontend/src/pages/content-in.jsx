@@ -24,8 +24,8 @@ const ContentIn = () => {
               <div className="flex items-center">
                 <a href="#" className="text-gray-600 text-sm mr-4"><i className="fas fa-arrow-left"></i></a>
                 <div>
-                  <h1 className="text-2xl font-semibold">Store Website Low-Fid</h1>
-                  <p className="text-gray-500 text-sm">Part of Software Development</p>
+                  <h1 className="text-2xl font-semibold">MergeMat Whiteboard</h1>
+                  <p className="text-gray-500 text-sm">Added by You.</p>
                 </div>
               </div>
               <div className="flex items-center">

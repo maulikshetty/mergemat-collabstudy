@@ -14,3 +14,13 @@ body {
 .bg-gray-100 {
   background-color: #f3f4f6; /* Set your desired background color */
 }
+
+/* Assuming your sidebar is 250px wide and your notification bar is 300px wide */
+@media (min-width: 1024px) { /* This corresponds to Tailwind's 'lg' breakpoint */
+  .lg\:pl-sidebar {
+    padding-left: 40px; /* Adjust the value to match your sidebar's width */
+  }
+  .lg\:pr-notificationbar {
+    padding-right: 300px; /* Adjust the value to match your notification bar's width */
+  }
+}
