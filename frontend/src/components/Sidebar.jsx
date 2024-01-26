@@ -30,7 +30,7 @@ export default function Sidebar() {
             <span class="font-bold text-lg">MergeMat</span>
             </div>
             <div>
-            <div class="text-sm font-semibold text-black-400"> {currentUser.firstname} </div>
+            <div class="text-sm font-semibold text-black-400"> {currentUser.firstname} {currentUser.lastname}</div>
             <div class="flex space-x-1 text-xs text-gray-400">
                 <span>Favorites</span>
                 <span>Recently</span>
@@ -39,10 +39,10 @@ export default function Sidebar() {
             <div class="space-y-2">
             <div class=" text-gray-400">Dashboards</div>
             <div class="space-y-1">
-                <div class="flex items-center space-x-2 text-gray-800">
+                <a href="/dashboard"  classname="flex items-center space-x-2 text-gray-800">
                 <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-                </div>
+                <span> Dashboard</span>
+                </a>
                 <a href="/group" className="flex items-center space-x-2 text-gray-800">
             <i className="fas fa-users"></i>
             <span>My Groups</span>

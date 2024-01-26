@@ -22,35 +22,35 @@ export default function Register() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e){
-    e.preventDefault()
+  async function handleSubmit(e) {
+    e.preventDefault();
+  
+    if (passwordref.current.value !== confirmpasswordref.current.value) {
+      setError('Passwords do not match');
+      toast.error('Passwords do not match');
+      return; // Stop the function if the passwords don't match
+    }
     
-
-  if (passwordref.current.value !== confirmpasswordref.current.value){
-    setError('Passwords do not match')
-    toast.error('Passwords do not match')
+    try {
+      setError('');
+      setLoading(true);
+      await signup(
+        emailref.current.value,
+        passwordref.current.value,
+        firstnameref.current.value,
+        lastnameref.current.value
+      );
+      toast.success('Account created successfully');
+      nav('/login');
+    } catch (error) {
+      console.error("Failed to create an account", error);
+      setError("Failed to create an account");
+      toast.error('Failed to create an account');
+    }
+  
+    setLoading(false);
   }
-  try {
-    setError('')
-    setLoading(true)
-    await signup(emailref.current.value, passwordref.current.value)
-
-    nav('/login')
-
-  } catch (error) {
-
-    console.error("Failed to create an account", error )
-    setError("Failed to create an account")
-    
-  }
-  const ref = collection(db, 'users')
-    await addDoc( ref, {
-      firstname: firstnameref.current.value,
-      lastname: lastnameref.current.value,
-      email: emailref.current.value
-    })
-  setLoading(false)
-  }
+  
 
   //const [password,setpassword] = useState("");
   //const [email,setemail] = useState("");

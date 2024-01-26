@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { auth, db } from '../config/firebase'
-import { collection, addDoc, doc, setDoc } from 'firebase/firestore'
+import { collection, addDoc, doc, setDoc, getDoc} from 'firebase/firestore'
 
 
 const AuthContext = React.createContext()
@@ -13,32 +13,18 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState()
     const [loading, setLoading] = useState(true)
 
-    // async function signup(firstName, lastName, email, password,) {
-    //     try {
-    //         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    //         const { user } = userCredential
-
-    //         // Add user details to Firestore
-    //         const ref = doc(db, "users",)
-    //         const docRef = await addDoc(collection(db, "users"), {
-    //             firstName: firstName,
-    //             lastName: lastName,
-    //             email: email
-    //         })
-    //         console.log("Document written with ID:", docRef.id)
-    //         // You can return additional information if needed
-    //         return user;
-
-    //     } catch (e) {
-    //         // Handle errors here
-    //         console.error("Error during signup:", e);
-
-    //     }
-    // }
-
-    function signup(email, password) {
+    function signup(email, password, firstName, lastName) {
         return auth.createUserWithEmailAndPassword(email, password)
-    }
+          .then((userCredential) => {
+            // Use the UID from the userCredential to create the document in Firestore
+            return setDoc(doc(db, 'users', userCredential.user.uid), {
+              firstname: firstName,
+              lastname: lastName,
+              email: email
+            });
+          });
+      }
+      
 
 
 
@@ -70,15 +56,28 @@ export function AuthProvider({ children }) {
 
 
     useEffect(() => {
-        const unsubscribe =
-            auth.onAuthStateChanged(user => {
-                setCurrentUser(user)
-                setLoading(false)
-
-            })
-        return unsubscribe
-
-    }, [])
+        const unsubscribe = auth.onAuthStateChanged(async user => {
+          if (user) {
+            // Set the user's auth details
+            setCurrentUser(user);
+      
+            // Now get the user's additional details from Firestore
+            const userDocRef = doc(db, 'users', user.uid);
+            const userDoc = await getDoc(userDocRef);
+            
+            // If the document exists, combine auth and Firestore data
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              setCurrentUser(prevUser => {
+                return {...prevUser, ...userData};
+              });
+            }
+          }
+          setLoading(false);
+        });
+        return unsubscribe;
+      }, []);
+      
 
     const value = {
         currentUser, login, logout, resetPassword, updateEmail, updatePassword, signup
