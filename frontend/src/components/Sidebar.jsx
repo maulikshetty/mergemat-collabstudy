@@ -4,7 +4,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../imgs/merge.png'
 
-    
+
+
+
+
 export default function Sidebar() {
     const { currentUser, logout } = useAuth();
     const [error, setError] = useState('')
@@ -19,77 +22,83 @@ export default function Sidebar() {
             setError('Failed to log out')
         }
     }
-  return (
 
-    <div class="bg-white p-6 space-y-6 w-full lg:w-64" >
-            <div class="flex items-center space-x-2">
-            <img
-                alt="MergeMat logo placeholder"
-                class="h-8 w-8"
-                src={logo}
-            />
-            <span class="font-bold text-lg">MergeMat</span>
+    const [isOpen, setisOpen] = useState(false);
+
+    const toggle = () => {
+        setisOpen(!isOpen);
+    };
+
+    return (
+        <div class="bg-white p-6 space-y-6 w-full lg:w-64" >
+            <div className="flex items-center space-x-2">
+                <img
+                    alt="MergeMat logo placeholder"
+                    className="h-8 w-8"
+                    src={logo}
+                />
+                <span className="font-bold text-lg">MergeMat</span>
+                <div />
+
             </div>
+
             <div>
-            <div class="text-sm font-semibold text-black-400"> {currentUser.firstname} {currentUser.lastname}</div>
-            <div class="flex space-x-1 text-xs text-gray-400">
-                <span>Favorites</span>
-                <span>Recently</span>
-            </div>
+                <div class="text-sm font-semibold text-black-400"> {currentUser.firstname} {currentUser.lastname}</div>
+                <div class="flex space-x-1 text-xs text-gray-400">
+                    <span>Favorites</span>
+                    <span>Recently</span>
+                </div>
             </div>
             <div class="space-y-2">
-            <div class=" text-gray-400">Dashboards</div>
-            <div class="space-y-1">
-                <a href="/dashboard"  classname="flex items-center space-x-2 text-gray-800">
-                <i class="fas fa-tachometer-alt"></i>
-                <span> Dashboard</span>
+                <div class=" text-gray-400">Dashboards</div>
+                <div class="space-y-1">
+                    <a href="/dashboard" classname="flex items-center space-x-2 text-gray-800">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span> Dashboard</span>
+                    </a>
+                    <a href="/group" className="flex items-center space-x-2 text-gray-800">
+                        <i className="fas fa-users"></i>
+                        <span>My Groups</span>
+                    </a>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class=" text-gray-400">Pages</div>
+                <div class="space-y-1">
+                    <div class="flex items-center space-x-2 text-gray-800">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Calendar</span>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="flex items-center space-x-2 text-gray-800">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+                <div class="flex items-center space-x-2 text-gray-800">
+                    <i class="fas fa-compass"></i>
+                    <span>Explore</span>
+                </div>
+                <a href="/content" className="flex items-center space-x-2 text-gray-800">
+                    <i className="fas fa-align-left"></i>
+                    <span>Content</span>
                 </a>
-                <a href="/group" className="flex items-center space-x-2 text-gray-800">
-            <i className="fas fa-users"></i>
-            <span>My Groups</span>
-          </a>
                 <div class="flex items-center space-x-2 text-gray-800">
-                <i class="fas fa-file-alt"></i>
-                <span>Personal Files</span>
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
                 </div>
-            </div>
-            </div>
-            <div class="space-y-2">
-            <div class=" text-gray-400">Pages</div>
-            <div class="space-y-1">
-                <div class="flex items-center space-x-2 text-gray-800">
-                <i class="fas fa-user"></i>
-                <span>User Profile</span>
+                <div class="flex items-center space-x-2 text-red-600">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <button onClick={handleLogout} >Logout</button>
                 </div>
-                <div class="flex items-center space-x-2 text-gray-800">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Calender</span>
-                </div>
-            </div>
-            </div>
-            <div class="space-y-2">
-            <div class="flex items-center space-x-2 text-gray-800">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </div>
-            <div class="flex items-center space-x-2 text-gray-800">
-                <i class="fas fa-compass"></i>
-                <span>Explore</span>
-            </div>
-            <a href="/content" className="flex items-center space-x-2 text-gray-800">
-          <i className="fas fa-align-left"></i>
-          <span>Content</span>
-        </a>
-            <div class="flex items-center space-x-2 text-gray-800">
-                <i class="fas fa-envelope"></i>
-                <span>Messages</span>
-            </div>
-            <div class="flex items-center space-x-2 text-red-600">
-                <i class="fas fa-sign-out-alt"></i>
-                <button onClick={handleLogout} >Logout</button>
-            </div>
             </div>
         </div>
 
-  );
+    );
 }
+
+
+
+
+

@@ -6,7 +6,6 @@ import Navbar from './components/Navbar'
 import Landing from './pages/landing'
 import Login from '../src/pages/login'
 import Register from './pages/Register'
-import axios from 'axios'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './appcontext/Authcontext'
 import Dashboard from './pages/Dashboard'
@@ -16,6 +15,8 @@ import Zego from './pages/Zego'
 import ContentIn from './pages/content-in'
 import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
+import Chats from './pages/Group/Chats'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -33,6 +34,8 @@ function App() {
         <Route path='/group' element={<PrivateRoute><Group /></PrivateRoute>} />
         <Route path='/zego' element={<PrivateRoute><Zego /></PrivateRoute>} />
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
+
+        <Route path='/chats' element={<Chats />} />
       </Routes>
     </AuthProvider>
   )
