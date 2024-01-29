@@ -2,6 +2,7 @@ import React from 'react';
 import Sidebar from '../components/Sidebar.jsx';
 import './styles/content.css';
 import CanvasDraw from "react-canvas-draw";
+import {ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 const ContentIn = () => {
   return (

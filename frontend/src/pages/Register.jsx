@@ -52,25 +52,6 @@ export default function Register() {
   }
   
 
-  //const [password,setpassword] = useState("");
-  //const [email,setemail] = useState("");
-  //const registeruser = async () =>{
-    //await createUserWithEmailAndPassword(auth,email,password);
-    //e.preventDefault()
-    //const {email,firstname,lastname,password}= data;
-    //try {
-     // const {data}= await axios.post('/register',{email,firstname,lastname,password})
-     // if (data.error){
-      //  toast.error(data.error)
-      //}else{
-       // setData({})
-       // toast.success('Registration is successful, please complete additonal data')
-     // }
-    //} 
-    //catch (error) {
-      
-    //}
-  //}
   return (
 
   <div className="bg-gray-50 relative">
@@ -86,15 +67,15 @@ export default function Register() {
                   
                     <form onSubmit={handleSubmit}>
                     <label className="block text-sm font-medium text-gray-700">Email Address</label>
-                    <input type="text" id="email" className="mt-1 p-3 block w-full rounded-xl border-solid border-black" placeholder="Enter your email" ref={emailref}  required />
+                    <input type="text" id="email" className="mt-1 p-3 block w-full rounded-xl border border-black" placeholder="Enter your email" ref={emailref}  required />
                     <label className="block text-sm font-medium text-gray-700">First Name</label>
-                    <input type="text" id="firstname" className="mt-1 p-3 block w-full rounded-xl border-solid border-black" placeholder="Enter your first name" ref={firstnameref}  required/>
+                    <input type="text" id="firstname" className="mt-1 p-3 block w-full rounded-xl border border-black" placeholder="Enter your first name" ref={firstnameref}  required/>
                     <label className="block text-sm font-medium text-gray-700">last Name</label>
-                    <input type="text" id="lastname" className="mt-1 p-3 block w-full rounded-xl border-solid border-black" placeholder="Enter your last name" ref={lastnameref} required/>
+                    <input type="text" id="lastname" className="mt-1 p-3 block w-full rounded-xl border border-black" placeholder="Enter your last name" ref={lastnameref} required/>
                     <label className="block text-sm font-medium text-gray-700">Password</label>
-                    <input type="password" id="password" className="mt-1 p-3 block w-full rounded-xl border-solid border-black" placeholder="Set your password" ref={passwordref} required />
+                    <input type="password" id="password" className="mt-1 p-3 block w-full rounded-xl border border-black" placeholder="Set your password" ref={passwordref} required />
                     <label className="block text-sm font-medium text-gray-700">Confirm your password</label>
-                    <input type="password" id="cpassword" className="mt-1 p-3 block w-full rounded-xl border-solid border-black" placeholder="Confirm your password" ref= {confirmpasswordref} required />
+                    <input type="password" id="cpassword" className="mt-1 p-3 block w-full rounded-xl border border-black" placeholder="Confirm your password" ref= {confirmpasswordref} required />
                     <button type="submit" disabled={loading} className="bg-black rounded-xl mt-3 w-full text-white py-2">Sign Up</button>
                     <p className="text-xs flex items-center justify-center mt-3 mb-4">Have an Account Already? <a className="font-bold font-sans ml-2" href="/login">Login</a></p>
                     </form>
