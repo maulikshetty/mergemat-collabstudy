@@ -1,6 +1,5 @@
 // Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
-import { getAnalytics } from "firebase/analytics";
 import "firebase/compat/auth";
 import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -30,5 +29,6 @@ const app = firebase.initializeApp({
 export const auth = app.auth();
 //const analytics = getAnalytics(app);
 export const db = getFirestore();
+export const storage = getStorage();
 export { collection, doc, setDoc }
 export default app;

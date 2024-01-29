@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { auth, db } from '../config/Firebase'
+import { auth, db, storage } from '../config/Firebase'
 import { collection, addDoc, doc, setDoc, getDoc } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth';
+
+
 
 
 const AuthContext = React.createContext()
@@ -28,8 +29,6 @@ export function AuthProvider({ children }) {
   }
 
 
-
-
   function login(email, password) {
     return auth.signInWithEmailAndPassword(email, password)
 
@@ -53,6 +52,8 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword
 
   }
+
+
 
 
 

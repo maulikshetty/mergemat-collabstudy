@@ -3,7 +3,7 @@ import './App.css'
 import './index.css'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
-import Landing from './pages/landing'
+import Landing from './pages/Landing'
 import Login from '../src/pages/login'
 import Register from './pages/Register'
 import { Toaster } from 'react-hot-toast'
@@ -16,10 +16,11 @@ import ContentIn from './pages/content-in'
 import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
 import Chats from './pages/Group/Chats'
+import DirectM from './pages/DirectMessages/DirectM'
 
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <AuthProvider>
@@ -36,6 +37,7 @@ function App() {
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
 
         <Route path='/chats' element={<Chats />} />
+        <Route path='/directmessages' element={<DirectM />} />
       </Routes>
     </AuthProvider>
   )
