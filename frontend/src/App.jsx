@@ -8,6 +8,7 @@ import Login from '../src/pages/login'
 import Register from './pages/Register'
 import axios from 'axios'
 import { Toaster } from 'react-hot-toast'
+import { ChakraProvider } from "@chakra-ui/react";
 import { AuthProvider } from './appcontext/Authcontext'
 import Dashboard from './pages/Dashboard'
 import Content from './pages/content'
@@ -18,6 +19,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
 import Messages from './pages/messages'
 import Usersettings from './pages/User-info'
+import Calendar from './pages/Calender'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +27,7 @@ function App() {
   return (
     <AuthProvider>
       <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
+      <ChakraProvider position='bottom-right' toastOptions={{ duration: 2000 }} />
       <Routes>
         <Route path='/' element={<Landing />} />
         <Route path='/login' element={<Login />} />
@@ -37,6 +40,7 @@ function App() {
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
         <Route path='/messages' element={<PrivateRoute><Messages /></PrivateRoute>} />
         <Route path='/user-info' element={<PrivateRoute><Usersettings /></PrivateRoute>} />
+        <Route path='/calendar' element={<PrivateRoute><Calendar /></PrivateRoute>} />
       </Routes>
     </AuthProvider>
   )

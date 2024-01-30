@@ -68,7 +68,7 @@ export default function Sidebar() {
                         <span>Calendar</span>
                     </NavLink>
                 
-                <NavLink to="/settings" className={linkClass}>
+                <NavLink to="/user-info" className={linkClass}>
                     <i className="fas fa-cog"></i>
                     <span>Settings</span>
                 </NavLink>
