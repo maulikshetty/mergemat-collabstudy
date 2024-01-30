@@ -1,9 +1,12 @@
 import React from 'react'
-import profile from "../../imgs/star in the sky.jpg"
 import InputD from './InputD'
 import MessageD from './MessageD'
+import { useChat } from '../../appcontext/Chatcontext'
 
 const ChatD = () => {
+
+    const { data } = useChat()
+
     return (
 
         <div className="chat">
@@ -13,9 +16,9 @@ const ChatD = () => {
                     <img
                         alt=""
                         className="image"
-                        src={profile}
+                        src={data.user?.photoURL}
                     />
-                    <span>Jane Austen</span>
+                    <span>{data.user?.firstname} {data.user?.lastname}</span>
                 </div>
                 <div className="flex justify-end pr-4">
                     <button className="btn btn-square btn-ghost">

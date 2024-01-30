@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import mmlogo from '../imgs/mmlogo.jpg'
 import placeimg from '../imgs/randimage.jpg'
 import { useState, useRef } from 'react'
-import axios from 'axios'
+import { auth, db } from '../config/Firebase'
 import { toast, Toaster } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 //import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { collection, addDoc } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
 import { useAuth } from '../appcontext/Authcontext'
+import { onAuthStateChanged } from 'firebase/auth'
 
 export default function Register() {
   const nav = useNavigate();
@@ -15,7 +16,7 @@ export default function Register() {
   const passwordref = useRef();
   const firstnameref = useRef();
   const lastnameref = useRef();
-  const { signup } = useAuth()
+  const { currentUser, signup } = useAuth()
   const confirmpasswordref = useRef();
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -38,6 +39,17 @@ export default function Register() {
         firstnameref.current.value,
         lastnameref.current.value
       );
+
+
+      auth.onAuthStateChanged(async user => {
+        if (user) {
+          await setDoc(doc(db, "userChats", user.uid), {})
+        }
+      });
+
+
+
+
       toast.success('Account created successfully');
       nav('/login');
     } catch (error) {
@@ -50,25 +62,6 @@ export default function Register() {
   }
 
 
-  //const [password,setpassword] = useState("");
-  //const [email,setemail] = useState("");
-  //const registeruser = async () =>{
-  //await createUserWithEmailAndPassword(auth,email,password);
-  //e.preventDefault()
-  //const {email,firstname,lastname,password}= data;
-  //try {
-  // const {data}= await axios.post('/register',{email,firstname,lastname,password})
-  // if (data.error){
-  //  toast.error(data.error)
-  //}else{
-  // setData({})
-  // toast.success('Registration is successful, please complete additonal data')
-  // }
-  //} 
-  //catch (error) {
-
-  //}
-  //}
   return (
 
     <div className="bg-gray-50 relative">

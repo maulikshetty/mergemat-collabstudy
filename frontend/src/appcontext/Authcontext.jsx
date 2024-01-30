@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { auth, db, storage } from '../config/Firebase'
-import { collection, addDoc, doc, setDoc, getDoc } from 'firebase/firestore'
-
-
-
+import { auth, db } from '../config/Firebase'
+import { doc, setDoc, getDoc } from 'firebase/firestore'
 
 const AuthContext = React.createContext()
 
@@ -25,7 +22,8 @@ export function AuthProvider({ children }) {
           email: email,
           uid: userCredential.user.uid
         });
-      });
+      })
+
   }
 
 
@@ -52,8 +50,6 @@ export function AuthProvider({ children }) {
     return currentUser.updatePassword
 
   }
-
-
 
 
 

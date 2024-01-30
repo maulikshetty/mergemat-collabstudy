@@ -1,14 +1,10 @@
 import React from 'react';
-import { useAuth } from '../appcontext/Authcontext'
+import { useAuth } from "../../appcontext/Authcontext"
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../imgs/merge.png'
+import logo from '../../imgs/merge.png'
 
-
-
-
-
-export default function Sidebar() {
+export default function SidePanel() {
     const { currentUser, logout } = useAuth();
     const [error, setError] = useState('')
     const nav = useNavigate();
@@ -30,63 +26,64 @@ export default function Sidebar() {
     };
 
     return (
-        <div class="bg-white p-6 space-y-6 w-full lg:w-64" >
+        <div class="bg-gray-900 p-6 space-y-6 h-full lg:w-64 rounded-lg" >
+
             <div className="flex items-center space-x-2">
                 <img
                     alt="MergeMat logo placeholder"
                     className="h-8 w-8"
                     src={logo}
                 />
-                <span className="font-bold text-lg">MergeMat</span>
+                <span className="font-bold text-white text-lg">MergeMat</span>
                 <div />
 
             </div>
 
             <div>
-                <div class="text-sm font-semibold text-black-400"> {currentUser.firstname} {currentUser.lastname}</div>
-                <div class="flex space-x-1 text-xs text-gray-400">
+                <div class="text-sm font-semibold text-white"> {currentUser.firstname} {currentUser.lastname}</div>
+                <div class="flex space-x-1 text-xs text-white">
                     <span>Favorites</span>
                     <span>Recently</span>
                 </div>
             </div>
             <div class="space-y-2">
-                <div class=" text-gray-400">Dashboards</div>
+                <div class=" text-white">Dashboards</div>
                 <div class="space-y-1">
                     <a href="/dashboard" classname="flex items-center space-x-2 text-gray-800">
                         <i class="fas fa-tachometer-alt"></i>
-                        <span> Dashboard</span>
+                        <span class="text-gray-400"> Dashboard</span>
                     </a>
-                    <a href="/group" className="flex items-center space-x-2 text-gray-800">
+                    <a href="/group" className="flex items-center space-x-2 text-white">
                         <i className="fas fa-users"></i>
-                        <span>My Groups</span>
+                        <span class="text-gray-400">My Groups</span>
                     </a>
                     <div class="flex items-center space-x-2 text-gray-800">
                         <a href='/directmessages'>
                             <i class="fas fa-envelope"></i>
-                            <span>Direct Messages</span>
+                            <span class="text-gray-400">Direct Messages</span>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="space-y-2">
-                <div class=" text-gray-400">Pages</div>
+                <div class=" text-white">Pages</div>
                 <div class="space-y-1">
                     <div class="flex items-center space-x-2 text-gray-800">
                         <i class="fas fa-calendar-alt"></i>
-                        <span>Calendar</span>
+                        <span class="text-gray-400">Calendar</span>
                     </div>
                 </div>
             </div>
             <div class="space-y-2">
-                <div class="flex items-center space-x-2 text-gray-800">
+                <div class="flex items-center space-x-2 text-white">
                     <i class="fas fa-cog"></i>
-                    <span>Settings</span>
+                    <span class="text-gray-400">Settings</span>
                 </div>
-                <div class="flex items-center space-x-2 text-gray-800">
+                <div class="flex items-center space-x-2">
                     <i class="fas fa-compass"></i>
-                    <span>Explore</span>
+                    <span class="text-gray-400">Explore</span>
                 </div>
-                <a href="/content" className="flex items-center space-x-2 text-gray-800">
+                <a href="/content" className="flex items-center space-x-2 text-white">
                     <i className="fas fa-align-left"></i>
                     <span>Content</span>
                 </a>
@@ -99,8 +96,3 @@ export default function Sidebar() {
 
     );
 }
-
-
-
-
-
