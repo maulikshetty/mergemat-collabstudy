@@ -20,7 +20,8 @@ export function AuthProvider({ children }) {
             return setDoc(doc(db, 'users', userCredential.user.uid), {
               firstname: firstName,
               lastname: lastName,
-              email: email
+              email: email,
+              timestamp: serverTimestamp()
             });
           });
       }

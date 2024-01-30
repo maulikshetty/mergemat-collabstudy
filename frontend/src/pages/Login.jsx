@@ -4,7 +4,7 @@ import placeimg from '../imgs/randimage.jpg'
 import { Link } from 'react-router-dom'
 import { useState, useRef } from 'react'
 import axios from 'axios'
-import { toast } from 'react-hot-toast'
+import { useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../appcontext/Authcontext'
 
@@ -16,6 +16,7 @@ export default function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const nav = useNavigate()
+  const toast = useToast()
  
   // const [data,setData] = useState({
   //   email:'',
@@ -37,6 +38,12 @@ export default function Login() {
 
     console.error("Failed to create an account", error )
     setError("Failed to create an account")
+    toast({
+      title: "Incorrect email or password",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    })
     
   }
 
@@ -69,11 +76,6 @@ export default function Login() {
         </div>
         <button type="submit" className="bg-black rounded-xl text-white py-2">Log in </button>
       <div className="flex justify-between">
-        <div className="flex items-center ">
-              <input  type="checkbox" name="remember-me" ></input>
-              <label className ="text-xs" htmlFor="remember-me">Remember me</label>
-             
-        </div>
         <div>
         <a className ="text-xs"> <Link to="/forgotpassword">Forgot Password</Link></a>
         </div>
