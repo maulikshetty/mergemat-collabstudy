@@ -31,7 +31,7 @@ export default function Sidebar() {
             <div className="mb-5">
           <div className="flex items-center space-x-2 mb-2">
             <i className="fas fa-user text-gray-600"></i>
-            <span className="font-semibold">{currentUser.firstname}</span>
+            <span className="font-semibold">{currentUser.firstname} {currentUser.lastname}</span>
           </div>
           <div className="flex space-x-1 text-sm">
             <span className="font-medium text-gray-600">Favorites</span>
