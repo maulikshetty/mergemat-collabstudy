@@ -28,17 +28,19 @@ export default function Sidebar() {
                 <img alt="MergeMat logo placeholder" className="h-8 w-8" src={logo} />
                 <span className="font-bold text-lg">MergeMat</span>
             </div>
-            <div>
-                <div className="text-sm font-semibold text-black-400">
-                    {currentUser.firstname} {currentUser.lastname}
-                </div>
-                <div className="flex space-x-1 text-xs text-gray-400">
-                    <span>Favorites</span>
-                    <span>Recently</span>
-                </div>
-            </div>
+            <div className="mb-5">
+          <div className="flex items-center space-x-2 mb-2">
+            <i className="fas fa-user text-gray-600"></i>
+            <span className="font-semibold">{currentUser.firstname}</span>
+          </div>
+          <div className="flex space-x-1 text-sm">
+            <span className="font-medium text-gray-600">Favorites</span>
+            <span className="text-gray-400">|</span>
+            <span className="text-gray-400">Recently</span>
+          </div>
+        </div>
             <div className="space-y-2">
-                <div className="text-gray-400">Dashboards</div>
+            <div className="font-medium text-gray-600 mb-2">Dashboards</div>
                 <div className="space-y-1">
                     <NavLink to="/dashboard" className={linkClass}>
                         <i className="fas fa-tachometer-alt"></i>
@@ -46,7 +48,7 @@ export default function Sidebar() {
                     </NavLink>
                     <NavLink to="/group" className={linkClass}>
                         <i className="fas fa-users"></i>
-                        <span>My Groups</span>
+                        <span> Groups</span>
                     </NavLink>
                     <NavLink to="/personal-files" className={linkClass}>
                         <i className="fas fa-file-alt"></i>
@@ -55,7 +57,7 @@ export default function Sidebar() {
                 </div>
             </div>
             <div className="space-y-2">
-                <div className="text-gray-400">Pages</div>
+            <div className="font-medium text-gray-600 mb-2">Pages</div>
                 <div className="space-y-1">
                     <NavLink to="/user-profile" className={linkClass}>
                         <i className="fas fa-user"></i>
@@ -65,9 +67,7 @@ export default function Sidebar() {
                         <i className="fas fa-calendar-alt"></i>
                         <span>Calendar</span>
                     </NavLink>
-                </div>
-            </div>
-            <div className="space-y-2">
+                
                 <NavLink to="/settings" className={linkClass}>
                     <i className="fas fa-cog"></i>
                     <span>Settings</span>
@@ -87,6 +87,7 @@ export default function Sidebar() {
                 <div className="flex items-center space-x-2 text-red-600 hover:bg-gray-100">
                     <i className="fas fa-sign-out-alt"></i>
                     <button onClick={handleLogout}>Logout</button>
+                </div>
                 </div>
             </div>
         </div>
