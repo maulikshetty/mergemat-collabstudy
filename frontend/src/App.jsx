@@ -17,6 +17,7 @@ import ContentIn from './pages/content-in'
 import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
 import Messages from './pages/messages'
+import Usersettings from './pages/User-info'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -35,6 +36,7 @@ function App() {
         <Route path='/zego' element={<PrivateRoute><Zego /></PrivateRoute>} />
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
         <Route path='/messages' element={<PrivateRoute><Messages /></PrivateRoute>} />
+        <Route path='/user-info' element={<PrivateRoute><Usersettings /></PrivateRoute>} />
       </Routes>
     </AuthProvider>
   )
