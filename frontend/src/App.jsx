@@ -16,6 +16,7 @@ import Zego from './pages/Zego'
 import ContentIn from './pages/content-in'
 import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
+import Messages from './pages/messages'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -33,6 +34,7 @@ function App() {
         <Route path='/group' element={<PrivateRoute><Group /></PrivateRoute>} />
         <Route path='/zego' element={<PrivateRoute><Zego /></PrivateRoute>} />
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
+        <Route path='/messages' element={<PrivateRoute><Messages /></PrivateRoute>} />
       </Routes>
     </AuthProvider>
   )
