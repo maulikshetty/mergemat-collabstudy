@@ -5,9 +5,12 @@ import './styles/content.css';
 import { useNavigate } from 'react-router-dom';
 import { db, storage, auth } from '../config/firebase.jsx';
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { useAuth } from '../appcontext/Authcontext';
+
 
 export default function Content() {
     const [modalType, setModalType] = useState('');
+    const { currentUser } = useAuth();
     const [projectName, setProjectName] = useState('');
     const [projects, setProjects] = useState([]);
     const [documents, setDocuments] = useState([]);
@@ -16,7 +19,7 @@ export default function Content() {
     useEffect(() => {
         const fetchProjects = async () => {
             try {
-                const q = query(collection(db, 'projects'), where('type', '==', 'whiteboard'));
+                const q = query(collection(db, 'projects'), where('type', '==', 'whiteboard'), where('uploadedBy', '==', auth.currentUser.uid));
                 const querySnapshot = await getDocs(q);
                 const projectsData = [];
                 querySnapshot.forEach((doc) => {
@@ -30,7 +33,7 @@ export default function Content() {
 
         const fetchDocuments = async () => {
             try {
-                const q = query(collection(db, 'projects'), where('type', '==', 'document'));
+                const q = query(collection(db, 'projects'), where('type', '==', 'document'), where('uploadedBy', '==', auth.currentUser.uid));
                 const querySnapshot = await getDocs(q);
                 const documentsData = [];
                 querySnapshot.forEach((doc) => {
