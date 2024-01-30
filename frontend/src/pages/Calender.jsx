@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import NotificationBar from '../components/Notificationbar';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useState } from 'react';
-
-
-
 function Calendar() {
     const [month, setMonth] = useState(new Date().getMonth() + 1);
     const [year, setYear] = useState(new Date().getFullYear());
+    const [showOverlay, setShowOverlay] = useState(false);
+    const [eventDate, setEventDate] = useState('');
+    const [eventTime, setEventTime] = useState('');
+    const [eventDescription, setEventDescription] = useState('');
 
     const handlePrevMonth = () => {
         setMonth(month === 1 ? 12 : month - 1);
@@ -56,6 +56,23 @@ function Calendar() {
         return calendarDays;
     };
 
+    const handleAddEvent = () => {
+        setShowOverlay(true);
+    };
+
+    const handleOverlaySubmit = () => {
+        // Perform event submission logic here
+        console.log('Event Date:', eventDate);
+        console.log('Event Time:', eventTime);
+        console.log('Event Description:', eventDescription);
+
+        // Reset overlay state
+        setShowOverlay(false);
+        setEventDate('');
+        setEventTime('');
+        setEventDescription('');
+    };
+
     return (
         <div className="flex flex-col lg:flex-row h-screen">
             {/* Sidebar */}
@@ -94,7 +111,9 @@ function Calendar() {
                                     <i className="fas fa-chevron-right"></i>
                                 </button>
                             </div>
-                            <button className="bg-blue-500 text-white px-4 py-2 rounded">Add Event</button>
+                            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleAddEvent}>
+                                Add Event
+                            </button>
                         </div>
                         <div className="grid grid-cols-7 gap-4 text-center">
                             {/* Day names */}
@@ -109,6 +128,56 @@ function Calendar() {
                     </div>
                 </div>
             </div>
+
+            {/* Event overlay */}
+            {showOverlay && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded shadow-lg">
+                        <h2 className="text-lg font-semibold mb-4">Add Event</h2>
+                        <div className="mb-4">
+                            <label htmlFor="event-date" className="block font-medium mb-1">
+                                Date
+                            </label>
+                            <input
+                                type="date"
+                                id="event-date"
+                                className="border border-gray-300 rounded px-3 py-2 w-full"
+                                value={eventDate}
+                                onChange={(e) => setEventDate(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="event-time" className="block font-medium mb-1">
+                                Time
+                            </label>
+                            <input
+                                type="time"
+                                id="event-time"
+                                className="border border-gray-300 rounded px-3 py-2 w-full"
+                                value={eventTime}
+                                onChange={(e) => setEventTime(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="event-description" className="block font-medium mb-1">
+                                Description
+                            </label>
+                            <textarea
+                                id="event-description"
+                                className="border border-gray-300 rounded px-3 py-2 w-full"
+                                value={eventDescription}
+                                onChange={(e) => setEventDescription(e.target.value)}
+                            ></textarea>
+                        </div>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded"
+                            onClick={handleOverlaySubmit}
+                        >
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
