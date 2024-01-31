@@ -1,12 +1,48 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
-import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-
+import { useToast } from '@chakra-ui/react';
 
 export default function usersettings() {
-    const { currentUser, logout } = useAuth();
+    const [error, setError] = useState('');
+    const Updatedemailref = useRef();
+    const toast = useToast();
+    const { currentUser, logout, resetPassword, updateEmail} = useAuth();
+
+    async function updateEmailhandler() {
+        setError('');
+        try {
+            await updateEmail(Updatedemailref.current.value);
+            toast({
+                title: 'Success',
+                description: 'email has been updated',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch(error) {
+            setError('Failed to update email');
+            console.log(error);
+        }
+    }
+
+    async function handlepassreset() {
+        setError('');
+        try {
+            await resetPassword(currentUser.email);
+            toast({
+                title: 'Success',
+                description: 'Password reset email has been sent',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch(error) {
+            setError('Failed to reset password');
+            console.log(error);
+        }
+    }
+
     return (
         <html lang="en">
             <head>
@@ -83,8 +119,9 @@ export default function usersettings() {
                                             <div className="mb-4">
                                                 <label className="block text-sm font-medium text-gray-700">
                                                     First Name
-                                                </label>
+                                                </label> 
                                                 <div className="mt-1 flex justify-between items-center">
+                                                <input type="text" id="firstname" className="mt-1 flex justify-between items-center rounded-m border-solid border-black" placeholder={currentUser.firstname} />
                                                     <p className="text-sm text-gray-900">{currentUser.firstname}</p>
                                                     <button className="text-blue-600 hover:text-blue-500">
                                                         Edit
@@ -96,6 +133,7 @@ export default function usersettings() {
                                                     Last Name
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
+                                                <input type="text" id="firstname" className="mt-1 flex justify-between items-center rounded-m border-solid border-black" placeholder={currentUser.lastname} />
                                                     <p className="text-sm text-gray-900">{currentUser.lastname}</p>
                                                     <button className="text-blue-600 hover:text-blue-500">
                                                         Edit
@@ -107,10 +145,11 @@ export default function usersettings() {
                                                     Email address
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
+                                                <input type="text" id="firstname" className="mt-1 flex justify-between items-center rounded-m border-solid border-black"  placeholder={currentUser.email} ref={Updatedemailref} />
                                                     <p className="text-sm text-gray-900">
                                                         {currentUser.email}
                                                     </p>
-                                                    <button className="text-blue-600 hover:text-blue-500">
+                                                    <button  onClick={updateEmailhandler} className="text-blue-600 hover:text-blue-500">
                                                         Edit
                                                     </button>
                                                 </div>
@@ -120,7 +159,8 @@ export default function usersettings() {
                                                     Phone numbers
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                    <p className="text-sm text-gray-900">971564****14</p>
+                                                <input type="text" id="firstname" className="mt-1 flex justify-between items-center rounded-m border-solid border-black" placeholder="+97150*******" />
+                                                
                                                     <button className="text-blue-600 hover:text-blue-500">
                                                         Add
                                                     </button>
@@ -131,12 +171,10 @@ export default function usersettings() {
                                                     Password
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                    <button className="text-sm text-gray-900">
+                                                    <button onClick={handlepassreset} className="text-sm text-gray-900">
                                                         Click to reset
                                                     </button>
-                                                    <button className="text-blue-600 hover:text-blue-500">
-                                                        Edit
-                                                    </button>
+                                                   
                                                 </div>
                                             </div>
                                             <div className="mb-4">

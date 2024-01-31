@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { auth, db } from '../config/firebase'
-import { collection, addDoc, doc, setDoc, getDoc} from 'firebase/firestore'
+import { collection, addDoc, doc, setDoc, getDoc, serverTimestamp} from 'firebase/firestore'
 
 
 const AuthContext = React.createContext()
@@ -45,14 +45,25 @@ export function AuthProvider({ children }) {
     }
 
     function updateEmail(email) {
-        return currentUser.updateEmail
+       
+        //const docref= doc(db, 'users', auth.userCredential.user.uid)
+        
+      
+        return auth.currentUser.verifyBeforeUpdateEmail(email)
+         
+          // Use the UID from the userCredential to create the document in Firestore
+         
+        
 
     }
+
+   
 
     function updatePassword(password) {
         return currentUser.updatePassword
 
     }
+    
 
 
 
