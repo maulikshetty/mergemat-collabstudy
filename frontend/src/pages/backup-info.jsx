@@ -13,18 +13,30 @@ export default function usersettings() {
     const toast = useToast();
     const { currentUser, logout, resetPassword, updateEmail} = useAuth();
 
-    async function handleSubmit() {
-        setError('');
-        const firstName = firstnameref.current.value;
-        const lastName = lastnameref.current.value;
-        const email = Updatedemailref.current.value;
+    async function handleSubmit(e) {
         
-        if (!firstName || !lastName || !email) {
-            setError('Please fill in all fields');
+        setError('');
+        let fieldsToUpdate = {};
+        const newFirstName = firstnameref.current.value;
+        const newLastName = lastnameref.current.value;
+        const newEmail = Updatedemailref.current.value;
+    
+        if (newFirstName && newFirstName !== currentUser.firstName) {
+            fieldsToUpdate.firstName = newFirstName;
+        }
+        if (newLastName && newLastName !== currentUser.lastName) {
+            fieldsToUpdate.lastName = newLastName;
+        }
+        if (newEmail && newEmail !== currentUser.email) {
+            fieldsToUpdate.email = newEmail;
+        }
+        
+        if (Object.keys(fieldsToUpdate).length === 0) {
+            setError('No changes to update');
             toast({
                 title: 'Error',
-                description: 'Please fill in all fields',
-                status: 'error',
+                description: 'No changes to update',
+                status: 'warning',
                 duration: 3000,
                 isClosable: true,
             });
@@ -33,11 +45,7 @@ export default function usersettings() {
     
         try {
             const userDocRef = doc(db, 'users', currentUser.uid);
-            await updateDoc(userDocRef, {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-            });
+            await updateDoc(userDocRef, fieldsToUpdate);
             toast({
                 title: 'Success',
                 description: 'User info has been updated',
@@ -157,6 +165,7 @@ export default function usersettings() {
 
                         {/* Main section */}
                         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+                            <form onSubmit={handleSubmit}>
                             <div className="container mx-auto px-6 py-8">
                                 <div className="bg-white shadow rounded-lg p-6">
                                     <div className="mb-4 border-b border-gray-200">
@@ -257,11 +266,12 @@ export default function usersettings() {
                                                     </button>
                                                 </div>
                                             </div>
-                                            <button type = 'submit' onClick={handleSubmit} className="text-white hover:text-white bg-gray-800 hover:bg-black rounded-lg px-4 py-2">
+                                            <button type = 'submit'  className="text-white hover:text-white bg-gray-800 hover:bg-black rounded-lg px-4 py-2">
                                                 Save
                                             </button>
                                             
                                         </div>
+                                        
                                         <div className="md:col-span-1 space-y-4">
                                             <div className="bg-gray-50 p-4 rounded-lg shadow">
                                                 <div className="flex items-center justify-center">
@@ -293,6 +303,7 @@ export default function usersettings() {
                                     </div>
                                 </div>
                             </div>
+                            </form>
                         </main>
                     </div>
                 </div>

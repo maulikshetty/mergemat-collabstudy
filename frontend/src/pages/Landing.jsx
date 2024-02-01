@@ -25,9 +25,9 @@ return (
                 <div className="hidden w-full md:flex md:items-center md:w-auto" id="mobile-nav">
                     <div className="text-sm font-semibold flex flex-col md:flex-row md:space-x-4 md:items-center">
                         <a href="#" className="block mt-4 md:inline-block md:mt-0 text-gray-600 hover:text-gray-900">How It Works</a>
-                        <a href="#" className="block mt-4 md:inline-block md:mt-0 text-gray-600 hover:text-gray-900">Our Work</a>
+                        {/* <a href="#" className="block mt-4 md:inline-block md:mt-0 text-gray-600 hover:text-gray-900">Our Work</a> */}
                         <a href="#" className="block mt-4 md:inline-block md:mt-0 text-gray-600 hover:text-gray-900">FAQ</a>
-                        <a href="#" className="block mt-4 md:inline-block md:mt-0 text-gray-600 hover:text-gray-900">About Us</a>
+                        {/* <a href="#" className="block mt-4 md:inline-block md:mt-0 text-gray-600 hover:text-gray-900">About Us</a> */}
                         <a href="/register" className="block mt-4 md:inline-block md:mt-0 bg-blue-700 text-white px-3 py-2 rounded-md">Sign Up</a>
                         <a href="/login" className="block mt-4 md:inline-block md:mt-0 text-gray-600 hover:text-gray-900">Login</a>
                     </div>
