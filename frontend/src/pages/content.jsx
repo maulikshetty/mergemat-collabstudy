@@ -193,7 +193,7 @@ export default function Content() {
                         <ul className="flex space-x-4 mb-4">
                             <li className="text-blue-500 font-semibold">Recently viewed</li>
                             <li>Shared files</li>
-                            <li>Shared projects</li>
+                            <li>Group projects</li>
                         </ul>
                         <div className="flex justify-between items-center mb-2">
                             <h3 className="font-semibold text-lg">Whiteboard projects</h3>
