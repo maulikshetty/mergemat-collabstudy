@@ -2,14 +2,15 @@ import React, { useState, useRef } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from '@chakra-ui/react';
-import { db } from '../config/firebase';
+import { auth, db } from '../config/firebase';
 import { updateDoc, doc } from 'firebase/firestore';
 
 export default function usersettings() {
     const [error, setError] = useState('');
     const Updatedemailref = useRef();
     const firstnameref = useRef();
-    const lastnameref = useRef();   
+    const lastnameref = useRef();  
+    const myuser = auth.currentUser;
     const toast = useToast();
     const { currentUser, logout, resetPassword, updateEmail} = useAuth();
 
@@ -32,11 +33,12 @@ export default function usersettings() {
         }
     
         try {
-            const userDocRef = doc(db, 'users', currentUser.uid);
+            const userDocRef = doc(db, 'users', myuser.uid);
             await updateDoc(userDocRef, {
-                firstName: firstName,
-                lastName: lastName,
+                firstname: firstName,
+                lastname: lastName,
                 email: email,
+                
             });
             toast({
                 title: 'Success',
