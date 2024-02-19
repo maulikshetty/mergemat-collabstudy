@@ -92,7 +92,21 @@ export default function usersettings() {
         }
     }
 
+    const [isToastShown, setIsToastShown] = useState(false);
 
+    function handleDOBFocus() {
+        if (!currentUser.dob && !isToastShown) {
+            setIsToastShown(true);
+            toast({
+                title: 'Warning',
+                description: 'Once edited, cannot be changed',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    }
+      
     async function updateEmailhandler() {
         setError('');
         try {
@@ -313,8 +327,9 @@ export default function usersettings() {
                                                     type="date"
                                                     id="dob"
                                                     className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
-                                                    placeholder={currentUser.dob ? currentUser.dob : "Not Provided"}
+                                                    value={currentUser.dob}
                                                     ref={updateddob}
+                                                    onFocus={handleDOBFocus}
                                                 />
 
                                                 </div>
