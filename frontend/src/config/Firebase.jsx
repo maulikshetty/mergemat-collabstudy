@@ -2,7 +2,7 @@
 import firebase from "firebase/compat/app";
 import { getAnalytics } from "firebase/analytics";
 import "firebase/compat/auth";
-import {getFirestore, collection, doc , setDoc} from "firebase/firestore";
+import {getFirestore, collection, doc , setDoc, updateDoc} from "firebase/firestore";
 import {getStorage} from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries

@@ -45,14 +45,25 @@ export function AuthProvider({ children }) {
     }
 
     function updateEmail(email) {
-        return currentUser.updateEmail
+       
+        //const docref= doc(db, 'users', auth.userCredential.user.uid)
+        
+      
+        return auth.currentUser.verifyBeforeUpdateEmail(email)
+         
+          // Use the UID from the userCredential to create the document in Firestore
+         
+        
 
     }
+
+   
 
     function updatePassword(password) {
         return currentUser.updatePassword
 
     }
+    
 
 
 
