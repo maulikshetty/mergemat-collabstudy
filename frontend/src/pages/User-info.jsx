@@ -2,14 +2,19 @@ import React, { useState, useRef } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from '@chakra-ui/react';
-import { db } from '../config/firebase';
+import { auth, db } from '../config/firebase';
 import { updateDoc, doc } from 'firebase/firestore';
 
 export default function usersettings() {
     const [error, setError] = useState('');
     const Updatedemailref = useRef();
     const firstnameref = useRef();
-    const lastnameref = useRef();   
+    const lastnameref = useRef();  
+    const Updatedaddress = useRef();
+    const updatedphone = useRef();
+    const updatedurl = useRef();
+    const updateddob = useRef();
+    const myuser = auth.currentUser;
     const toast = useToast();
     const { currentUser, logout, resetPassword, updateEmail} = useAuth();
 
@@ -18,26 +23,55 @@ export default function usersettings() {
         const firstName = firstnameref.current.value;
         const lastName = lastnameref.current.value;
         const email = Updatedemailref.current.value;
+        const address = Updatedaddress.current.value;
+        const phone = updatedphone.current.value;
+        const url = updatedurl.current.value;
+        const dob = updateddob.current.value;
+        const updatedFields = {};
+
+        if (firstName) {
+            updatedFields.firstname = firstName;
+        }
+
+        if (lastName) {
+            updatedFields.lastname = lastName;
+        }
+
+        if (email) {
+            updatedFields.email = email;
+        }
+
+        if (address) {
+            updatedFields.address = address;
+        }
         
-        if (!firstName || !lastName || !email) {
-            setError('Please fill in all fields');
+        if (phone) {
+            updatedFields.phone = address;
+        }
+
+        if (url) {
+            updatedFields.url = url;
+        }
+
+        if (dob) {
+            updatedFields.dob = dob;
+        }
+
+        if (Object.keys(updatedFields).length === 0) {
+            setError('Please fill in at least one field');
             toast({
                 title: 'Error',
-                description: 'Please fill in all fields',
+                description: 'Please fill in at least one field',
                 status: 'error',
                 duration: 3000,
                 isClosable: true,
             });
             return;
         }
-    
+
         try {
-            const userDocRef = doc(db, 'users', currentUser.uid);
-            await updateDoc(userDocRef, {
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-            });
+            const userDocRef = doc(db, 'users', myuser.uid);
+            await updateDoc(userDocRef, updatedFields);
             toast({
                 title: 'Success',
                 description: 'User info has been updated',
@@ -58,7 +92,21 @@ export default function usersettings() {
         }
     }
 
+    const [isToastShown, setIsToastShown] = useState(false);
 
+    function handleDOBFocus() {
+        if (!currentUser.dob && !isToastShown) {
+            setIsToastShown(true);
+            toast({
+                title: 'Warning',
+                description: 'Once edited, cannot be changed',
+                status: 'warning',
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+    }
+      
     async function updateEmailhandler() {
         setError('');
         try {
@@ -171,11 +219,15 @@ export default function usersettings() {
                                                     First Name
                                                 </label> 
                                                 <div className="mt-1 flex justify-between items-center">
-                                                <input type="text" id="firstname" className="mt-1 flex justify-between items-center rounded-m border-solid border-black" placeholder={currentUser.firstname} ref={firstnameref} />
+                                                <input
+                                                    type="text"
+                                                    id="firstname"
+                                                    className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
+                                                    placeholder={currentUser.firstname}
+                                                    ref={firstnameref}
+                                                />
                                                     
-                                                    <button className="text-blue-600 hover:text-blue-500">
-                                                        Edit
-                                                    </button>
+
                                                 </div>
                                             </div>
                                             <div className="mb-4">
@@ -183,11 +235,15 @@ export default function usersettings() {
                                                     Last Name
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                <input type="text" id="firstname" className="mt-1 flex justify-between items-center rounded-m border-solid border-black" placeholder={currentUser.lastname} ref={lastnameref}/>
+                                                <input
+                                                    type="text"
+                                                    id="lastname"
+                                                    className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
+                                                    placeholder={currentUser.lastname}
+                                                    ref={lastnameref}
+                                                />
                                                     
-                                                    <button className="text-blue-600 hover:text-blue-500">
-                                                        Edit
-                                                    </button>
+
                                                 </div>
                                             </div>
                                             <div className="mb-4">
@@ -195,10 +251,13 @@ export default function usersettings() {
                                                     Email address
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                <input type="text" id="firstname" className="mt-1 w-80 flex justify-between items-center rounded-m border-solid border-black"  placeholder={currentUser.email} ref={Updatedemailref} />
-                                                    <button  onClick={updateEmailhandler} className="text-blue-600 hover:text-blue-500">
-                                                        Edit
-                                                    </button>
+                                                <input
+                                                    type="email"
+                                                    id="email"
+                                                    className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
+                                                    placeholder={currentUser.email}
+                                                    ref={Updatedemailref}
+                                                />
                                                 </div>
                                             </div>
                                             <div className="mb-4">
@@ -206,11 +265,14 @@ export default function usersettings() {
                                                     Phone numbers
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                <input type="text" id="firstname" className="mt-1 flex justify-between items-center rounded-m border-solid border-black" placeholder="Not Provided" />
-                                                
-                                                    <button className="text-blue-600 hover:text-blue-500">
-                                                        Add
-                                                    </button>
+                                                <input
+                                                    type="tel"
+                                                    id="phone"
+                                                    className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
+                                                    placeholder={currentUser.phone ? currentUser.phone : "Not Provided"}
+                                                    ref={updatedphone}
+                                                />                                                
+
                                                 </div>
                                             </div>
                                             <div className="mb-4">
@@ -218,9 +280,11 @@ export default function usersettings() {
                                                     Password
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                    <button onClick={handlepassreset} className="text-sm text-gray-900">
-                                                        Click to reset
-                                                    </button>
+                                                    <div className="mt-1 flex justify-between items-center">
+                                                        <button onClick={handlepassreset} className="w-full text-sm text-gray-900 bg-gray-300 hover:bg-gray-400 focus:bg-gray-400 focus:outline-none px-8 py-2 rounded-md">
+                                                            Click to reset
+                                                        </button>
+                                                    </div>
                                                    
                                                 </div>
                                             </div>
@@ -229,10 +293,14 @@ export default function usersettings() {
                                                     Address
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                    <p className="text-sm text-gray-900">Not provided</p>
-                                                    <button className="text-blue-600 hover:text-blue-500">
-                                                        Edit
-                                                    </button>
+                                                <input
+                                                    type="text"
+                                                    id="address"
+                                                    className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
+                                                    placeholder={currentUser.address ? currentUser.address : "Not Provided"}
+                                                    ref={Updatedaddress}
+                                                />
+
                                                 </div>
                                             </div>
                                             <div className="mb-4">
@@ -240,10 +308,14 @@ export default function usersettings() {
                                                     URL
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                    <p className="text-sm text-gray-900">Not provided</p>
-                                                    <button className="text-blue-600 hover:text-blue-500">
-                                                        Add
-                                                    </button>
+                                                <input
+                                                    type="url"
+                                                    id="url"
+                                                    className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
+                                                    placeholder={currentUser.url ? currentUser.url : "Not Provided"}
+                                                    ref={updatedurl}
+                                                />
+
                                                 </div>
                                             </div>
                                             <div className="mb-4">
@@ -251,10 +323,15 @@ export default function usersettings() {
                                                     Date of birth
                                                 </label>
                                                 <div className="mt-1 flex justify-between items-center">
-                                                    <p className="text-sm text-gray-900">Not provided</p>
-                                                    <button className="text-blue-600 hover:text-blue-500">
-                                                        Add
-                                                    </button>
+                                                <input
+                                                    type="date"
+                                                    id="dob"
+                                                    className="mt-1 w-full px-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
+                                                    value={currentUser.dob}
+                                                    ref={updateddob}
+                                                    onFocus={handleDOBFocus}
+                                                />
+
                                                 </div>
                                             </div>
                                             <button type = 'submit' onClick={handleSubmit} className="text-white hover:text-white bg-gray-800 hover:bg-black rounded-lg px-4 py-2">
