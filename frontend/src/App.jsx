@@ -20,6 +20,7 @@ import PrivateRoute from './config/Privateroute'
 import Messages from './pages/messages'
 import Usersettings from './pages/User-info'
 import Calendar from './pages/Calender'
+import Groups from './pages/Groups'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -41,6 +42,7 @@ function App() {
         <Route path='/messages' element={<PrivateRoute><Messages /></PrivateRoute>} />
         <Route path='/user-info' element={<PrivateRoute><Usersettings /></PrivateRoute>} />
         <Route path='/calendar' element={<PrivateRoute><Calendar /></PrivateRoute>} />
+        <Route path='/groups' element={<PrivateRoute><Groups /></PrivateRoute>} />
       </Routes>
     </AuthProvider>
   )
