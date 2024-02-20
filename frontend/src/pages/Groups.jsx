@@ -6,6 +6,8 @@ import { useToast } from '@chakra-ui/react';
 import { db } from '../config/firebase';
 import { updateDoc, doc } from 'firebase/firestore';
 
+
+
 export default function Groups(){
     return (
         <div>
@@ -17,7 +19,7 @@ export default function Groups(){
                 <div className="flex-grow px-6 py-8">
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl font-semibold">My Groups:</h1>
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Create/Join Group</button>
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" onClick={() => window.location.href = '/create'}>Create/Join Group</button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                         {/* Group cards */}
@@ -32,7 +34,7 @@ export default function Groups(){
                                     <img src="https://placehold.co/32x32" alt="Group icon" className="h-8 w-8 rounded-full" />
                                     <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-2">18</span>
                                 </div>
-                                <button className="text-blue-500 hover:text-blue-600">View</button>
+                                <button className="text-blue-500 hover:text-blue-600" onClick={() => window.location.href = '/group'}>View</button>
                             </div>
                         </div>
                         <div className="bg-white rounded-lg shadow p-4">

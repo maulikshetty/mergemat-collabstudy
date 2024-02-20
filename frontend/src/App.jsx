@@ -21,6 +21,7 @@ import Messages from './pages/messages'
 import Usersettings from './pages/User-info'
 import Calendar from './pages/Calender'
 import Groups from './pages/Groups'
+import CreateGRP from './pages/Create'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -43,6 +44,7 @@ function App() {
         <Route path='/user-info' element={<PrivateRoute><Usersettings /></PrivateRoute>} />
         <Route path='/calendar' element={<PrivateRoute><Calendar /></PrivateRoute>} />
         <Route path='/groups' element={<PrivateRoute><Groups /></PrivateRoute>} />
+        <Route path='/create' element={<PrivateRoute><CreateGRP /></PrivateRoute>} />
       </Routes>
     </AuthProvider>
   )
