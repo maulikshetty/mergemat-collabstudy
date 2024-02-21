@@ -11,6 +11,11 @@ const ChatsD = () => {
     const { currentUser } = useAuth()
     const { dispatch } = useChat()
 
+
+
+
+
+
     useEffect(() => {
 
         const getChats = () => {
@@ -41,6 +46,59 @@ const ChatsD = () => {
         console.log("selected user:", u)
         dispatch({ type: "CHANGE_USER", payload: u });
     }
+
+    useEffect(() => {
+        const handleSelect = async () => {
+
+            //check if the group exists(chats collection in firestore), if not create a new one
+
+            const combinedId = currentUser.uid > user.uid ? currentUser.uid + user.uid : user.uid + currentUser.uid
+
+            try {
+                const res = await getDoc(doc(db, "chats", combinedId))
+
+                if (!res.exists()) {
+                    //create a chat in chats collection
+                    await setDoc(doc(db, "chats", combinedId), { messages: [] })
+                }
+                //create user chats
+                await updateDoc(doc(db, "userChats", currentUser.uid), {
+                    [combinedId + ".userInfo"]: {
+                        uid: user.uid,
+                        firstname: user.firstname,
+                        lastname: user.lastname,
+                        photoURL: user.photoURL,
+                    },
+                    [combinedId + ".date"]: serverTimestamp(),
+                });
+
+                await updateDoc(doc(db, "userChats", user.uid), {
+                    [combinedId + ".userInfo"]: {
+                        uid: currentUser.uid,
+                        firstname: currentUser.firstname,
+                        lastname: currentUser.lastname,
+                        photoURL: currentUser.photoURL
+                    },
+                    [combinedId + ".date"]: serverTimestamp(),
+                });
+
+
+
+            } catch (e) {
+
+                console.log("chats are not saved in firebase", e)
+
+            }
+
+            setUser(null)
+            setUsername("")
+
+        }
+
+
+
+
+    }, [])
 
 
     return (

@@ -7,6 +7,7 @@ import { updateProfile } from "firebase/auth"
 import { useAuth } from "../../appcontext/Authcontext"
 import { auth, db, storage } from '../../config/Firebase'
 import { doc, setDoc } from 'firebase/firestore'
+import Back from "../../imgs/back.png"
 
 const NavD = () => {
     const fileInputRef = useRef(null);
@@ -77,6 +78,7 @@ const NavD = () => {
         <div className="navbar mt-5 px-4">
 
             <div className='user'>
+                <a href="/dashboard"> <img src={Back} alt="" style={{ width: '20px', height: '20px' }} /></a>
                 <a onClick={handleImageClick} style={{ cursor: 'pointer' }}>
                     <input
                         ref={fileInputRef}

@@ -50,28 +50,30 @@ const SearchD = () => {
             if (!res.exists()) {
                 //create a chat in chats collection
                 await setDoc(doc(db, "chats", combinedId), { messages: [] })
-
-                //create user chats
-                await updateDoc(doc(db, "userChats", currentUser.uid), {
-                    [combinedId + ".userInfo"]: {
-                        uid: user.uid,
-                        firstname: user.firstname,
-                        lastname: user.lastname,
-                        photoURL: user.photoURL,
-                    },
-                    [combinedId + ".date"]: serverTimestamp(),
-                });
-
-                await updateDoc(doc(db, "userChats", user.uid), {
-                    [combinedId + ".userInfo"]: {
-                        uid: currentUser.uid,
-                        firstname: currentUser.firstname,
-                        lastname: currentUser.lastname,
-                        photoURL: user.photoURL
-                    },
-                    [combinedId + ".date"]: serverTimestamp(),
-                });
             }
+            //create user chats
+            await updateDoc(doc(db, "userChats", currentUser.uid), {
+                [combinedId + ".userInfo"]: {
+                    uid: user.uid,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    photoURL: user.photoURL,
+                },
+                [combinedId + ".date"]: serverTimestamp(),
+            });
+
+            await updateDoc(doc(db, "userChats", user.uid), {
+                [combinedId + ".userInfo"]: {
+                    uid: currentUser.uid,
+                    firstname: currentUser.firstname,
+                    lastname: currentUser.lastname,
+                    photoURL: currentUser.photoURL
+                },
+                [combinedId + ".date"]: serverTimestamp(),
+            });
+
+
+
         } catch (e) {
 
             console.log("chats are not saved in firebase", e)
