@@ -22,6 +22,12 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const toast = useToast();
 
+  function generateUsername(firstName, lastName) {
+    const randomNumber = Math.floor(Math.random() * 10000); // generates a random number between 0 and 9999
+    const username = `${firstName.charAt(0)}${lastName.charAt(0)}${randomNumber}`;
+    return username;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -40,11 +46,13 @@ export default function Register() {
     try {
       setError('');
       setLoading(true);
+      const username = generateUsername(firstnameref.current.value, lastnameref.current.value);
       await signup(
         emailref.current.value,
         passwordref.current.value,
         firstnameref.current.value,
-        lastnameref.current.value
+        lastnameref.current.value,
+        username
       );
       toast({
         title: 'Success',
