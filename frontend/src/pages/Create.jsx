@@ -3,7 +3,7 @@ import Sidebar from '../components/Sidebar';
 import NotificationBar from '../components/Notificationbar';
 import { useState, useEffect } from 'react';
 import { db, auth, storage } from '../config/firebase.jsx';
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,8 @@ function CreateGRP() {
     const [groupMembers, setGroupMembers] = useState([]);
     const [groupCreatedBy, setGroupCreatedBy] = useState('');
     const [file, setFile] = useState(null);
+    const [visibleUsers, setVisibleUsers] = useState([]);
+    const [fileUploadStatus, setFileUploadStatus] = useState(''); // New state for file upload status
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -31,33 +33,76 @@ function CreateGRP() {
         fetchUsers();
     }, []);
 
+    
     const handleSearchChange = (e) => {
-        setSearch(e.target.value);
-        setShowNameList(e.target.value !== '');
+        const value = e.target.value;
+        setSearch(value);
+        setShowNameList(value !== '');
+        const filteredUsers = users.filter(user =>
+            user.firstname.toLowerCase().includes(value.toLowerCase())
+        );
+        setVisibleUsers(filteredUsers);
+    };
+    const addUserToGroup = (user) => {
+        console.log("Adding user to group:", user); // Debugging line
+        setGroupMembers(prevMembers => {
+            if (!prevMembers.find(member => member.username === user.username)) {
+                const updatedMembers = [...prevMembers, { firstname: user.firstname, username: user.username }];
+                setShowNameList(false); // Hide the dropdown
+                setSearch(''); // Clear the search bar input
+                return updatedMembers;
+            }
+            return prevMembers;
+        });
     };
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+        const file = e.target.files[0];
+        setFile(file);
+        setFileUploadStatus(file ? `${file.name} uploaded` : ''); // Update upload status
     };
 
     const handleCreateGroup = async () => {
+        // if (!groupName || !groupMembers.length || !auth.currentUser.uid) {
+        //     console.error('Invalid group data');
+        //     return;
+        // }
+
+        if (!groupName || groupMembers.length === 0) {
+            toast({
+                title: 'Error',
+                description: 'Please provide a group name and select at least one member.',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+            return;
+        }
+        
         const groupData = {
             groupName: groupName,
-            groupMembers: groupMembers,
-            groupCreatedBy: auth.currentUser.uid,
+            groupMembers: groupMembers.map(member => member.username),
+            groupCreatedBy: auth.currentUser.uid
         };
     
         try {
+            // Create the group document in Firestore
             const groupRef = await addDoc(collection(db, 'groups'), groupData);
             console.log('Group created with ID: ', groupRef.id);
-
+    
+            let downloadURL = '';
             if (file) {
                 const storageRef = ref(storage, `groupPictures/${groupRef.id}/${file.name}`);
                 await uploadBytes(storageRef, file);
-                const downloadURL = await getDownloadURL(storageRef);
+                downloadURL = await getDownloadURL(storageRef);
                 console.log('Picture uploaded with URL: ', downloadURL);
+    
+                // Update the group document with the cover image URL
+                await updateDoc(doc(db, 'groups', groupRef.id), {
+                    groupCover: downloadURL
+                });
             }
-
+    
             toast({
                 title: 'Group Created',
                 description: `Group created with name: ${groupName}`,
@@ -93,7 +138,7 @@ function CreateGRP() {
                         <div className="mb-4">
                             <h2 className="text-xl font-semibold">Create Group</h2>
                         </div>
-                        <div className="grid grid-cols-1 gap-6">
+                        <div className="grid grid-cols-1 gap-2">
                             <label className="block">
                                 <span className="text-gray-700">Group Name:</span>
                                 <input
@@ -112,27 +157,41 @@ function CreateGRP() {
                                         value={search}
                                         onChange={handleSearchChange}
                                         // onFocus={() => setShowNameList(true)}
-                                        onBlur={() => setShowNameList(false)}
+                                        // onBlur={() => setShowNameList(false)}
                                         className="w-full px-3 py-2 border rounded-lg text-gray-700 focus:outline-none focus:shadow-outline"
                                         placeholder="Search.."
                                     />
-                                    {showNameList && (
-                                        <div className="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
-                                            {users
-                                                .filter((user) =>
-                                                    user.firstname.toLowerCase().includes(search.toLowerCase())
-                                                )
-                                                .map((filteredUser) => (
+                                    {/* Allow searching for users and adding multiple users here */}
+                                    {
+                                        showNameList && (
+                                            <div className="absolute z-10 bg-white mt-1 rounded-md shadow-lg w-full">
+                                                {visibleUsers.map(user => (
                                                     <div
-                                                        className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                                        key={filteredUser.id}
-                                                        onClick={() => setGroupMembers([...groupMembers, filteredUser])}
+                                                        key={user.id}
+                                                        className="p-2 hover:bg-gray-100 cursor-pointer"
+                                                        onClick={() => addUserToGroup(user)}
                                                     >
-                                                     {filteredUser.firstname} ({filteredUser.username})
+                                                        {user.firstname} ({user.username})
                                                     </div>
                                                 ))}
-                                        </div>
-                                    )}
+                                            </div>
+                                        )
+                                    }
+                                    <div className="mt-4">
+                                        <h3 className="text-gray-700">Selected Members:</h3>
+                                        {groupMembers.length === 0 ? (
+                                            <p className="text-red-500">Please select at least one user.</p>
+                                        ) : (
+                                            <ul>
+                                                {groupMembers.map((member, index) => (
+                                                    <li key={index} className="p-2 border rounded mt-2">
+                                                        {member.firstname}
+                                                        {/* Optionally add a button to remove a member */}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
                                 </div>
                             </label>
                             <label className="block cursor-pointer">
@@ -141,6 +200,8 @@ function CreateGRP() {
                                     <i className="fas fa-cloud-upload-alt fa-3x text-gray-300"></i>
                                     <input type="file" className="hidden" onChange={handleFileChange} />
                                 </div>
+                                {/* Display file upload status here */}
+                                {fileUploadStatus && <p className="text-green-500">{fileUploadStatus}</p>}
                             </label>
                             <button className="bg-gray-800 text-white rounded-md px-4 py-2" onClick={handleCreateGroup}>Create</button>
                         </div>

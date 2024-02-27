@@ -15,13 +15,27 @@ export default function Groups() {
         const fetchUserGroups = async () => {
             try {
                 const groupsRef = collection(db, 'groups');
-                const q = query(groupsRef, where('groupCreatedBy', '==', auth.currentUser.uid));
-                const querySnapshot = await getDocs(q);
-                const groups = [];
-                querySnapshot.forEach((doc) => {
-                    groups.push(doc.data());
+                // Query for groups created by the user
+                const createdByQuery = query(groupsRef, where('groupCreatedBy', '==', auth.currentUser.uid));
+                // Query for groups where the user is a member
+                const memberOfQuery = query(groupsRef, where('groupMembers', 'array-contains', currentUser.username));
+                
+                // Get documents for both queries
+                const [createdBySnapshot, memberOfSnapshot] = await Promise.all([
+                    getDocs(createdByQuery),
+                    getDocs(memberOfQuery)
+                ]);
+                
+                // Combine and map documents to data
+                const groups = new Map();
+                createdBySnapshot.forEach((doc) => {
+                    groups.set(doc.id, doc.data());
                 });
-                setUserGroups(groups);
+                memberOfSnapshot.forEach((doc) => {
+                    groups.set(doc.id, doc.data()); // This ensures no duplicates
+                });
+                
+                setUserGroups(Array.from(groups.values()));
             } catch (error) {
                 toast({
                     title: 'Error',
@@ -32,9 +46,10 @@ export default function Groups() {
                 });
             }
         };
-
+    
         fetchUserGroups();
-    }, [currentUser.uid, toast]);
+    }, [currentUser.uid, currentUser.username, toast]);
+    
 
     return (
         <div>
