@@ -1,8 +1,60 @@
-import React from "react";
-import Sidebar from "../components/Sidebar.jsx";
-import './styles/Group.css'
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getDocs, query, collection, where } from 'firebase/firestore';
+import { db, auth } from '../config/firebase.jsx';
+import Sidebar from '../components/Sidebar';
+import { useAuth } from '../appcontext/Authcontext';
+import { useToast } from "@chakra-ui/react";
 
 export default function Group() {
+    const { groupId } = useParams(); // Get groupId from URL
+    const [group, setGroup] = useState(null);
+    const { currentUser } = useAuth();
+    const toast = useToast();
+    const navigate = useNavigate();
+    const [hasShownToast, setHasShownToast] = useState(false);
+
+
+    useEffect(() => {
+        console.log('Group component rendered'); // Add this line
+
+        const fetchGroup = async () => {
+            try {
+                const groupQuery = query(collection(db, 'groups'), where('groupId', '==', groupId)); // Query groups where groupId equals the groupId from URL
+                const groupSnapshot = await getDocs(groupQuery); // Execute the query
+        
+                if (!groupSnapshot.empty) {
+                    const groupDoc = groupSnapshot.docs[0]; // Get the first (and should be the only) document that matches the query
+                    const groupData = groupDoc.data(); // Get the group data
+                    
+                    // Check if the current user is authorized to access the group
+                    if (groupData.groupCreatedBy === auth.currentUser.uid || groupData.groupMembers.includes(currentUser.username)) {
+                        setGroup(groupData); // Set the group data
+                        console.log('Group ID:', groupId);
+                        console.log('Group Name:', groupData.groupName);
+                    } else {
+                        if (!hasShownToast) { // Add this line
+                            toast({
+                                title: "Access Denied",
+                                description: "You don't have access to this group.",
+                                status: "error",
+                                duration: 5000,
+                                isClosable: true,
+                            });
+                            setHasShownToast(true); // And this line
+                        }
+                        navigate('/groups');
+                    }
+                } else {
+                    console.log('No such group!');
+                }
+            } catch (error) {
+                console.error('Error fetching group:', error);
+            }
+        };
+        fetchGroup();
+    }, []);
+
     return (
         <body class="bg-gray-100">
             <script src="https://cdn.tailwindcss.com"></script>
@@ -18,7 +70,7 @@ export default function Group() {
                             <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
                                 <i class="fas fa-bars"></i>
                             </button>
-                            <div class="font-semibold text-lg">General</div>
+                            <div class="font-semibold text-lg">{group && group.groupName}</div> {/* Display group name */}
                             <div class="text-gray-500">Live Collaboration</div>
                             <div class="text-gray-500">Post</div>
                             <div class="text-gray-500">File</div>

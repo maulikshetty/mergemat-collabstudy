@@ -37,7 +37,7 @@ function App() {
         <Route path='/forgotpassword' element={<ForgotPassword />} />
         <Route path='/dashboard' element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path='/content' element={<PrivateRoute><Content /></PrivateRoute>} />
-        <Route path='/group' element={<PrivateRoute><Group /></PrivateRoute>} />
+        <Route path='/group/:groupId' element={<PrivateRoute><Group /></PrivateRoute>} />
         <Route path='/zego' element={<PrivateRoute><Zego /></PrivateRoute>} />
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
         <Route path='/messages' element={<PrivateRoute><Messages /></PrivateRoute>} />

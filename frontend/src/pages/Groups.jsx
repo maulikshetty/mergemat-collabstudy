@@ -70,23 +70,21 @@ export default function Groups() {
 )}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                         {/* Group cards */}
-
-
                         {userGroups.map((group) => (
                             <div className="bg-white rounded-lg shadow p-4">
-                            <img src="https://placehold.co/300x200" alt="Group of people working together illustration" className="rounded-lg" />
-                            <div className="mt-4">
-                                <div className="font-semibold">{group.groupName}</div>
-                                <div className="text-sm text-gray-500">Meeting in progress..</div>
-                            </div>
-                            <div className="flex justify-between items-center mt-4">
-                                <div className="flex items-center">
-                                    <img src="https://placehold.co/32x32" alt="Group icon" className="h-8 w-8 rounded-full" />
-                                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-2">18</span>
+                                <img src={group.groupCover || "https://placehold.co/300x200"} alt="Group of people working together illustration" className="rounded-lg" style={{ maxWidth: "300px", maxHeight: "200px" }} />
+                                <div className="mt-4">
+                                    <div className="font-semibold">{group.groupName}</div>
+                                    <div className="text-sm text-gray-500">Meeting in progress..</div>
                                 </div>
-                                <button className="text-blue-500 hover:text-blue-600" onClick={() => window.location.href = '/group'}>View</button>
+                                <div className="flex justify-between items-center mt-4">
+                                    <div className="flex items-center">
+                                        <img src="https://placehold.co/32x32" alt="Group icon" className="h-8 w-8 rounded-full" />
+                                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-2">18</span>
+                                    </div>
+                                    <button className="text-blue-500 hover:text-blue-600" onClick={() => window.location.href = `/group/${group.groupId}`}>View</button>
+                                </div>
                             </div>
-                        </div>
                         ))}
                     </div>
                 </div>

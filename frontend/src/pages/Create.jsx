@@ -63,11 +63,6 @@ function CreateGRP() {
     };
 
     const handleCreateGroup = async () => {
-        // if (!groupName || !groupMembers.length || !auth.currentUser.uid) {
-        //     console.error('Invalid group data');
-        //     return;
-        // }
-
         if (!groupName || groupMembers.length === 0) {
             toast({
                 title: 'Error',
@@ -79,7 +74,9 @@ function CreateGRP() {
             return;
         }
         
+        const groupId = generateGroupId(); // Generate a unique group id
         const groupData = {
+            groupId: groupId,
             groupName: groupName,
             groupMembers: groupMembers.map(member => member.username),
             groupCreatedBy: auth.currentUser.uid
@@ -122,7 +119,13 @@ function CreateGRP() {
             });
         }
     };
-    
+
+    const generateGroupId = () => {
+        // Generate a unique group id using a combination of timestamp and random number
+        const timestamp = Date.now().toString();
+        const randomNumber = Math.floor(Math.random() * 10000).toString();
+        return timestamp + randomNumber;
+    };
     return (
         <div className="flex h-screen responsive-wrap">
             {/* Sidebar */}
