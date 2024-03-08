@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDocs, query, collection, where } from 'firebase/firestore';
+import { getDocs, query, collection, where, addDoc, onSnapshot, orderBy } from 'firebase/firestore';
 import { db, auth } from '../config/firebase.jsx';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
@@ -13,9 +13,12 @@ export default function Group() {
     const toast = useToast();
     const navigate = useNavigate();
     const [hasShownToast, setHasShownToast] = useState(false);
-
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
+    const messagesEndRef = useRef(null);
 
     useEffect(() => {
+
         console.log('Group component rendered'); // Add this line
 
         const fetchGroup = async () => {
@@ -53,7 +56,53 @@ export default function Group() {
             }
         };
         fetchGroup();
-    }, []);
+
+        const fetchMessages = async () => {
+            const messagesQuery = query(collection(db, 'groups', groupId, 'messages'), orderBy('timestamp', 'asc'));
+            const messagesSnapshot = await getDocs(messagesQuery);
+            setMessages(messagesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        };
+        fetchMessages();
+    
+        // Listen to new messages
+        const messagesQuery = query(collection(db, 'groups', groupId, 'messages'), orderBy('timestamp', 'asc'));
+        const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+            const fetchedMessages = [];
+            snapshot.docs.forEach(doc => {
+                fetchedMessages.push({ id: doc.id, ...doc.data() });
+            });
+            setMessages(fetchedMessages);
+        });
+        return unsubscribe;
+        
+    }, [groupId]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    const sendMessage = async () => {
+        if (newMessage.trim() === '') return;
+    
+        await addDoc(collection(db, 'groups', groupId, 'messages'), {
+            text: newMessage,
+            timestamp: new Date(), // Use serverTimestamp() if possible for consistency
+            user: currentUser.username,
+        });
+    
+        setNewMessage('');
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    };
+    
 
     return (
         <body class="bg-gray-100">
@@ -90,34 +139,27 @@ export default function Group() {
 
                     <div class="flex-1 flex flex-col">
 
-                        <div class="flex-1 p-4 overflow-y-auto">
-                            <div class="flex items-center space-x-2 mb-4">
-                                <div class="rounded-full bg-blue-500 text-white w-8 h-8 flex items-center justify-center">KJ</div>
+                    <div class="flex-1 p-4 overflow-y-auto" style={{ maxHeight: '85vh' }}>
+                        {messages.map(message => (
+                            <div class="flex items-start space-x-2 mb-4">
+                                <div class="rounded-full bg-blue-500 text-white w-8 h-8 flex items-center justify-center">{message.user[0]}</div>
                                 <div>
-                                    <div class="text-sm font-semibold">Kennedy, John</div>
-                                    <div class="text-xs text-gray-500">Yesterday 8:46 pm</div>
+                                    <div class="text-sm font-semibold">{message.user}</div>
+                                    <div class="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'Loading...'}</div>
+                                    <p class="mb-4">{message.text}</p>
                                 </div>
                             </div>
-                            <p class="mb-4">Hello everyone, let's have a meeting tomorrow.</p>
-                            <div class="flex items-center space-x-2 mb-4">
-                                <div class="rounded-full bg-green-500 text-white w-8 h-8 flex items-center justify-center">JB</div>
-                                <div>
-                                    <div class="text-sm font-semibold">Bouvier, Jacqueline</div>
-                                    <div class="text-xs text-gray-500">Yesterday 8:50 pm</div>
-                                </div>
-                            </div>
-                            <p>Sure, let's meet tomorrow.</p>
+                        ))}
+                        <div ref={messagesEndRef} />
+                    </div>
 
-                        </div>
-
-
-                        <div class="border-t p-4 flex items-center space-x-3">
-                            <button class="text-gray-500 focus:outline-none">
-                                <i class="fas fa-paperclip"></i>
-                            </button>
-                            <input type="text" class="flex-1 border rounded px-2 py-1" placeholder="Type a new message" />
-                            <button class="bg-blue-500 text-white rounded px-4 py-1 focus:outline-none">Send</button>
-                        </div>
+        <div class="border-t p-4 flex items-center space-x-3">
+            <button class="text-gray-500 focus:outline-none">
+                <i class="fas fa-paperclip"></i>
+            </button>
+            <input type="text" class="flex-1 border rounded px-2 py-1" placeholder="Type a new message" value={newMessage} onChange={e => setNewMessage(e.target.value)} onKeyDown={handleKeyDown} />
+            <button class="bg-blue-500 text-white rounded px-4 py-1 focus:outline-none" onClick={sendMessage}>Send</button>
+        </div>
                     </div>
                 </div>
             </div>
