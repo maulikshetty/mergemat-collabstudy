@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDocs, query, collection, where, addDoc, onSnapshot, orderBy } from 'firebase/firestore';
+import { getDocs, query, collection, where, addDoc, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { db, auth } from '../config/firebase.jsx';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
@@ -20,6 +20,8 @@ export default function Group() {
     useEffect(() => {
 
         console.log('Group component rendered'); // Add this line
+
+
 
         const fetchGroup = async () => {
             try {
@@ -102,6 +104,14 @@ export default function Group() {
             sendMessage();
         }
     };
+
+    const deleteMessage = async (messageId) => {
+        try {
+            await deleteDoc(doc(db, 'groups', groupId, 'messages', messageId));
+        } catch (error) {
+            console.error('Error deleting message:', error);
+        }
+    };
     
 
     return (
@@ -139,15 +149,22 @@ export default function Group() {
 
                     <div class="flex-1 flex flex-col">
 
-                    <div class="flex-1 p-4 overflow-y-auto" style={{ maxHeight: '85vh' }}>
+                    <div class="flex-1 p-4 overflow-y-auto" style={{ maxHeight: '82vh' }}>
                         {messages.map(message => (
                             <div class="flex items-start space-x-2 mb-4">
                                 <div class="rounded-full bg-blue-500 text-white w-8 h-8 flex items-center justify-center">{message.user[0]}</div>
-                                <div>
+                                <div class="flex-grow"> {/* Add 'flex-grow' class */}
                                     <div class="text-sm font-semibold">{message.user}</div>
                                     <div class="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'Loading...'}</div>
                                     <p class="mb-4">{message.text}</p>
                                 </div>
+                                {message.user === currentUser.username && (
+                                    <div class="flex-none"> {/* Add 'flex-none' class */}
+                                        <button onClick={() => deleteMessage(message.id)} class="text-red-500 focus:outline-none">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ))}
                         <div ref={messagesEndRef} />
