@@ -129,11 +129,12 @@ export default function Group() {
                             <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
                                 <i class="fas fa-bars"></i>
                             </button>
-                            <div class="font-semibold text-lg">{group && group.groupName}</div> {/* Display group name */}
+                            <div class="text-gray-800 font-bold">{group && group.groupName}</div>
+                            <div class="text-gray-500">General</div>
                             <div class="text-gray-500">Live Collaboration</div>
                             <div class="text-gray-500">Post</div>
                             <div class="text-gray-500">File</div>
-                            <div class="text-gray-500">Members</div>
+                            <div class="text-gray-500" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
                         </div>
                         <div class="flex items-center space-x-4">
                             <div class="relative">

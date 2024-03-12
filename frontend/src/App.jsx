@@ -46,7 +46,7 @@ function App() {
         <Route path='/calendar' element={<PrivateRoute><Calendar /></PrivateRoute>} />
         <Route path='/groups' element={<PrivateRoute><Groups /></PrivateRoute>} />
         <Route path='/create' element={<PrivateRoute><CreateGRP /></PrivateRoute>} />
-        <Route path='/members' element={<PrivateRoute><Members /></PrivateRoute>} />
+        <Route path='/group/:groupId/members' element={<PrivateRoute><Members /></PrivateRoute>} />
       </Routes>
     </AuthProvider>
   )
