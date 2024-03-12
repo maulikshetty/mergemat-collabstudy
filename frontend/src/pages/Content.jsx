@@ -3,7 +3,7 @@ import Sidebar from '../components/Sidebar.jsx';
 import NotificationBar from '../components/Notificationbar.jsx';
 import './styles/content.css';
 import { useNavigate } from 'react-router-dom';
-import { db, storage, auth } from '../config/firebase.jsx';
+import { db, storage, auth } from '../config/Firebase.jsx';
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from '@chakra-ui/react';
