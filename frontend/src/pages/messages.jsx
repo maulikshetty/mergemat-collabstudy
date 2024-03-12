@@ -5,7 +5,7 @@ import { useAuth } from "../appcontext/Authcontext";
 import { useNavigate } from "react-router-dom";
 import '../pages/styles/message.css';
 import Sidebar from "../components/Sidebar";
-import { db, storage, auth } from '../config/firebase.jsx';
+import { db, storage, auth } from '../config/Firebase.jsx';
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 
 

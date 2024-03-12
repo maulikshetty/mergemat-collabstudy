@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDocs, query, collection, where, addDoc, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore';
-import { db, auth } from '../config/firebase.jsx';
+import { db, auth } from '../config/Firebase.jsx';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from "@chakra-ui/react";
