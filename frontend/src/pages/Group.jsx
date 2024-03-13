@@ -156,7 +156,7 @@ export default function Group() {
                             <div class="flex items-start space-x-2 mb-4">
                                 <div class="rounded-full bg-blue-500 text-white w-8 h-8 flex items-center justify-center">{message.user[0]}</div>
                                 <div class="flex-grow"> {/* Add 'flex-grow' class */}
-                                    <div class="text-sm font-semibold">{message.user}</div>
+                                    <div class="text-sm font-semibold">{message.name}</div>
                                     <div class="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'Loading...'}</div>
                                     <p class="mb-4">{message.text}</p>
                                 </div>
