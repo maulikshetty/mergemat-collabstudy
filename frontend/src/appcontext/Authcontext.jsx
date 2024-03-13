@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { auth, db } from '../config/firebase'
+import { auth, db } from '../config/Firebase'
 import { collection, addDoc, doc, setDoc, getDoc, serverTimestamp} from 'firebase/firestore'
 
 
@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState()
     const [loading, setLoading] = useState(true)
 
-    function signup(email, password, firstName, lastName) {
+    function signup(email, password, firstName, lastName, username) {
         return auth.createUserWithEmailAndPassword(email, password)
           .then((userCredential) => {
             // Use the UID from the userCredential to create the document in Firestore
@@ -21,6 +21,7 @@ export function AuthProvider({ children }) {
               firstname: firstName,
               lastname: lastName,
               email: email,
+              username: username,
               timestamp: serverTimestamp()
             });
           });

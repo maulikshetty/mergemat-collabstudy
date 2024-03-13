@@ -3,7 +3,7 @@
 Please commit changes here, but before doing so check the file here for any conflicts or changes already made by others
 
 ```
-npm start
+npm run dev
 ```
 
 Frontend changes to be made on the app.js file, though you would have to create additional components which will be called by this file,

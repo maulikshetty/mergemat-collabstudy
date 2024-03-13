@@ -6,7 +6,7 @@ export default function NotificationBar() {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
         />
         <div
-        class="bg-white p-6 space-y-6 w-full lg:w-64 lg:h-screen lg:fixed lg:inset-y-0 lg:right-0 overflow-y-auto"
+        class="bg-white p-6 space-y-6 w-64 lg:w-64 lg:h-screen lg:fixed lg:inset-y-0 lg:right-0 overflow-y-auto "
       >
         <div class="font-semibold text-lg mb-4">Notifications</div>
         <div class="space-y-4">

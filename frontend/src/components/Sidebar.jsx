@@ -34,9 +34,9 @@ export default function Sidebar() {
             <span className="font-semibold">{currentUser.firstname} {currentUser.lastname}</span>
           </div>
           <div className="flex space-x-1 text-sm">
-            <span className="font-medium text-gray-600">Favorites</span>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-400">Recently</span>
+            <span className="font-medium text-gray-600">Username</span>
+            <span className="text-gray-400">:</span>
+            <span className="text-gray-400">{currentUser.username}</span>
           </div>
         </div>
             <div className="space-y-2">
@@ -46,7 +46,7 @@ export default function Sidebar() {
                         <i className="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </NavLink>
-                    <NavLink to="/group" className={linkClass}>
+                    <NavLink to="/groups" className={linkClass}>
                         <i className="fas fa-users"></i>
                         <span> Groups</span>
                     </NavLink>

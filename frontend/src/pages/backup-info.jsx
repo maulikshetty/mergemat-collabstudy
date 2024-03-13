@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from '@chakra-ui/react';
-import { db } from '../config/firebase';
+import { db } from '../config/Firebase';
 import { updateDoc, doc } from 'firebase/firestore';
 
 export default function usersettings() {
