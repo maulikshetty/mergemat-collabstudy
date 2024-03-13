@@ -94,6 +94,7 @@ export default function Group() {
             text: newMessage,
             timestamp: new Date(), // Use serverTimestamp() if possible for consistency
             user: currentUser.username,
+            name: currentUser.firstname
         });
     
         setNewMessage('');
