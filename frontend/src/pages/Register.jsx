@@ -5,8 +5,8 @@ import { useState, useRef } from 'react'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { auth } from '../config/firebase';
-import { db } from '../config/firebase'
+import { auth } from '../config/Firebase';
+import { db } from '../config/Firebase'
 import { collection, addDoc } from 'firebase/firestore'
 import { useAuth } from '../appcontext/Authcontext'
 
@@ -21,6 +21,12 @@ export default function Register() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const toast = useToast();
+
+  function generateUsername(firstName, lastName) {
+    const randomNumber = Math.floor(Math.random() * 10000); // generates a random number between 0 and 9999
+    const username = `${firstName.charAt(0)}${lastName.charAt(0)}${randomNumber}`;
+    return username;
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -40,11 +46,13 @@ export default function Register() {
     try {
       setError('');
       setLoading(true);
+      const username = generateUsername(firstnameref.current.value, lastnameref.current.value);
       await signup(
         emailref.current.value,
         passwordref.current.value,
         firstnameref.current.value,
-        lastnameref.current.value
+        lastnameref.current.value,
+        username
       );
       toast({
         title: 'Success',
