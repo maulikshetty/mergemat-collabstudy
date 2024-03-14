@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react'; // Import useEffect here
-import { db } from '../config/firebase.jsx'; 
+import { db } from '../config/Firebase.jsx'; 
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 export default function Reminders() {
