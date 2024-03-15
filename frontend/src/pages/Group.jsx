@@ -158,7 +158,13 @@ export default function Group() {
                                 <div class="flex-grow"> {/* Add 'flex-grow' class */}
                                     <div class="text-sm font-semibold">{message.name}</div>
                                     <div class="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'Loading...'}</div>
-                                    <p class="mb-4">{message.text}</p>
+                                    <p class="mb-4">
+                                        {message.text.includes('http://') || message.text.includes('https://') ? (
+                                            <a href={message.text} target="_blank" rel="noopener noreferrer" class="text-blue-500">{message.text}</a>
+                                        ) : (
+                                            message.text
+                                        )}
+                                    </p>
                                 </div>
                                 {message.user === currentUser.username && (
                                     <div class="flex-none"> {/* Add 'flex-none' class */}

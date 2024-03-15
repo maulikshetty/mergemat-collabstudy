@@ -1,15 +1,18 @@
 import React from 'react'
 import Sidebar from '../components/Sidebar.jsx'
+
 import Notifications from '../components/Notificationbar.jsx'
 import './styles/dashboard.css'; // Import a CSS file for styling
 import { useAuth } from '../appcontext/Authcontext'
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import Reminders from '../components/Reminders.jsx'
 
 export default function dashboard() {
     const { currentUser, logout } = useAuth();
     const [error, setError] = useState('')
     const nav = useNavigate();
+
 
     return (
       
@@ -75,32 +78,21 @@ export default function dashboard() {
                 <h2 class="text-xl font-semibold mb-4">Reminders</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-                    <div class="bg-blue-200 p-4 rounded shadow flex items-center justify-between">
-                        <div>
-                            <h4 class="font-semibold">Daily French Lessons</h4>
-                            <p class="text-sm text-gray-500">35 lessons</p>
-                        </div>
-                        <i class="fas fa-chevron-circle-right text-blue-500"></i>
-                    </div>
-                    <div class="bg-orange-200 p-4 rounded shadow flex items-center justify-between">
-                        <div>
-                            <h4 class="font-semibold">Learn ReactJS</h4>
-                            <p class="text-sm text-gray-500">New course available</p>
-                        </div>
-                        <i class="fas fa-chevron-circle-right text-orange-500"></i>
-                    </div>
-                    <div class="bg-purple-200 p-4 rounded shadow flex items-center justify-between">
-                        <div>
-                            <h4 class="font-semibold">Add Reminder</h4>
-                            <p class="text-sm text-gray-500">Don't forget your tasks</p>
-                        </div>
-                        <i class="fas fa-chevron-circle-right text-purple-500"></i>
-                    </div>
+                    
+                    
+                    <div>
+      {/* Your existing dashboard layout */}
+      <Reminders />
+      {/* Any other components you might have */}
+    </div>
+                                
                 </div>
             </div>
+            
         </div>
         <Notifications />
-        </div>
+                </div>
+               
         </body>
         </div>
         
