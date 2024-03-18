@@ -4,8 +4,6 @@ import Editor from "@monaco-editor/react"
 import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 import {MonacoBinding} from 'y-monaco'
-import "./styles/quill.css"
-
 
 export default function Contenteditor() {
 
