@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.21.1",
+    "serve": "^14.2.1",
     "zego-superboard-web": "^2.14.1"
   },
   "devDependencies": {
