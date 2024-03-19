@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
-import app  from '../config/firebase';
-import { db, auth } from '../config/firebase';
+import app  from '../config/Firebase';
+import { db, auth } from '../config/Firebase';
 import * as Y from 'yjs';
 import { FireProvider } from 'y-fire';
 import { QuillBinding } from 'y-quill';

@@ -25,6 +25,8 @@ import CreateGRP from './pages/Create'
 import Members from './pages/Members'
 import Contenteditor from './pages/Contenteditor'
 import ContentRichText from './pages/ContentRichText'
+import Files from './pages/Files'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -51,6 +53,7 @@ function App() {
         <Route path='/groups' element={<PrivateRoute><Groups /></PrivateRoute>} />
         <Route path='/create' element={<PrivateRoute><CreateGRP /></PrivateRoute>} />
         <Route path='/group/:groupId/members' element={<PrivateRoute><Members /></PrivateRoute>} />
+        <Route path= '/group/:groupId/files' element={<PrivateRoute><Files/></PrivateRoute>}/>
       </Routes>
     </AuthProvider>
   )
