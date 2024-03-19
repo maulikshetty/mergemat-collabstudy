@@ -114,7 +114,7 @@ export default function Content() {
                 const viewAllButton = document.createElement('button');
                 viewAllButton.className = 'text-blue-500 text-sm font-semibold mr-1'; // Added margin-right
                 viewAllButton.textContent = 'VIEW ALL';
-                viewAllButton.onclick = () => navigate('/content-in');
+                viewAllButton.onclick = () => window.location.href = `/content/doc/${projectId}`;
 
                 const deleteButton = document.createElement('button');
                 deleteButton.className = 'text-red-500 text-sm font-semibold ml-1'; // Added margin-left
