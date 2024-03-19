@@ -62,60 +62,75 @@ export default function Content() {
         setModalType('');
     };
 
+    const generateProjectId = () => {
+        // Generate a random project id
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const length = 10;
+        let projectId = '';
+        for (let i = 0; i < length; i++) {
+            projectId += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return projectId;
+    };
+
     const addProject = async () => {
         if (projectName.trim() !== '') {
             try {
+                // Generate a project id
+                const projectId = generateProjectId();
+
                 // Store project details in Firestore
                 const newProjectData = {
+                    id: projectId,
                     name: projectName,
                     type: modalType,
                     uploadedBy: auth.currentUser.uid,
                 };
                 const docRef = await addDoc(collection(db, 'projects'), newProjectData);
-    
+
                 // Get the container where the new project will be displayed
                 const projectContainerId = modalType === 'whiteboard' ? 'whiteboardProjects' : 'documentProjects';
                 const projectContainer = document.getElementById(projectContainerId);
-    
+
                 // Create elements for the new project
                 const projectDiv = document.createElement('div');
                 projectDiv.className = 'bg-gray-200 p-4 rounded-lg';
-    
+
                 const img = document.createElement('img');
                 img.src = 'https://placehold.co/300x150';
                 img.alt = `Placeholder image of a ${projectName} project`;
                 img.className = 'rounded-lg mb-2';
                 img.style.width = '100%';
                 img.style.height = 'auto';
-    
+
                 const projectNameH4 = document.createElement('h4');
                 projectNameH4.className = 'font-semibold mb-1';
                 projectNameH4.textContent = projectName;
-    
+
                 const uploadedByP = document.createElement('p');
                 uploadedByP.className = 'text-sm mb-2';
                 uploadedByP.textContent = 'Uploaded by You';
-    
+
                 const viewAllButton = document.createElement('button');
                 viewAllButton.className = 'text-blue-500 text-sm font-semibold mr-1'; // Added margin-right
                 viewAllButton.textContent = 'VIEW ALL';
-                viewAllButton.onclick = () => navigate('/content-in');
-                
+                viewAllButton.onclick = () => window.location.href = `/content/doc/${projectId}`;
+
                 const deleteButton = document.createElement('button');
                 deleteButton.className = 'text-red-500 text-sm font-semibold ml-1'; // Added margin-left
                 deleteButton.textContent = 'DELETE';
                 deleteButton.onclick = () => deleteProject(projectName, modalType);
-    
+
                 // Append elements to the div
                 projectDiv.appendChild(img);
                 projectDiv.appendChild(projectNameH4);
                 projectDiv.appendChild(uploadedByP);
                 projectDiv.appendChild(viewAllButton);
                 projectDiv.appendChild(deleteButton);
-    
+
                 // Append the projectDiv to the container
                 projectContainer.appendChild(projectDiv);
-    
+
                 // Show success toast
                 toast({
                     title: 'Project Created',
@@ -124,7 +139,7 @@ export default function Content() {
                     duration: 5000,
                     isClosable: true,
                 });
-    
+
                 console.log('Project added with ID: ', docRef.id);
             } catch (error) {
                 // Show error toast if there's a problem adding the project
@@ -137,7 +152,7 @@ export default function Content() {
                     isClosable: true,
                 });
             }
-    
+
             // Close the modal
             closeModal();
         }
@@ -222,7 +237,7 @@ export default function Content() {
                                     <p className="text-sm mb-2">Uploaded by You</p>
                                     <button
                                         className="text-blue-500 text-sm font-semibold mr-2"
-                                        onClick={() => navigate('/content-in')}
+                                        onClick={() => window.location.href = `/content-in`}
                                     >
                                         VIEW ALL
                                     </button>
@@ -262,7 +277,7 @@ export default function Content() {
                                     <p className="text-sm mb-2">Uploaded by You</p>
                                     <button
                                         className="text-blue-500 text-sm font-semibold"
-                                        onClick={() => navigate('/content-in')}
+                                        onClick={() => window.location.href = `/content/doc/${document.id}`}
                                     >
                                         VIEW ALL
                                     </button>
