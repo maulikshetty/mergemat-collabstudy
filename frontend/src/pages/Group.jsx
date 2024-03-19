@@ -134,7 +134,7 @@ export default function Group() {
                             <div class="text-gray-500">General</div>
                             <div class="text-gray-500">Live Collaboration</div>
                             <div class="text-gray-500">Post</div>
-                            <div class="text-gray-500">File</div>
+                            <div class="text-gray-500" onClick={() => navigate(`/group/${groupId}/files`)}>File</div>
                             <div class="text-gray-500" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
                         </div>
                         <div class="flex items-center space-x-4">

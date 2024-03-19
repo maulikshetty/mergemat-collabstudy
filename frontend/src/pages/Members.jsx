@@ -275,7 +275,7 @@ export default function Members() {
                             <div className= "text-gray-500" onClick={() => navigate(`/group/${groupId}`)}>General</div>
                             <div className="text-gray-500">Live Collaboration</div>
                             <div className="text-gray-500">Post</div>
-                            <div className="text-gray-500">File</div>
+                            <div className="text-gray-500" onClick={() => navigate(`/group/${groupId}/files`)}>File</div>
                             <div className="text-gray-500">Members</div>
                         </div>
                         <div className="flex items-center space-x-4">
