@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDocs, query, collection, where, getDoc, doc, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore';
+import { getDocs, query, collection, where, getDoc, doc, updateDoc, arrayRemove, arrayUnion, setDoc } from 'firebase/firestore';
 import { db, auth } from '../config/Firebase.jsx';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, list } from 'firebase/storage'; // Import listAll function
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext.jsx';
 import { useToast } from "@chakra-ui/react";
@@ -11,6 +12,97 @@ export default function Files() {
     const [group, setGroup] = useState(null);
     const { currentUser } = useAuth();
     const navigate = useNavigate();
+    const [file, setFile] = useState(null); // State for the file
+    const storage = getStorage(); // Get a reference to the storage service
+    const [files, setFiles] = useState([]);
+    const toast = useToast();
+    const fileInputRef = useRef(null); // Create a ref for the file input
+    const [buttonText, setButtonText] = useState('Upload');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleButtonClick = () => {
+        if (buttonText === 'Upload') {
+            // If the button text is 'Upload', trigger the file input
+            fileInputRef.current.click();
+        } else {
+            // If the button text is 'Confirm Upload', upload the file
+            setIsLoading(true); // Set loading to true before starting the upload
+            handleFileUpload();
+        }
+    };
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]); // Update the state when a file is selected
+        setButtonText('Confirm Upload'); // Change the button text to 'Confirm Upload'
+    };
+
+    const fetchFiles = async () => {
+        const filesQuery = query(collection(db, 'files'), where('groupId', '==', groupId)); // Query files where groupId equals the groupId from URL
+        const filesSnapshot = await getDocs(filesQuery); // Execute the query
+
+        // Get the data for each file
+        const filesData = filesSnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+                name: data.name,
+                url: data.url,
+                uploadedBy: data.uploadedBy,
+                uploadDate: data.uploadDate ? data.uploadDate.toDate().toDateString() : '' // Convert Firestore timestamp to JavaScript Date object
+            };
+        });
+
+        setFiles(filesData); // Update the state with the fetched files
+    };
+    const handleFileUpload = async () => {
+        const storageRef = ref(storage, 'files/' + file.name); // Create a storage reference
+        const uploadTask = uploadBytesResumable(storageRef, file); // Create a task to upload the file
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+            },
+            (error) => {
+                // Handle unsuccessful uploads
+                console.error("Upload failed:", error);
+                setIsLoading(false);
+            },
+            async () => {
+                // Handle successful uploads on complete
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                console.log('File available at', downloadURL);
+
+                // Store the file information in Firestore
+                const fileDoc = doc(db, 'files', file.name);
+                await setDoc(fileDoc, {
+                    name: file.name,
+                    url: downloadURL,
+                    uploadedBy: currentUser.firstname, // Assuming the user's first name is stored in currentUser.firstName
+                    uploadDate: new Date(), // Store the current date and time
+                    groupId: groupId // Store the groupId
+                });
+
+                // Add a toast notification
+                toast({
+                    title: "File uploaded.",
+                    description: "Your file has been successfully uploaded.",
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                });
+
+                // Reset the file input
+                setFile(null);
+
+                // Refresh the files
+                await fetchFiles();
+                setButtonText('Upload');
+                setIsLoading(false);
+            }
+        );
+    }
 
     useEffect(() => {
 
@@ -50,6 +142,7 @@ export default function Files() {
             }
         };
         fetchGroup();
+        fetchFiles();
 
     }, [groupId, navigate]);
 
@@ -73,7 +166,7 @@ export default function Files() {
                             <div className="text-gray-500">Live Collaboration</div>
                             <div className="text-gray-500">Post</div>
                             <div className="text-gray-500">File</div>
-                            <div className="text-gray-500">Members</div>
+                            <div className="text-gray-500" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
                         </div>
                         <div className="flex items-center space-x-4">
                             <div className="relative">
@@ -85,45 +178,66 @@ export default function Files() {
                             <i className="fas fa-bell text-gray-600"></i>
                         </div>
                     </div>
-                    <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-                <div class="container mx-auto px-4 py-4">
-                    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                        <div class="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                Group Files
-                            </h3>
-                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Upload
-                            </button>
-                        </div>
-                        <div class="px-4 py-5 sm:p-0">
-                            <dl>
-                                <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
-                                    <dt class="text-sm font-medium text-gray-500">
-                                        Files
-                                    </dt>
-                                    <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-
-                                        <div class="flex items-center justify-between py-2">
+                    <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <div class="container mx-auto px-4 py-4">
+                <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Group Files
+                    </h3>
+                    <input type="file" ref={fileInputRef} onChange={handleFileChange} value={file ? undefined : ''} style={{ display: 'none' }} />
+                    <button onClick={handleButtonClick} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        {isLoading ? 'Uploading...' : buttonText}
+                    </button>
+                </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        File Name
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Uploaded By
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Uploaded On
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Install
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {files.map((file, index) => (
+                                    <tr key={index}>
+                                        <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <i class="fas fa-folder text-yellow-500 mr-2"></i>
-                                                <span>File Name</span>
+                                                <i class="fas fa-file text-yellow-500 mr-2"></i>
+                                                <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
                                             </div>
-                                            <div class="flex items-center">
-                                                <span class="mr-6">35,4 мб</span>
-                                                <span class="mr-6">12.02.2022</span>
-                                                <i class="fas fa-ellipsis-v text-gray-500"></i>
-                                            </div>
-                                        </div>
-
-                                    </dd>
-                                </div>
-
-                            </dl>
-                        </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {file.uploadedBy} {/* Display the name of the user who uploaded the file */}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {file.uploadDate} {/* Display the date of upload */}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <a href={file.url} download={file.name}>
+                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                    Download
+                                                </button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
 
 
                 </div>
