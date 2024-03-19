@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDocs, query, collection, where, getDoc, doc } from 'firebase/firestore';
+import { getDocs, query, collection, where, getDoc, doc, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore';
 import { db, auth } from '../config/Firebase.jsx';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext.jsx';
 import { useToast } from "@chakra-ui/react";
+
 
 export default function Members() {
     const { groupId } = useParams(); // Get groupId from URL
@@ -15,8 +16,155 @@ export default function Members() {
     const toast = useToast();
     const [hasShownToast, setHasShownToast] = useState(false);
     const [adminName, setAdminName] = useState('');
+    const [usernameInput, setUsernameInput] = useState('');
 
+    const leaveGroup = async () => {
+        if (window.confirm("Are you sure you want to leave this group?")) {
+            try {
+                // Create a query to fetch the group by groupId
+                const groupQuery = query(collection(db, 'groups'), where('groupId', '==', groupId));
+                const groupSnapshot = await getDocs(groupQuery);
     
+                if (!groupSnapshot.empty) {
+                    // Get the group document
+                    const groupDoc = groupSnapshot.docs[0];
+                    const groupData = groupDoc.data();
+    
+                    // Check if the current user is the creator of the group
+                    if (auth.currentUser.uid === groupData.groupCreatedBy) {
+                        console.error("Error: Group creator cannot leave the group.");
+                        toast({
+                            title: "You cannot leave the group.",
+                            description: "As the admin, you cannot leave the group.",
+                            status: "error",
+                            duration: 3000,
+                            isClosable: true,
+                        });
+                        return;
+                    }
+    
+                    // Update the members array to remove the current user's username
+                    await updateDoc(groupDoc.ref, {
+                        groupMembers: arrayRemove(currentUser.username)
+                    });
+    
+                    toast({
+                        title: "Action Complete",
+                        description: "You have left the group. Contact the admin to be added back.",
+                        status: "warning",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                } else {
+                    console.log(`No group with groupId: ${groupId}`);
+                }
+            } catch (error) {
+                console.error("Error leaving group: ", error);
+            }
+        }
+    };
+    
+    
+
+    const addMember = async (username) => {
+        try {
+            // Check if the username exists in the users collection
+            const userQuery = query(collection(db, 'users'), where('username', '==', username));
+            const userSnapshot = await getDocs(userQuery);
+
+            if (userSnapshot.empty) {
+                console.log(`No user with username: ${username}`);
+                toast({
+                    title: "Error adding member.",
+                    description: `No user with username: ${username}`,
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                });
+                return;
+            }
+
+            // Get the user's first name
+            const userDoc = userSnapshot.docs[0];
+            const userData = userDoc.data();
+            const firstname = userData.firstname;
+
+            // Check if the user is already a member of the group
+            const groupQuery = query(collection(db, 'groups'), where('groupId', '==', groupId));
+            const groupSnapshot = await getDocs(groupQuery);
+
+            if (!groupSnapshot.empty) {
+                const groupDoc = groupSnapshot.docs[0];
+                const groupData = groupDoc.data();
+
+                if (groupData.groupMembers.includes(username)) {
+                    console.log(`${username} is already a member of the group`);
+                    toast({
+                        title: "Error adding member.",
+                        description: `${username} is already a member of the group`,
+                        status: "error",
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                    return;
+                }
+
+                const groupRef = doc(db, 'groups', groupDoc.id);
+
+                await updateDoc(groupRef, {
+                    groupMembers: arrayUnion(username)
+                });
+
+                // Only update the members state and show the toast when the member is successfully added to Firestore
+                setMembers([...members, `${firstname} (${username})`]);
+
+                toast({
+                    title: "Member added.",
+                    description: `${username} was added to the group.`,
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            } else {
+                console.log(`No group with groupId: ${groupId}`);
+            }
+        } catch (error) {
+            console.error('Error adding member:', error);
+        }
+    };
+
+    const removeMember = async (fullname) => {
+        try {
+            const username = fullname.split(' ').pop().slice(1, -1); // Extract username from fullname
+
+            const groupQuery = query(collection(db, 'groups'), where('groupId', '==', groupId));
+            const groupSnapshot = await getDocs(groupQuery);
+
+            if (!groupSnapshot.empty) {
+                const groupDoc = groupSnapshot.docs[0]; // Get the first document that matches the query
+                const groupRef = doc(db, 'groups', groupDoc.id); // Use the actual document ID
+
+                await updateDoc(groupRef, {
+                    groupMembers: arrayRemove(username)
+                });
+                setMembers(members.filter(member => member !== fullname));
+
+                // Show toast notification
+                toast({
+                    title: "Member removed.",
+                    description: `${username} was removed from the group.`,
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                });
+            } else {
+                console.log(`No group with groupId: ${groupId}`);
+            }
+        } catch (error) {
+            console.error('Error removing member:', error);
+        }
+    };
+
     useEffect(() => {
 
         const fetchGroup = async () => {
@@ -141,27 +289,75 @@ export default function Members() {
                         </div>
                     </div>
 
+                    <div className="flex items-center p-4 space-x-4">
+                        <form className="relative" onSubmit={(e) => { e.preventDefault(); addMember(usernameInput); }}>
+                            <label htmlFor="addMember" className="sr-only">Add member</label>
+                            <input 
+                                type="text" 
+                                id="addMember"
+                                className="border rounded px-2 py-2 mr-2" 
+                                placeholder="Enter username.." 
+                                value={usernameInput} 
+                                onChange={(e) => setUsernameInput(e.target.value)} 
+                            />
+                            <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded focus:outline-none">
+                                Add Member 
+                            </button>
+                        </form>
+                    </div>
+
                     <div className="flex flex-col p-4">
                         <h2 className="text-2xl font-semibold mb-4">Group Members</h2>
                         <ul className="grid grid-cols-3 gap-4">
                             {members.map((member, index) => (
-                                <li key={index} className="bg-white p-4 shadow rounded">
+                                <li key={index} className="bg-white p-4 shadow rounded relative">
                                     <div className="font-semibold">{member}</div>
-                                    {/* Add additional member information here */}
+                                    {group && group.groupCreatedBy === auth.currentUser.uid && (
+                                        <button onClick={() => removeMember(member)} className="text-red-500 focus:outline-none absolute top-4 right-4">
+                                            <i className="fas fa-trash"></i>
+                                        </button>
+                                    )}
                                 </li>
                             ))}
                         </ul>
                     </div>
-                    <div className="flex-1 flex flex-col p-4">
+                    <div className="flex flex-col p-4">
                         <h2 className="text-2xl font-semibold mb-4">Group Admin</h2>
                         <ul className="grid grid-cols-3 gap-4">
                             <li className="bg-white p-4 shadow rounded">
                                 <div className="font-semibold">{adminName}</div>
                             </li>
-                            {/* Add additional admin information here */}
+                        </ul>
+                    </div>
+                    <div className="flex-1 flex flex-col p-4">
+                        <h2 className="text-2xl font-semibold mb-4">Notice</h2>
+                        <p className="text-lg mb-4">Only the group admin can remove members.</p>
+                        <h2 className="text-2xl font-semibold mb-4">FAQ</h2>
+                        <ul>
+                            <li className="mb-2">
+                                <h3 className="font-semibold">Who can remove members from the group?</h3>
+                                <p>Only the group admin can remove members from the group.</p>
+                            </li>
+                            <li className="mb-2">
+                                <h3 className="font-semibold">How to delete a group</h3>
+                                <p>The group admin should contact us with the reason, and we will proceed with the process</p>
+                            </li>
+                            <li className="mb-2">
+                                <h3 className="font-semibold">How do I report an admin </h3>
+                                <p>Please contact us through email with your concern and we will take action if needed</p>
+                            </li>
+                            <li className="mb-2">
+                                <h3 className="font-semibold">Can I ban users from the chat</h3>
+                                <p>Currently you cannot mute or ban a user, If you wish you could remove the user as an admin.</p>
+                            </li>
+                            <button style={{ backgroundColor: 'red', color: 'white', padding: '8px 16px', borderRadius: '4px', border: 'none', cursor: 'pointer'  }} onClick={leaveGroup}>
+                            Leave Group
+                            </button>
+                            {/* Add additional FAQs here */}
                         </ul>
                     </div>
                 </div>
+
             </div>
         </body>
     );
