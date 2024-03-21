@@ -46,7 +46,7 @@ export default function Sidebar() {
                         <i className="fas fa-tachometer-alt text-lg"></i>
                         <span>Dashboard</span>
                     </NavLink>
-                    <NavLink to="/group" className={linkClass}>
+                    <NavLink to="/groups" className={linkClass}>
                         <i className="fas fa-users text-lg"></i>
                         <span>Groups</span>
                     </NavLink>
