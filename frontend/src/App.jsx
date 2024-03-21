@@ -56,6 +56,7 @@ function App() {
         <Route path='/content/whiteboard/:groupId' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
         <Route path='/contentwhite' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
         <Route path='/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
+         <Route path='/content/doc/:groupId' element={<PrivateRoute><ContentRichText /></PrivateRoute>} />
       </Routes>
     </AuthProvider>
   )
