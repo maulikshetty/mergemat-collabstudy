@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { db } from '../config/Firebase'; // Ensure this path matches your actual file structure
-import { collection, addDoc, getDocs, deleteDoc, doc } from "Firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { useNotifications } from '../components/NotificationContext'; // Ensure this path matches your actual file structure
 
 export default function Reminders() {
