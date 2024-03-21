@@ -5,7 +5,7 @@ import { createTLStore, defaultShapeUtils } from 'tldraw'
 import { useState, useEffect, useRef } from 'react'
 import * as Y from 'yjs'
 import { FireProvider } from 'y-fire'
-import app, { db } from '../config/firebase'
+import app, { db } from '../config/Firebase'
 import { getDocs, query, collection, where, addDoc, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { useNavigate, useParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
