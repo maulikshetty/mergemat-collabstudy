@@ -19,6 +19,7 @@ export default function Content() {
     const [documents, setDocuments] = useState([]);
     const navigate = useNavigate();
     const toast = useToast();
+   
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -158,13 +159,18 @@ export default function Content() {
         }
     };
     
-
+   
     const deleteProject = async (projectName, type) => {
         try {
             const collectionName = 'projects';
+            const groupQuery = query(collection(db, 'projects'), where('id', '==', project.id));
             const project = type === 'whiteboard' ? projects.find((p) => p.name === projectName) : documents.find((p) => p.name === projectName);
             if (project) {
-                await deleteDoc(doc(db, collectionName, project.id));
+                console.log('db: ', db);
+                console.log('project.id: ', project.id);
+                console.log('groupQuery: ', groupQuery);
+                //await deleteDoc(doc(db, groupQuery));
+                await deleteDoc(doc(db, 'projects', project.id));
                 console.log(`${type} project deleted: `, projectName);
 
                 // Remove the deleted project from the array
@@ -181,7 +187,7 @@ export default function Content() {
                     duration: 5000,
                     isClosable: true,
                 });
-    
+
             } else {
                 console.log(`${type} project not found: `, projectName);
             }
@@ -196,7 +202,6 @@ export default function Content() {
             });
         }
     };
-
 
     return (
         <div className="flex min-h-screen bg-gray-100">
@@ -237,7 +242,7 @@ export default function Content() {
                                     <p className="text-sm mb-2">Uploaded by You</p>
                                     <button
                                         className="text-blue-500 text-sm font-semibold mr-2"
-                                        onClick={() => window.location.href = `/content-in`}
+                                        onClick={() => window.location.href = `/content/whiteboard/${project.id}`}
                                     >
                                         VIEW ALL
                                     </button>

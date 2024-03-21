@@ -5,6 +5,8 @@ import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 import {MonacoBinding} from 'y-monaco'
 
+
+
 export default function Contenteditor() {
 
   const editorRef = useRef(null);
