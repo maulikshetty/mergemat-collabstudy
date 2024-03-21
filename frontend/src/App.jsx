@@ -26,6 +26,7 @@ import Members from './pages/Members'
 import Contenteditor from './pages/Contenteditor'
 import ContentRichText from './pages/ContentRichText'
 import Files from './pages/Files'
+import { NotificationProvider } from './components/NotificationContext';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <NotificationProvider>
       <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
       <ChakraProvider position='bottom-right' toastOptions={{ duration: 2000 }} />
       <Routes>
@@ -55,6 +57,7 @@ function App() {
         <Route path='/group/:groupId/members' element={<PrivateRoute><Members /></PrivateRoute>} />
         <Route path= '/group/:groupId/files' element={<PrivateRoute><Files/></PrivateRoute>}/>
       </Routes>
+      </NotificationProvider>
     </AuthProvider>
   )
 }
