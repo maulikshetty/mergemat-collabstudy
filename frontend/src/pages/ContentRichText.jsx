@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
-import app  from '../config/Firebase';
-import { db, auth } from '../config/Firebase';
+import app  from '../config/firebase';
+import { db, auth } from '../config/firebase';
 import * as Y from 'yjs';
 import { FireProvider } from 'y-fire';
 import { QuillBinding } from 'y-quill';
@@ -11,6 +11,8 @@ import styled from 'styled-components';
 import { getDocs, query, collection, where, addDoc, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from "@chakra-ui/react";
+import QuillCursors from 'quill-cursors';
+import Quill from 'quill';
 
 const Container = styled.div`
   background-color: #F3F3F3;
@@ -62,19 +64,41 @@ const TOOLBAR_OPTIONS = [
   ["clean"],
 ]
 
+Quill.register('modules/cursors', QuillCursors);
+
   const modules = {
+    cursors: true,
     toolbar:  TOOLBAR_OPTIONS
   
   };
 
+ 
+  
+
 function ContentRichText() {
+
+  
+  
+
+  // Create a new cursor with the id 'myCursor' and a name
+ 
   const toast = useToast();
   const navigate = useNavigate();
   const [group, setGroup] = useState(null);
-
+  const [currentUser, setCurrentUser] = useState(null);
   const { groupId } = useParams();
 
   const quillRef = useRef(null); // Create a ref to store the Quill instance
+
+  
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+  
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
 
@@ -110,6 +134,41 @@ function ContentRichText() {
 fetchGroup();
  
     if (quillRef.current != null) {
+
+      const editor = new Quill(quillRef.current, {
+        theme: 'snow',
+        modules: {
+          toolbar: TOOLBAR_OPTIONS,
+          cursors: {
+            template: '<div class="custom-cursor">...</div>',
+            hideDelayMs: 5000,
+            hideSpeedMs: 0,
+            selectionChangeSource: null,
+            transformOnTextChange: true,
+          },
+        },
+      });
+
+      const cursors = editor.getModule('modules/cursors');
+      cursors.createCursor('cursor', 'My Cursor', 'red');
+      cursors.on('selection-change', (range, oldRange, source) => {
+        if (range) {
+          db.collection('sessions').doc('mySession').set({
+            [userId]: { index: range.index, length: range.length }
+          }, { merge: true });
+        }
+      });
+
+      db.collection('sessions').doc('mySession').onSnapshot((doc) => {
+        const data = doc.data();
+        for (const userId in data) {
+          if (!currentUser.uid) {
+            const { index, length } = data[userId];
+            cursorManager.moveCursor(userId, { index, length });
+          }
+        }
+      });
+
       const ydoc = new Y.Doc();
       const yText = ydoc.getText('quill');
       const provider = new FireProvider({ app, ydoc, path: `projects/${groupId}` });
@@ -159,8 +218,9 @@ fetchGroup();
                 </button>
               </div>
             </div>
-            <Container>
-            <ReactQuill theme="snow" ref={quillRef} modules={modules}/>
+            <Container> 
+            <div id="editor" ref={quillRef}></div>
+      
             </Container>
           </div>
         </div>

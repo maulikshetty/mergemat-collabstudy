@@ -3,7 +3,7 @@ import Sidebar from '../components/Sidebar';
 import NotificationBar from '../components/Notificationbar';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from '@chakra-ui/react';
-import { db, auth } from '../config/Firebase.jsx';
+import { db, auth } from '../config/firebase.jsx';
 import { updateDoc, doc, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function Groups() {

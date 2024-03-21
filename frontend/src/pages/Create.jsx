@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from '../components/Sidebar';
 import NotificationBar from '../components/Notificationbar';
 import { useState, useEffect } from 'react';
-import { db, auth, storage } from '../config/Firebase.jsx';
+import { db, auth, storage } from '../config/firebase.jsx';
 import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useToast } from '@chakra-ui/react';

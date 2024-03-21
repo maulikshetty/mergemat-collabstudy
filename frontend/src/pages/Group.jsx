@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDocs, query, collection, where, addDoc, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore';
-import { db, auth } from '../config/Firebase.jsx';
+import { db, auth } from '../config/firebase.jsx';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from "@chakra-ui/react";
@@ -94,7 +94,6 @@ export default function Group() {
             text: newMessage,
             timestamp: new Date(), // Use serverTimestamp() if possible for consistency
             user: currentUser.username,
-            name: currentUser.firstname
         });
     
         setNewMessage('');
@@ -156,15 +155,9 @@ export default function Group() {
                             <div class="flex items-start space-x-2 mb-4">
                                 <div class="rounded-full bg-blue-500 text-white w-8 h-8 flex items-center justify-center">{message.user[0]}</div>
                                 <div class="flex-grow"> {/* Add 'flex-grow' class */}
-                                    <div class="text-sm font-semibold">{message.name}</div>
+                                    <div class="text-sm font-semibold">{message.user}</div>
                                     <div class="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'Loading...'}</div>
-                                    <p class="mb-4">
-                                        {message.text.includes('http://') || message.text.includes('https://') ? (
-                                            <a href={message.text} target="_blank" rel="noopener noreferrer" class="text-blue-500">{message.text}</a>
-                                        ) : (
-                                            message.text
-                                        )}
-                                    </p>
+                                    <p class="mb-4">{message.text}</p>
                                 </div>
                                 {message.user === currentUser.username && (
                                     <div class="flex-none"> {/* Add 'flex-none' class */}

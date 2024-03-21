@@ -26,6 +26,7 @@ import Members from './pages/Members'
 import Contenteditor from './pages/Contenteditor'
 import ContentRichText from './pages/ContentRichText'
 import Files from './pages/Files'
+import Contentwhite from './pages/Contentwhite'
 
 
 function App() {
@@ -45,6 +46,8 @@ function App() {
         <Route path='/group/:groupId' element={<PrivateRoute><Group /></PrivateRoute>} />
         <Route path='/zego' element={<PrivateRoute><Zego /></PrivateRoute>} />
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
+        <Route path='/content/whiteboard/:groupId' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
+        <Route path='/contentwhite' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
         <Route path='/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
         <Route path='/content/doc/:groupId' element={<PrivateRoute><ContentRichText /></PrivateRoute>} />
         <Route path='/messages' element={<PrivateRoute><Messages /></PrivateRoute>} />
