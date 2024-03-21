@@ -150,6 +150,7 @@ export default function NotificationBar() {
         </div>
       </div>
       </div>
+       </div>
 
     )
 }
