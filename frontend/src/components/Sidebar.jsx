@@ -83,8 +83,11 @@ export default function Sidebar() {
                     <span>Settings</span>
                 </div>
                 <div class="flex items-center space-x-2 text-gray-800">
-                    <i class="fas fa-compass"></i>
-                    <span>Explore</span>
+                    <a href='/explore'>
+                        <i class="fas fa-compass"></i>
+
+                        <span>Explore</span>
+                    </a>
                 </div>
                 <a href="/content" className="flex items-center space-x-2 text-gray-800">
                     <i className="fas fa-align-left"></i>

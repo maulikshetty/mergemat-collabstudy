@@ -1,0 +1,113 @@
+.profileCard {
+
+    min-width: auto;
+    width: 600px;
+    height: auto;
+    background-color: white;
+    margin: 30px;
+    border-radius: 5px;
+    padding: 20px;
+    position: relative;
+    margin: auto;
+    margin-top: 30px;
+    /*    
+    margin: auto;
+    margin-top: 50px;
+  
+    max-width: 600px;
+    */
+
+
+
+    .profileInfo {
+        display: flex;
+        justify-content: space-between;
+
+
+
+        .rightInfo {
+            margin-top: 35px;
+
+            .college,
+            .company {
+
+                color: rgba(0, 0, 0, 0.9);
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 24px;
+            }
+        }
+
+        .location {
+            color: rgba(0, 0, 0, 0.9);
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 24px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+
+        }
+
+        .website {
+            text-decoration: underline;
+            color: rgba(47, 62, 106, 0.757);
+        }
+    }
+
+
+    .about,
+    .skills {
+        color: black;
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 24px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+
+
+    .edit-btn {
+        position: absolute;
+        right: 30px;
+
+
+        .edit-icon {
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+
+            margin-top: -10px;
+
+        }
+
+        .edit-icon:hover {
+            background-color: whitesmoke;
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+
+        }
+
+
+
+    }
+
+    .username {
+        font-family: system-ui;
+        font-weight: 500;
+        font-size: 23px;
+        margin-top: -10px;
+
+    }
+
+    .headline {
+        margin-top: -1px;
+        font-family: system-ui;
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.9);
+        width: 350px;
+        line-height: 30px;
+    }
+}

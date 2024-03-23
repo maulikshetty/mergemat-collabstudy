@@ -41,12 +41,12 @@ export function AuthProvider({ children }) {
     return auth.sendPasswordResetEmail(email)
   }
 
-  function updateEmail(email) {
+  function updateEmail() {
     return currentUser.updateEmail
 
   }
 
-  function updatePassword(password) {
+  function updatePassword() {
     return currentUser.updatePassword
 
   }

@@ -1,0 +1,44 @@
+.posts-card {
+
+    width: 500px;
+    min-height: auto;
+    background-color: rgb(255, 255, 255);
+    margin-top: 30px;
+    border: 1px solid #b7b7b7;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+
+
+    .status {
+        text-align: left;
+        font-family: system-ui, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.9);
+        margin: 10px 0 0 10px;
+    }
+
+    .name {
+        font-family: system-ui, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.8);
+        margin: 10px 0 0 10px;
+        text-decoration: underline;
+        cursor: pointer;
+
+    }
+
+    .timeStamp {
+        font-family: system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0px 0 0 10px;
+
+
+
+    }
+}

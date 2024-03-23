@@ -1,0 +1,48 @@
+.topbar-main {
+    width: 100%;
+    height: 70px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+
+}
+
+.logo {
+    width: 50px;
+    margin-left: 70px;
+}
+
+.user {
+    width: 40px;
+    margin-left: 70px;
+    border-radius: 50%;
+    position: absolute;
+    right: 60px;
+    cursor: pointer;
+}
+
+.popup-position {
+    position: absolute;
+    right: 10px;
+    top: 65px;
+    z-index: 99;
+}
+
+.icons {
+    display: flex;
+    margin-left: 70px;
+    align-items: center;
+    justify-content: space-between;
+    width: 45%;
+
+}
+
+.react-icon {
+    cursor: pointer;
+    color: #212121ed;
+
+}
+
+.react-icon:hover {
+    color: #5e5e5e;
+}

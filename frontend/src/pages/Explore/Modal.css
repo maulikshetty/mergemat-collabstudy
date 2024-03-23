@@ -1,0 +1,17 @@
+.modal-input {
+    border: none;
+    background-color: white;
+    outline: none;
+    color: black;
+    font-size: 16px;
+    font-family: system-ui;
+    width: 100%;
+
+}
+
+.modal-button:hover {
+    background-color: black;
+    color:
+        white;
+
+}

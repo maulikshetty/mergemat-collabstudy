@@ -15,9 +15,10 @@ import Zego from './pages/Zego'
 import ContentIn from './pages/content-in'
 import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
-import Chats from './pages/Group/Chats'
+import Explore from './pages/Explore/ExploreLayout'
 import DirectM from './pages/DirectMessages/DirectM'
 import { ChatContextProvider } from './appcontext/Chatcontext'
+import ProfileLayout from './pages/Explore/ProfileLayout'
 
 
 function App() {
@@ -38,7 +39,9 @@ function App() {
           <Route path='/zego' element={<PrivateRoute><Zego /></PrivateRoute>} />
           <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
 
-          <Route path='/chats' element={<Chats />} />
+          <Route path='/explore' element={<Explore />} />
+
+          <Route path='/profile' element={<ProfileLayout />} />
 
           <Route path='/directmessages' element={<PrivateRoute><DirectM /></PrivateRoute>} />
 
