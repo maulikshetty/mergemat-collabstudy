@@ -5,8 +5,8 @@ import { useState, useRef } from 'react'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { auth } from '../config/Firebase';
-import { db } from '../config/Firebase'
+// { auth } from '../config/Firebase';
+//import { db } from '../config/Firebase'
 import { collection, addDoc } from 'firebase/firestore'
 import { useAuth } from '../appcontext/Authcontext'
 
