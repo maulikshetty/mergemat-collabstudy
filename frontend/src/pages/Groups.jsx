@@ -72,7 +72,7 @@ export default function Groups() {
                         {/* Group cards */}
                         {userGroups.map((group) => (
                             <div className="bg-white rounded-lg shadow p-4">
-                                <img src={group.groupCover || "https://placehold.co/300x200"} alt="Group of people working together illustration" className="rounded-lg" style={{ maxWidth: "300px", maxHeight: "200px" }} />
+                                <img src={group.groupCover || "https://t3.ftcdn.net/jpg/05/70/39/62/360_F_570396261_Jx0zuuyBcBwQg0WHDXdnfm6cgQ3BmlEc.jpg"} alt="Group of people working together illustration" className="rounded-lg" style={{ maxWidth: "300px", maxHeight: "200px" }} />
                                 <div className="mt-4">
                                     <div className="font-semibold">{group.groupName}</div>
                                     <div className="text-sm text-gray-500">Meeting in progress..</div>
