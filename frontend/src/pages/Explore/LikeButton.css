@@ -1,0 +1,118 @@
+.like-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 10px;
+    margin-top: 25px;
+    cursor: pointer;
+    flex-direction: column;
+
+    p {
+        font-family: system-ui;
+        font-weight: 400;
+        color: #4b6681;
+        font-size: 12px;
+        margin-top: 20px;
+    }
+
+
+    .like-comment {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+
+    }
+
+    .comment-input {
+        height: 40px;
+        background-color: whitesmoke;
+        padding-left: 10px;
+        border-radius: 30px;
+        border: 1px solid #7373736c;
+        font-family: system-ui;
+        font-size: 16px;
+        margin-top: 15px;
+    }
+
+    .comment-input:focus {
+        outline: 1px solid #bdbaba90;
+
+    }
+
+    .add-comment-btn {
+        width: 150px;
+        height: 35px;
+        background-color: #0693e3;
+        outline: none;
+        cursor: pointer;
+        border: none;
+        color: white;
+        border-radius: 30px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+
+    }
+
+    .all-comments {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #e4e2e56c;
+        padding-left: 7px;
+        border-radius: 10px;
+        position: relative;
+        margin: 2px;
+
+
+        .comment-name {
+            color: #212121;
+            font-weight: 640;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .comment {
+            margin-top: 2px;
+            font-size: 14px;
+            padding-bottom: 10px;
+
+
+        }
+
+        .timestamp {
+            position: absolute;
+            right: 10px;
+            top: -12px;
+        }
+
+
+    }
+
+
+    .like-icon {
+        color: #0693e3;
+    }
+
+    .likes-comment-inner {
+        display: flex;
+        align-items: center;
+
+        .blue {
+            color: #0693e3;
+        }
+
+        .black {
+            color: #4b6681;
+
+        }
+
+        p {
+            font-family: system-ui;
+            font-weight: 400;
+            color: #4b6681;
+            font-size: 16px;
+            margin-top: 0px;
+            margin-left: 5px;
+
+        }
+    }
+}

@@ -1,12 +1,14 @@
 import { auth, db } from "../config/Firebase";
 import { useAuth } from "../appcontext/Authcontext";
-import { addDoc, collection, doc, onSnapshot, updateDoc, query, where, getDocs } from "firebase/firestore"
-import { ToastContainer, toast } from "react-toastify"
+import { addDoc, collection, doc, onSnapshot, updateDoc, query, where, getDocs, setDoc, deleteDoc } from "firebase/firestore"
+import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 
 
 
 let postsRef = collection(db, "posts")
+let likeRef = collection(db, "likes")
+let commentRef = collection(db, "comments")
 let userRef = collection(db, "users")
 
 
@@ -94,28 +96,86 @@ export const getSingleUser = (setCurrentUser, email) => {
     });
 };
 
+export const likePost = (userId, postId, liked) => {
 
-// export const getSingleStatus = (setAllStatus, id) => {
-//     const singlePostQuery = query(postsRef, where("userId", "==", id));
-//     onSnapshot(singlePostQuery, (response) => {
-//         setAllStatus(
-//             response.docs.map((docs) => {
-//                 return { ...docs.data(), id: docs.id };
-//             })
-//         );
-//     });
-// };
-
-// export const getSingleUse = (setCurrentUser, email) => {
-//     const singleUserQuery = query(collection(db, "users"), where("email", "==", email));
-//     onSnapshot(singleUserQuery, (response) => {
-//         setCurrentUser(
-//             response.docs.map((docs) => {
-//                 return { ...docs.data(), id: docs.id };
-//             })[0]
-//         );
-//     });
-// };
+    try {
+        let docToLike = doc(likeRef, `${userId}_${postId}`)
+        if (liked) {
+            deleteDoc(docToLike)
 
 
+        } else {
+            setDoc(docToLike, { userId, postId })
 
+        }
+
+    }
+    catch (err) {
+        console.log(err)
+
+    }
+
+}
+
+export const getLikesByUser = (userId, postId, setLiked, setLikesCount) => {
+
+    try {
+
+        let likeQuery = query(likeRef, where('postId', '==', postId))
+
+        onSnapshot(likeQuery, (response) => {
+            let likes = response.docs.map((doc) => doc.data())
+            let likesCount = likes?.length
+
+            const isLiked = likes.some((like) => like.userId === userId)
+
+            setLikesCount(likesCount);
+            setLiked(isLiked);
+        })
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+export const postComment = (postId, comment, timeStamp, firstname, lastname) => {
+    try {
+        addDoc(commentRef, { postId, comment, timeStamp, firstname, lastname })
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+export const getComments = (postId, setComments) => {
+    try {
+        let singlePostQuery = query(commentRef, where('postId', '==', postId))
+
+        onSnapshot(singlePostQuery, (response) => {
+            const comments = response.docs.map((doc) => {
+                return {
+                    id: doc.id,
+                    ...doc.data()
+                }
+            })
+
+            setComments(comments)
+        })
+
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+export const getAllUsers = (setAllUsers) => {
+
+    onSnapshot(userRef, (response) => {
+        setAllUsers(response.docs.map((docs) => {
+            return { ...docs.data(), id: docs.id }
+        }))
+
+    })
+
+}

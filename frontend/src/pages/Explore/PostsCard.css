@@ -20,6 +20,14 @@
         margin: 10px 0 0 10px;
     }
 
+    .post-image {
+        width: 40px;
+        border-radius: 50%;
+        object-fit: contain;
+        height: 40px;
+
+    }
+
     .name {
         font-family: system-ui, sans-serif;
         font-size: 16px;
