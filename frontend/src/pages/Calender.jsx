@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import NotificationBar from '../components/Notificationbar';
@@ -120,48 +119,65 @@ function Calendar() {
                             <div className="flex justify-between items-center mb-6">
                                 <div className="text-xl font-semibold text-gray-800">Calendar</div>
                                 <div className="flex flex-1 justify-center items-center">
+                                    <button
+                                        className="text-gray-600 hover:text-blue-300 transition-colors duration-200"
+                                        onClick={handlePrevMonth}
+                                    >
+                                        <i className="fas fa-chevron-left"></i>
+                                    </button>
+                                    <div className="px-4">
+                                        <DatePicker
+                                            selected={new Date(year, month - 1)}
+                                            onChange={(date) => {
+                                                setMonth(date.getMonth() + 1);
+                                                setYear(date.getFullYear());
+                                            }}
+                                            dateFormat="MMMM yyyy"
+                                            showMonthYearPicker
+                                            className="font-semibold text-xl text-gray-800"
+                                        />
+                                    </div>
+                                    <button
+                                        className="text-gray-600 hover:text-blue-300 transition-colors duration-200"
+                                        onClick={handleNextMonth}
+                                    >
+                                        <i className="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
                                 <button
-                                className="text-gray-600 hover:text-blue-300 transition-colors duration-200"
-                                onClick={handleNextMonth}
-                            >
-                                <i className="fas fa-chevron-right"></i>
-                            </button>
+                                    className="bg-blue-200 hover:bg-blue-300 text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    onClick={handleAddEvent}
+                                    disabled={!selectedDate}
+                                >
+                                    Add Event
+                                </button>
+                            </div>
+                            <div className="grid grid-cols-7 gap-4 text-center bg-white p-6 rounded-lg shadow-md">
+                                {renderCalendarDays()}
+                            </div>
                         </div>
-                        <button
-                            className="bg-blue-200 hover:bg-blue-300 text-gray-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                            onClick={handleAddEvent}
-                            disabled={!selectedDate}
-                        >
-                            Add Event
-                        </button>
-                    </div>
-                    <div className="grid grid-cols-7 gap-4 text-center bg-white p-6 rounded-lg shadow-md">
-                        {renderCalendarDays()}
-                    </div>
-                </div>
-                <div className="w-full lg:w-60 bg-white p-6 shadow-lg overflow-y-auto">
-                    <NotificationBar />
-                    <div className="p-6">
-                        <h2 className="text-lg font-semibold mb-4">Events</h2>
-                        {events.length === 0 ? (
-                            <p>No events scheduled.</p>
-                        ) : (
-                            <ul>
-                                {events.map((event, index) => (
-                                    <li key={index} className="my-2">
-                                        <div className="text-gray-800 bg-indigo-200 p-2 rounded"> {/* Adjusted for better visibility */}
-                                            {event.title} ({event.date.toDateString()})
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                        <div className="w-full lg:w-60 bg-white p-6 shadow-lg overflow-y-auto">
+                            <NotificationBar />
+                            <div className="p-6">
+                                <h2 className="text-lg font-semibold mb-4">Events</h2>
+                                {events.length === 0 ? (
+                                    <p>No events scheduled.</p>
+                                ) : (
+                                    <ul>
+                                        {events.map((event, index) => (
+                                            <li key={index}>
+                                                <div className="text-gray-800">
+                                                    {event.title} ({event.date.toDateString()})
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
     
             {/* Modal for adding events */}
             {showModal && (
