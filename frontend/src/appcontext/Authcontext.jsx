@@ -30,6 +30,17 @@ export function AuthProvider({ children }) {
       }
       
 
+      function resendVerificationEmail() {
+        return auth.currentUser.sendEmailVerification()
+          .then(() => {
+            // Email verification sent
+            alert('Email verification link has been sent to your email address.');
+          })
+          .catch((error) => {
+            // Handle error
+            alert('Error resending email verification: ' + error.message);
+          });
+      }
 
 
 
@@ -43,23 +54,14 @@ export function AuthProvider({ children }) {
           } else {
             // Email is not verified, throw an error
             alert('Please verify your email before logging in.');
+            resendVerificationEmail(email);
             throw new Error('Please verify your email before logging in.');
           }
         });
 
     }
 
-    function resendVerificationEmail() {
-      return auth.currentUser.sendEmailVerification()
-        .then(() => {
-          // Email verification sent
-          alert('Email verification link has been sent to your email address.');
-        })
-        .catch((error) => {
-          // Handle error
-          alert('Error resending email verification: ' + error.message);
-        });
-    }
+ 
 
     function logout() {
         return auth.signOut()
@@ -75,7 +77,9 @@ export function AuthProvider({ children }) {
         
       
         return auth.currentUser.verifyBeforeUpdateEmail(email)
-         
+        
+        
+
           // Use the UID from the userCredential to create the document in Firestore
          
         
