@@ -3,10 +3,11 @@ import Sidebar from '../components/Sidebar';
 import NotificationBar from '../components/Notificationbar';
 import { useState, useEffect } from 'react';
 import { db, auth, storage } from '../config/Firebase.jsx';
-import { collection, addDoc, getDocs, updateDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { useNotifications } from '../components/NotificationContext';
 
 
 function CreateGRP() {
@@ -61,6 +62,7 @@ function CreateGRP() {
         setFile(file);
         setFileUploadStatus(file ? `${file.name} uploaded` : ''); // Update upload status
     };
+    const { addNotification } = useNotifications(); // Hook from your NotificationContext
 
     const handleCreateGroup = async () => {
         if (!groupName || groupMembers.length === 0) {
@@ -98,8 +100,10 @@ function CreateGRP() {
                 await updateDoc(doc(db, 'groups', groupRef.id), {
                     groupCover: downloadURL
                 });
+                
+        
             }
-    
+            await addNotification(`New group created: ${groupName}`);
             toast({
                 title: 'Group Created',
                 description: `Group created with name: ${groupName}`,
@@ -220,3 +224,4 @@ function CreateGRP() {
 }
 
 export default CreateGRP;
+
