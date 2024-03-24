@@ -56,7 +56,7 @@ export default function Register() {
       );
       toast({
         title: 'Success',
-        description: 'Account created successfully',
+        description: 'Account created successfully, please verify your email address to login.',
         status: 'success',
         duration: 3000,
         isClosable: true,
