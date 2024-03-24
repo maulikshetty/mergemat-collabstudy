@@ -24,6 +24,10 @@ export default function Sidebar() {
 
     return (
         <div className="bg-white shadow-md p-6 space-y-6 w-full lg:w-64">
+                      <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+          />
             <div className="flex items-center space-x-3 mb-4">
                 <img alt="MergeMat logo" className="h-10 w-10" src={logo} />
                 <span className="font-bold text-xl">MergeMat</span>
