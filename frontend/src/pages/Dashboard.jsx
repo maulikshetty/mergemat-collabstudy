@@ -1,103 +1,100 @@
+import React, { useState, useEffect } from 'react';
+import Sidebar from '../components/Sidebar';
+import NotificationBar from '../components/Notificationbar';
+import { useAuth } from '../appcontext/Authcontext';
+import { useToast } from '@chakra-ui/react';
+import { db, auth } from '../config/Firebase.jsx';
+import { updateDoc, doc, collection, query, where, getDocs } from 'firebase/firestore';
 
-import React from 'react'
-import Sidebar from '../components/Sidebar.jsx'
+export default function Groups() {
+    const [userGroups, setUserGroups] = useState([]);
+    const { currentUser } = useAuth();
+    const toast = useToast();
 
-import Notifications from '../components/Notificationbar.jsx'
-import './styles/dashboard.css'; // Import a CSS file for styling
-import { useAuth } from '../appcontext/Authcontext'
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Reminders from '../components/Reminders.jsx'
-
-export default function dashboard() {
-    const { currentUser, logout } = useAuth();
-    const [error, setError] = useState('')
-    const nav = useNavigate();
-
+    useEffect(() => {
+        const fetchUserGroups = async () => {
+            try {
+                const groupsRef = collection(db, 'groups');
+                // Query for groups created by the user
+                const createdByQuery = query(groupsRef, where('groupCreatedBy', '==', auth.currentUser.uid));
+                // Query for groups where the user is a member
+                const memberOfQuery = query(groupsRef, where('groupMembers', 'array-contains', currentUser.username));
+                
+                // Get documents for both queries
+                const [createdBySnapshot, memberOfSnapshot] = await Promise.all([
+                    getDocs(createdByQuery),
+                    getDocs(memberOfQuery)
+                ]);
+                
+                // Combine and map documents to data
+                const groups = new Map();
+                createdBySnapshot.forEach((doc) => {
+                    groups.set(doc.id, doc.data());
+                });
+                memberOfSnapshot.forEach((doc) => {
+                    groups.set(doc.id, doc.data()); // This ensures no duplicates
+                });
+                
+                setUserGroups(Array.from(groups.values()));
+            } catch (error) {
+                toast({
+                    title: 'Error',
+                    description: 'Failed to fetch user groups',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                });
+            }
+        };
+    
+        fetchUserGroups();
+    }, [currentUser.uid, currentUser.username, toast]);
+    
 
     return (
-      
         <div>
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-          />
-            <body class="h-full bg-gray-100">
+            <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+                {/* Left sidebar */}
+                <Sidebar />
 
-            <div class="flex flex-col lg:flex-row h-screen">
-            <Sidebar />
-            <div class="flex-1 p-6 lg:pl-sidebar lg:pr-notificationbar">
-            <div class="flex justify-between items-center mb-6">
-            <div class="flex space-x-2 items-center">
-                <i class="fas fa-bars text-gray-600"></i>
-                <span class="font-semibold text-lg">Dashboard</span>
-            </div>
-            <div class="flex space-x-4 items-center">
-                <i class="fas fa-search text-gray-600"></i>
-                <i class="fas fa-bell text-gray-600"></i>
-                <i class="fas fa-user-circle text-gray-600"></i>
-                <i class="fas fa-th text-gray-600"></i>
-                <i class="fas fa-envelope text-gray-600"></i>
-            </div>
-            
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-semibold mb-2">Welcome, {currentUser.firstname} </h2>
-            <p class="text-gray-600">Welcome to your dashboard! here is a brief of your groups and reminders below</p>
-          </div>
-
-          <div class="mt-6">
-                <h2 class="text-xl font-semibold mb-4">My Groups</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                    <div class="bg-white p-4 rounded shadow flex items-center">
-                        <img src="https://placehold.co/50x50" alt="Group of people illustration for F27FA - Group 22" class="mr-4"/>
-                        <div>
-                            <h4 class="font-semibold">F27FA – Group 22</h4>
-                            <p class="text-sm text-gray-500">Meeting in progress...</p>
-                        </div>
+                {/* Main content */}
+                <div className="flex-grow px-6 py-8">
+                    <div className="flex justify-between items-center">
+                        <h1 className="text-2xl font-semibold">My Groups:</h1>
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" onClick={() => window.location.href = '/create'}>Create/Join Group</button>
                     </div>
-                    <div class="bg-white p-4 rounded shadow flex items-center">
-                        <img src="https://placehold.co/50x50" alt="Group of people illustration for Software Development" class="mr-4"/>
-                        <div>
-                            <h4 class="font-semibold">Software Development</h4>
-                            <p class="text-sm text-gray-500">Scheduled Meeting</p>
+                    {userGroups.length === 0 && (
+                        <div className="flex justify-center h-full">
+                            <h1 className="text-sm font-regular">No groups found</h1>
                         </div>
-                    </div>
-                    <div class="bg-white p-4 rounded shadow flex items-center">
-                        <img src="https://placehold.co/50x50" alt="Group of people illustration for Mathematics - CW" class="mr-4"/>
-                        <div>
-                            <h4 class="font-semibold">Mathematics - CW</h4>
-                            <p class="text-sm text-gray-500">10 Unread Messages</p>
-                        </div>
+)}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                        {/* Group cards */}
+                        {userGroups.map((group) => (
+                            <div className="bg-white rounded-lg shadow p-4">
+                                <img src={group.groupCover || "https://placehold.co/300x200"} alt="Group of people working together illustration" className="rounded-lg" style={{ maxWidth: "300px", maxHeight: "200px" }} />
+                                <div className="mt-4">
+                                    <div className="font-semibold">{group.groupName}</div>
+                                    <div className="text-sm text-gray-500">Meeting in progress..</div>
+                                </div>
+                                <div className="flex justify-between items-center mt-4">
+                                    <div className="flex items-center">
+                                        <img src="https://placehold.co/32x32" alt="Group icon" className="h-8 w-8 rounded-full" />
+                                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-2">18</span>
+                                    </div>
+                                    <button className="text-blue-500 hover:text-blue-600" onClick={() => window.location.href = `/group/${group.groupId}`}>View</button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-                <button class="text-blue-500 text-sm mt-2">View More Groups</button>
-            </div>
 
-            <div class="mt-6">
-                <h2 class="text-xl font-semibold mb-4">Reminders</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                    
-                    
-                    <div>
-      {/* Your existing dashboard layout */}
-      <Reminders />
-      {/* Any other components you might have */}
-    </div>
-                                
+                {/* Right sidebar */}
+                <div className="w-64">
+                    {/* Adjust width as needed */}
+                    <NotificationBar />
                 </div>
             </div>
-            
-                    </div>
-                    
-        <Notifications />
-                </div>
-               
-        </body>
         </div>
-        
-    )
-}
-   
+    );
+};
