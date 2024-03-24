@@ -124,27 +124,31 @@ export default function Group() {
 
                 <div class="flex-1 flex flex-col overflow-hidden">
 
-                    <div class="flex justify-between items-center p-4 bg-white border-b">
-                        <div class="flex space-x-4">
-                            <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
-                                <i class="fas fa-bars"></i>
-                            </button>
-                            <div class="text-gray-800 font-bold">{group && group.groupName}</div>
-                            <div class="text-gray-500">General</div>
-                            <div class="text-gray-500">Live Collaboration</div>
-                            <div class="text-gray-500">Post</div>
-                            <div class="text-gray-500" onClick={() => navigate(`/group/${groupId}/files`)}>File</div>
-                            <div class="text-gray-500" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
-                        </div>
+                <div class="flex justify-between items-center p-4 bg-white border-b">
+                    <div class="flex space-x-4">
+                        <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                        </button>
                         <div class="flex items-center space-x-4">
-                            <div class="relative">
-                                <input type="text" class="border rounded px-2 py-1" placeholder="Search" />
-                                <i class="fas fa-search absolute right-2 top-2 text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-video custom-icon" onClick={() => window.open('/zego')}></i>
-                            <i class="fas fa-cog text-gray-600"></i>
-                            <i class="fas fa-bell text-gray-600"></i>
+                        <div className="flex items-center space-x-3">
+                            <i className="fas fa-users text-gray-800 text-lg"></i>
+                            <span className="font-semibold text-lg">{group && group.groupName}</span>
                         </div>
+                        <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}`)}>General</div>
+                        <div class="text-gray-500 cursor-pointer">Live Collaboration</div>
+                        <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/files`)}>File</div>
+                        <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                        <input type="text" class="border rounded px-2 py-1" placeholder="Search" />
+                        <i class="fas fa-search absolute right-2 top-2 text-gray-400"></i>
+                        </div>
+                        <i class="fas fa-video custom-icon" onClick={() => window.open('/zego')}></i>
+                        <i class="fas fa-cog text-gray-600 cursor-pointer"></i>
+                        <i class="fas fa-bell text-gray-600 cursor-pointer"></i>
+                    </div>
                     </div>
 
 
