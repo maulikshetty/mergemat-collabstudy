@@ -24,11 +24,6 @@ import Groups from './pages/Groups'
 import CreateGRP from './pages/Create'
 import Members from './pages/Members'
 import Files from './pages/Files'
-import Contentwhite from './pages/Contentwhite'
-import Contenteditor from './pages/Contenteditor'
-import ContentRichText from './pages/ContentRichText'
-import { NotificationProvider } from './components/NotificationContext';
-
 
 
 function App() {
@@ -36,7 +31,6 @@ function App() {
 
   return (
     <AuthProvider>
-      <NotificationProvider>
       <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
       <ChakraProvider position='bottom-right' toastOptions={{ duration: 2000 }} />
       <Routes>
@@ -56,12 +50,7 @@ function App() {
         <Route path='/create' element={<PrivateRoute><CreateGRP /></PrivateRoute>} />
         <Route path='/group/:groupId/members' element={<PrivateRoute><Members /></PrivateRoute>} />
         <Route path= '/group/:groupId/files' element={<PrivateRoute><Files/></PrivateRoute>}/>
-        <Route path='/content/whiteboard/:groupId' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
-        <Route path='/contentwhite' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
-        <Route path='/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
-         <Route path='/content/doc/:groupId' element={<PrivateRoute><ContentRichText /></PrivateRoute>} />
       </Routes>
-      </NotificationProvider>
     </AuthProvider>
   )
 }
