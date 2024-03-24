@@ -30,6 +30,7 @@ import ContentRichText from './pages/ContentRichText'
 import { NotificationProvider } from './components/NotificationContext';
 
 
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -48,8 +49,6 @@ function App() {
         <Route path='/group/:groupId' element={<PrivateRoute><Group /></PrivateRoute>} />
         <Route path='/zego' element={<PrivateRoute><Zego /></PrivateRoute>} />
         <Route path='/content-in' element={<PrivateRoute><ContentIn /></PrivateRoute>} />
-        <Route path='/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
-        <Route path='/content/doc/:groupId' element={<PrivateRoute><ContentRichText /></PrivateRoute>} />
         <Route path='/messages' element={<PrivateRoute><Messages /></PrivateRoute>} />
         <Route path='/user-info' element={<PrivateRoute><Usersettings /></PrivateRoute>} />
         <Route path='/calendar' element={<PrivateRoute><Calendar /></PrivateRoute>} />
