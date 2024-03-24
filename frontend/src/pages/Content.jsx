@@ -4,7 +4,7 @@ import NotificationBar from '../components/Notificationbar.jsx';
 import './styles/content.css';
 import { useNavigate } from 'react-router-dom';
 import { db, storage, auth } from '../config/Firebase.jsx';
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from '@chakra-ui/react';
 
@@ -19,6 +19,7 @@ export default function Content() {
     const [documents, setDocuments] = useState([]);
     const navigate = useNavigate();
     const toast = useToast();
+    const [projectDataref, setProjectDataref] = useState(null);
    
 
     useEffect(() => {
@@ -79,7 +80,8 @@ export default function Content() {
             try {
                 // Generate a project id
                 const projectId = generateProjectId();
-
+                const docID = projectId;
+                setProjectDataref(docID);
                 // Store project details in Firestore
                 const newProjectData = {
                     id: projectId,
@@ -87,8 +89,9 @@ export default function Content() {
                     type: modalType,
                     uploadedBy: auth.currentUser.uid,
                 };
-                const docRef = await addDoc(collection(db, 'projects'), newProjectData);
-
+                //const docRef = await addDoc(collection(db, 'projects'), newProjectData);
+                const docRef = doc(db, 'projects', docID);
+                await setDoc(docRef, newProjectData);
                 // Get the container where the new project will be displayed
                 const projectContainerId = modalType === 'whiteboard' ? 'whiteboardProjects' : 'documentProjects';
                 const projectContainer = document.getElementById(projectContainerId);
@@ -142,6 +145,7 @@ export default function Content() {
                 });
 
                 console.log('Project added with ID: ', docRef.id);
+                
             } catch (error) {
                 // Show error toast if there's a problem adding the project
                 console.error('Error adding project: ', error);
@@ -163,12 +167,14 @@ export default function Content() {
     const deleteProject = async (projectName, type) => {
         try {
             const collectionName = 'projects';
-            const groupQuery = query(collection(db, 'projects'), where('id', '==', project.id));
             const project = type === 'whiteboard' ? projects.find((p) => p.name === projectName) : documents.find((p) => p.name === projectName);
+            //const groupQuery = query(collection(db, 'projects'), where('id', '==', project.id));
+            //setProjectDataref(doc(db, 'projects', project.id));
             if (project) {
+                console.log('project: ', projectDataref);
                 console.log('db: ', db);
                 console.log('project.id: ', project.id);
-                console.log('groupQuery: ', groupQuery);
+                //console.log('groupQuery: ', groupQuery);
                 //await deleteDoc(doc(db, groupQuery));
                 await deleteDoc(doc(db, 'projects', project.id));
                 console.log(`${type} project deleted: `, projectName);
