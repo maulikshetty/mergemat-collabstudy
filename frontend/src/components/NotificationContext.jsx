@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../config/Firebase';
 import { collection, onSnapshot, addDoc, deleteDoc, doc, getDocs, writeBatch } from 'firebase/firestore';
-
+import { useAuth } from '../appcontext/Authcontext';
 const NotificationContext = createContext();
 
 export const useNotifications = () => useContext(NotificationContext);
@@ -16,9 +16,11 @@ export const NotificationProvider = ({ children }) => {
       snapshot.forEach(doc => {
         notificationsData.push({ id: doc.id, ...doc.data() });
       });
+      // Sort notifications by timestamp in descending order so newer notifications are on top
+      notificationsData.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
       setNotifications(notificationsData);
     });
-
+  
     // Cleanup the listener on component unmount
     return () => unsubscribe();
   }, []);
@@ -55,3 +57,4 @@ export const NotificationProvider = ({ children }) => {
 
   return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;
 };
+
