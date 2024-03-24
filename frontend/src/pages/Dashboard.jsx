@@ -1,3 +1,4 @@
+
 import React from 'react'
 import Sidebar from '../components/Sidebar.jsx'
 
@@ -89,7 +90,8 @@ export default function dashboard() {
                 </div>
             </div>
             
-        </div>
+                    </div>
+                    
         <Notifications />
                 </div>
                
@@ -98,3 +100,4 @@ export default function dashboard() {
         
     )
 }
+   
