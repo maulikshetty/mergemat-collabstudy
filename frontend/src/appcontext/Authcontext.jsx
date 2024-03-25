@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
         return auth.currentUser.sendEmailVerification()
           .then(() => {
             // Email verification sent
-            alert('Email verification link has been sent to your email address.');
+            alert('Email verification link has been resent to your email address.');
           })
           .catch((error) => {
             // Handle error

@@ -18,6 +18,26 @@ export default function usersettings() {
     const toast = useToast();
     const { currentUser, logout, resetPassword, updateEmail} = useAuth();
 
+
+
+
+    async function updateEmailhandler() {
+        setError('');
+        try {
+            await updateEmail(Updatedemailref.current.value);
+            toast({
+                title: 'Success',
+                description: 'email has been updated',
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch(error) {
+            setError('Failed to update email');
+            console.log(error);
+        }
+    }
+
     async function handleSubmit() {
         setError('');
         const firstName = firstnameref.current.value;
@@ -39,6 +59,7 @@ export default function usersettings() {
 
         if (email) {
             updatedFields.email = email;
+
         }
 
         if (address) {
@@ -72,6 +93,7 @@ export default function usersettings() {
         try {
             const userDocRef = doc(db, 'users', myuser.uid);
             await updateDoc(userDocRef, updatedFields);
+            await updateEmail(email);
             toast({
                 title: 'Success',
                 description: 'User info has been updated',
@@ -107,22 +129,7 @@ export default function usersettings() {
         }
     }
       
-    async function updateEmailhandler() {
-        setError('');
-        try {
-            await updateEmail(Updatedemailref.current.value);
-            toast({
-                title: 'Success',
-                description: 'email has been updated',
-                status: 'success',
-                duration: 3000,
-                isClosable: true,
-            });
-        } catch(error) {
-            setError('Failed to update email');
-            console.log(error);
-        }
-    }
+    
 
     async function handlepassreset() {
         setError('');

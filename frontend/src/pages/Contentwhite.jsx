@@ -20,6 +20,25 @@ const [group, setGroup] = useState(null);
 
 const { groupId } = useParams();
 
+
+const handleshare =() => {
+  const currentUrl = window.location.href;
+  navigator.clipboard.writeText(currentUrl)
+    .then(() => {
+      console.log('URL copied to clipboard:', currentUrl);
+      toast({
+        title: "Copied to clipboard",
+        description: "The URL has been copied to your clipboard.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    })
+    .catch((error) => {
+      console.error('Error copying URL to clipboard:', error);
+    });
+}
+
 const tldrawRef = useRef(null);
 tldrawRef.current = new Tldraw({ position: 'fixed', inset: 0});
 
@@ -116,24 +135,17 @@ console.log("Parsed data changed:", parsedData);
         <div className="flex-1 p-4 md:p-8 overflow-auto">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center">
-              <a href="#" className="text-gray-600 text-sm mr-4">
+              <a href="/content" className="text-gray-600 text-sm mr-4">
                 <i className="fas fa-arrow-left"></i>
               </a>
               <div>
                 <h1 className="text-2xl font-semibold">{group && group.name}</h1>
-                <p className="text-gray-500 text-sm">Live Document</p>
+                <p className="text-gray-500 text-sm">Whiteboard</p>
               </div>
             </div>
             <div className="flex items-center">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="border border-gray-300 rounded-full py-2 px-4 text-sm"
-                />
-                <i className="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-              </div>
-              <button className="ml-4 bg-blue-600 text-white rounded-full py-2 px-4 text-sm">
+              
+              <button className="ml-4 bg-blue-600 text-white rounded-full py-2 px-4 text-sm" onClick={handleshare}>
                 Share
               </button>
             </div>
