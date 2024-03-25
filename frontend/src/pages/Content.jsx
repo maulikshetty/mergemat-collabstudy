@@ -4,9 +4,11 @@ import NotificationBar from '../components/Notificationbar.jsx';
 import './styles/content.css';
 import { useNavigate } from 'react-router-dom';
 import { db, storage, auth } from '../config/Firebase.jsx';
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { useAuth } from '../appcontext/Authcontext';
 import { useToast } from '@chakra-ui/react';
+import imgs from '../imgs/Group1mergematplacehold.png'
+import imgs2 from '../imgs/Coverdocuemnt.png'
 
 // test
 
@@ -19,6 +21,7 @@ export default function Content() {
     const [documents, setDocuments] = useState([]);
     const navigate = useNavigate();
     const toast = useToast();
+    const [projectDataref, setProjectDataref] = useState(null);
    
 
     useEffect(() => {
@@ -79,7 +82,8 @@ export default function Content() {
             try {
                 // Generate a project id
                 const projectId = generateProjectId();
-
+                const docID = projectId;
+                setProjectDataref(docID);
                 // Store project details in Firestore
                 const newProjectData = {
                     id: projectId,
@@ -87,51 +91,52 @@ export default function Content() {
                     type: modalType,
                     uploadedBy: auth.currentUser.uid,
                 };
-                const docRef = await addDoc(collection(db, 'projects'), newProjectData);
-
+                //const docRef = await addDoc(collection(db, 'projects'), newProjectData);
+                const docRef = doc(db, 'projects', docID);
+                await setDoc(docRef, newProjectData);
                 // Get the container where the new project will be displayed
                 const projectContainerId = modalType === 'whiteboard' ? 'whiteboardProjects' : 'documentProjects';
                 const projectContainer = document.getElementById(projectContainerId);
-
+    
                 // Create elements for the new project
                 const projectDiv = document.createElement('div');
                 projectDiv.className = 'bg-gray-200 p-4 rounded-lg';
-
+    
                 const img = document.createElement('img');
-                img.src = 'https://placehold.co/300x150';
+                img.src = 'https://mm.codespectre.org/src/imgs/Group1mergematplacehold.png';
                 img.alt = `Placeholder image of a ${projectName} project`;
                 img.className = 'rounded-lg mb-2';
                 img.style.width = '100%';
                 img.style.height = 'auto';
-
+    
                 const projectNameH4 = document.createElement('h4');
                 projectNameH4.className = 'font-semibold mb-1';
                 projectNameH4.textContent = projectName;
-
+    
                 const uploadedByP = document.createElement('p');
                 uploadedByP.className = 'text-sm mb-2';
                 uploadedByP.textContent = 'Uploaded by You';
-
+    
                 const viewAllButton = document.createElement('button');
                 viewAllButton.className = 'text-blue-500 text-sm font-semibold mr-1'; // Added margin-right
-                viewAllButton.textContent = 'VIEW ALL';
+                viewAllButton.textContent = 'VIEW ALL ';
                 viewAllButton.onclick = () => window.location.href = `/content/doc/${projectId}`;
-
+    
                 const deleteButton = document.createElement('button');
                 deleteButton.className = 'text-red-500 text-sm font-semibold ml-1'; // Added margin-left
                 deleteButton.textContent = 'DELETE';
                 deleteButton.onclick = () => deleteProject(projectName, modalType);
-
+    
                 // Append elements to the div
                 projectDiv.appendChild(img);
                 projectDiv.appendChild(projectNameH4);
                 projectDiv.appendChild(uploadedByP);
                 projectDiv.appendChild(viewAllButton);
                 projectDiv.appendChild(deleteButton);
-
+    
                 // Append the projectDiv to the container
                 projectContainer.appendChild(projectDiv);
-
+    
                 // Show success toast
                 toast({
                     title: 'Project Created',
@@ -140,8 +145,11 @@ export default function Content() {
                     duration: 5000,
                     isClosable: true,
                 });
-
+    
                 console.log('Project added with ID: ', docRef.id);
+    
+                // Refresh the page
+                window.location.reload();
             } catch (error) {
                 // Show error toast if there's a problem adding the project
                 console.error('Error adding project: ', error);
@@ -153,7 +161,7 @@ export default function Content() {
                     isClosable: true,
                 });
             }
-
+    
             // Close the modal
             closeModal();
         }
@@ -163,12 +171,14 @@ export default function Content() {
     const deleteProject = async (projectName, type) => {
         try {
             const collectionName = 'projects';
-            const groupQuery = query(collection(db, 'projects'), where('id', '==', project.id));
             const project = type === 'whiteboard' ? projects.find((p) => p.name === projectName) : documents.find((p) => p.name === projectName);
+            //const groupQuery = query(collection(db, 'projects'), where('id', '==', project.id));
+            //setProjectDataref(doc(db, 'projects', project.id));
             if (project) {
+                console.log('project: ', projectDataref);
                 console.log('db: ', db);
                 console.log('project.id: ', project.id);
-                console.log('groupQuery: ', groupQuery);
+                //console.log('groupQuery: ', groupQuery);
                 //await deleteDoc(doc(db, groupQuery));
                 await deleteDoc(doc(db, 'projects', project.id));
                 console.log(`${type} project deleted: `, projectName);
@@ -204,7 +214,8 @@ export default function Content() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex h-screen flex-col lg:flex-row
+         bg-gray-100">
             <Sidebar />
 
             <div className="flex-grow px-6 py-8">
@@ -214,8 +225,6 @@ export default function Content() {
                     <div className="mb-6">
                         <ul className="flex space-x-4 mb-4">
                             <li className="text-blue-500 font-semibold">Recently viewed</li>
-                            <li>Shared files</li>
-                            <li>Group projects</li>
                         </ul>
                         <div className="flex justify-between items-center mb-2">
                             <h3 className="font-semibold text-lg">Whiteboard projects</h3>
@@ -228,15 +237,15 @@ export default function Content() {
                         </div>
                         <div
                             id="whiteboardProjects"
-                            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                            className="grid grid-cols-1 md:grid-cols-3 gap-4"
                         >
                             {projects.map((project) => (
-                                <div key={project.name} className="bg-gray-200 p-4 rounded-lg">
+                                <div key={project.name} className="bg-gray-100 p-4 rounded-lg">
                                     <img
-                                        src="https://placehold.co/300x150"
+                                        src={imgs}
                                         alt={`Placeholder image of a ${project.name} project`}
                                         className="rounded-lg mb-2"
-                                        style={{ width: '100%', height: 'auto' }}
+                                        style={{ width: '420px', height: '250px' }}
                                     />
                                     <h4 className="font-semibold mb-1">{project.name}</h4>
                                     <p className="text-sm mb-2">Uploaded by You</p>
@@ -244,7 +253,7 @@ export default function Content() {
                                         className="text-blue-500 text-sm font-semibold mr-2"
                                         onClick={() => window.location.href = `/content/whiteboard/${project.id}`}
                                     >
-                                        VIEW ALL
+                                        VIEW ALL 
                                     </button>
                                     <button
                                         className="text-red-500 text-sm font-semibold"
@@ -268,23 +277,23 @@ export default function Content() {
                         </div>
                         <div
                             id="documentProjects"
-                            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                            className="grid grid-cols-1 md:grid-cols-3 gap-4"
                         >
                             {documents.map((document) => (
-                                <div key={document.name} className="bg-gray-200 p-4 rounded-lg">
+                                <div key={document.name} className="bg-gray-100 p-4 rounded-lg">
                                     <img
-                                        src="https://placehold.co/300x150"
+                                        src={imgs2}
                                         alt={`Placeholder image of a ${document.name} document`}
                                         className="rounded-lg mb-2"
-                                        style={{ width: '100%', height: 'auto' }}
+                                        style={{ width: '420px', height: '250px' }}
                                     />
                                     <h4 className="font-semibold mb-1">{document.name}</h4>
                                     <p className="text-sm mb-2">Uploaded by You</p>
                                     <button
-                                        className="text-blue-500 text-sm font-semibold"
+                                        className="text-blue-500 text-sm font-semibold mr-2"
                                         onClick={() => window.location.href = `/content/doc/${document.id}`}
                                     >
-                                        VIEW ALL
+                                        VIEW ALL 
                                     </button>
                                     <button
                                         className="text-red-500 text-sm font-semibold"
