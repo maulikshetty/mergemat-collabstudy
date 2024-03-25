@@ -59,6 +59,7 @@ export default function Groups() {
                 <Sidebar />
 
                 {/* Main content */}
+                
                 <div className="flex-grow px-6 py-8">
                     <div className="flex justify-between items-center">
                         <h1 className="text-2xl font-semibold">My Groups:</h1>
