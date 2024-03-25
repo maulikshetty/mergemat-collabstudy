@@ -98,42 +98,47 @@ export default function NotificationBar() {
             </div>
           ))}
         </div>
-        <div className="font-semibold text-lg mb-4">Activities</div>
-        <div className="flex items-center space-x-2 text-sm">
-          <i className="fas fa-paint-brush text-red-500"></i>
-          <div>
-            <div>Changed the style.</div>
-            <div className="text-xs text-gray-500">Just now</div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2 text-sm">
-          <i className="fas fa-upload text-blue-500"></i>
-          <div>
-            <div>Released a new version.</div>
-            <div className="text-xs text-gray-500">59 minutes ago</div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2 text-sm">
-          <i className="fas fa-bug text-orange-500"></i>
-          <div>
-            <div>Submitted a bug.</div>
-            <div className="text-xs text-gray-500">12 hours ago</div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2 text-sm">
-          <i className="fas fa-edit text-purple-500"></i>
-          <div>
-            <div>Modified a data in Page X.</div>
-            <div className="text-xs text-gray-500">Today, 11:59 AM</div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-2 text-sm">
-          <i className="fas fa-trash-alt text-red-500"></i>
-          <div>
-            <div>Deleted a page in Project X.</div>
-            <div className="text-xs text-gray-500">Feb 2, 2023</div>
-          </div>
-        </div>
+        <div className="font-semibold text-lg mb-4">Announcements</div>
+
+<div className="flex items-center space-x-2 text-sm">
+  <i className="fas fa-star text-yellow-500"></i>
+  <div>
+    <div>New feature released: Direct Messages</div>
+    <div className="text-xs text-gray-500">2 hours ago</div>
+  </div>
+</div>
+
+<div className="flex items-center space-x-2 text-sm">
+  <i className="fas fa-exclamation-circle text-red-500"></i>
+  <div>
+    <div>Scheduled maintenance on June 10th.</div>
+    <div className="text-xs text-gray-500">1 day ago</div>
+  </div>
+</div>
+
+<div className="flex items-center space-x-2 text-sm">
+  <i className="fas fa-trophy text-green-500"></i>
+  <div>
+    <div>Mergemat has pushed 6 updates in the last week</div>
+    <div className="text-xs text-gray-500">3 days ago</div>
+  </div>
+</div>
+
+<div className="flex items-center space-x-2 text-sm">
+  <i className="fas fa-star text-yellow-500"></i>
+  <div>
+    <div>New feature: Notification are created automatically now</div>
+    <div className="text-xs text-gray-500">5 days ago</div>
+  </div>
+</div>
+
+<div className="flex items-center space-x-2 text-sm">
+  <i className="fas fa-gift text-purple-500"></i>
+  <div>
+    <div>MergeMat has launched</div>
+    <div className="text-xs text-gray-500">12 weeks ago</div>
+  </div>
+</div>
 
         <div className="font-semibold text-lg mb-4">Recent Chats</div>
         {recentChats.length > 0 ? (
