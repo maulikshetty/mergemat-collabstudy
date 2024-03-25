@@ -140,10 +140,10 @@ function Calendar() {
             <div className="flex flex-col lg:flex-row h-screen">
                 <Sidebar />
                 <div className="flex-1 flex flex-col overflow-hidden">
-                    <div className="flex-shrink-0 flex items-center justify-between p-6 border-b bg-white">
+                    <div className="flex-shrink-0 flex items-center justify-between p-4 border-b bg-white lg:p-6">
                     </div>
-                    <div className="flex-grow flex overflow-hidden">
-                        <div className="flex-1 overflow-y-auto p-8 transparent">
+                    <div className="flex-grow flex flex-col lg:flex-row overflow-hidden">
+                         <div className="flex-1 overflow-y-auto p-4 lg:p-8">
                             <div className="flex justify-between items-center mb-6">
                                 <div className="text-xl font-semibold text-gray-800">Calendar</div>
                                 <div className="flex flex-1 justify-center items-center">
@@ -180,12 +180,12 @@ function Calendar() {
                                     Add Event
                                 </button>
                             </div>
-                            <div className="grid grid-cols-7 gap-4 text-center bg-white p-6 rounded-lg shadow-md">
+                            <div className="grid grid-cols-7 gap-2 text-center bg-white p-4 rounded-lg shadow-md lg:p-6 lg:gap-4">
                                 {renderCalendarDays()}
-                            </div>
-                        </div>
-                        <div className="w-full lg:w-60 bg-white p-6 shadow-lg overflow-y-auto">
-                            <NotificationBar />
+                                </div>
+            </div>
+            <div className="w-full lg:w-60 bg-white p-4 shadow-lg overflow-y-auto lg:p-6">
+              <NotificationBar />
                             <div className="p-6">
                                 <h2 className="text-lg font-semibold mb-4">Events</h2>
                                 {events.length === 0 ? (
@@ -209,8 +209,8 @@ function Calendar() {
     
             {/* Modal for adding events */}
             {showModal && (
-                <div className="fixed z-10 inset-0 overflow-y-auto">
-                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
                         <div className="fixed inset-0 transition-opacity">
                             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
                         </div>
