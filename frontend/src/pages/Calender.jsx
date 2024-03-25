@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import NotificationBar from '../components/Notificationbar';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
-
-
-
-
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore'; // Import `query` and `where`
+import { db } from '../config/Firebase';
+import { auth } from '../config/Firebase'; // Ensure `auth` is imported
+import { useNotifications } from '../components/NotificationContext';
 
 function Calendar() {
     const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -15,10 +14,28 @@ function Calendar() {
     const [selectedDate, setSelectedDate] = useState(null);
     const [events, setEvents] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const { addNotification } = useNotifications();
     const [newEventTitle, setNewEventTitle] = useState('');
 
+    useEffect(() => {
+        const fetchEvents = async () => {
+            if (!auth.currentUser) return; // Ensure there's a logged-in user
+            const userUid = auth.currentUser.uid; // Get the current user's UID
 
-    
+            const eventsCollectionRef = collection(db, 'events');
+            const q = query(eventsCollectionRef, where("userId", "==", userUid)); // Filter events by userId
+            const eventsSnapshot = await getDocs(q);
+            const eventsList = eventsSnapshot.docs.map((doc) => ({
+                id: doc.id,
+                title: doc.data().title,
+                date: doc.data().date.toDate(), // Convert Firestore Timestamp to Date instance
+            }));
+            setEvents(eventsList);
+        };
+
+        fetchEvents();
+    }, []);
+
     // Determine today's date
     const today = new Date();
     const todayDateString = today.toDateString();
@@ -43,24 +60,32 @@ function Calendar() {
         }
     };
 
-    const handleSubmitEvent = () => {
-        if (newEventTitle.trim() !== '') {
-            const newEvent = {
+    const handleSubmitEvent = async () => {
+        if (newEventTitle.trim() !== '' && auth.currentUser) {
+            const userUid = auth.currentUser.uid; // Get the current user's UID
+            const eventData = {
                 title: newEventTitle,
                 date: selectedDate,
+                userId: userUid, // Add the userId to the event data
             };
-            setEvents([...events, newEvent]);
-            setShowModal(false);
-            setNewEventTitle('');
+            try {
+                const eventsCollection = collection(db, 'events');
+                const newEventDoc = await addDoc(eventsCollection, eventData);
+                setEvents([...events, { id: newEventDoc.id, ...eventData }]);
+                setShowModal(false);
+                setNewEventTitle('');
+                await addNotification(`New event added: ${newEventTitle}`);
+            } catch (error) {
+                console.error('Error adding event: ', error);
+            }
         }
     };
-
     const renderCalendarDays = () => {
         const daysInMonth = getDaysInMonth(year, month);
         const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
         const calendarDays = [];
         const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
+    
         for (let i = 0; i < 7; i++) {
             calendarDays.push(
                 <div key={`day-name-${i}`} className="text-center font-semibold text-gray-600">
@@ -76,21 +101,23 @@ function Calendar() {
             const dateStr = date.toDateString();
             const isSelected = selectedDate && selectedDate.toDateString() === dateStr;
             const isToday = dateStr === todayDateString;
-            const dayEvents = events.filter((event) => event.date.toDateString() === dateStr);
-
+            const dayEvents = events.filter((event) => {
+                const eventDate = new Date(event.date);
+                return eventDate.toDateString() === dateStr;
+            });
+    
             const dayStyle = isToday ? { backgroundColor: '#B3E5FC' } : {};
-
+    
             calendarDays.push(
                 <div
                     key={`day-${day}`}
-                    className={`text-center text-gray-700 hover:bg-indigo-100 cursor-pointer transition-colors duration-200 p-2 rounded-full ${isSelected ? 'bg-indigo-500 text-white' : ''
-                        }`}
+                    className={`text-center text-gray-700 hover:bg-indigo-100 cursor-pointer transition-colors duration-200 p-2 rounded-full ${isSelected ? 'bg-indigo-500 text-white' : ''}`}
                     style={dayStyle}
                     onClick={() => setSelectedDate(date)}
                 >
                     <div>{day}</div>
                     {dayEvents.length > 0 && (
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-black-500">
                             {dayEvents.map((event, index) => (
                                 <div key={index}>{event.title}</div>
                             ))}
@@ -99,9 +126,10 @@ function Calendar() {
                 </div>
             );
         }
-
+    
         return calendarDays;
     };
+    
 
     return (
         <div>
@@ -229,5 +257,12 @@ function Calendar() {
             )}
         </div>
     );
-} 
+            };
 export default Calendar;
+
+
+
+
+
+
+
