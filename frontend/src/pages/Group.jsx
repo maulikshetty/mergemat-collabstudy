@@ -155,31 +155,37 @@ export default function Group() {
                     <div class="flex-1 flex flex-col">
 
                     <div class="flex-1 p-4 overflow-y-auto" style={{ maxHeight: '82vh' }}>
-                        {messages.map(message => (
+                    {messages.length === 0 ? (
+                        <div class="text-center text-gray-500 mt-8">
+                            Be the first to message the group!
+                        </div>
+                    ) : (
+                        messages.map(message => (
                             <div class="flex items-start space-x-2 mb-4">
                                 <div class="rounded-full bg-blue-500 text-white w-8 h-8 flex items-center justify-center">{message.user[0]}</div>
-                                <div class="flex-grow"> {/* Add 'flex-grow' class */}
+                                <div class="flex-grow">
                                     <div class="text-sm font-semibold">{message.user}</div>
                                     <div class="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'Loading...'}</div>
                                     <p class="mb-4">
-                                         {message.text.includes('http://') || message.text.includes('https://') ? (
-                                             <a href={message.text} target="_blank" rel="noopener noreferrer" class="text-blue-500">{message.text}</a>
-                                         ) : (
-                                             message.text
-                                         )}
-                                     </p>
+                                        {message.text.includes('http://') || message.text.includes('https://') ? (
+                                            <a href={message.text} target="_blank" rel="noopener noreferrer" class="text-blue-500">{message.text}</a>
+                                        ) : (
+                                            message.text
+                                        )}
+                                    </p>
                                 </div>
                                 {message.user === currentUser.username && (
-                                    <div class="flex-none"> {/* Add 'flex-none' class */}
+                                    <div class="flex-none">
                                         <button onClick={() => deleteMessage(message.id)} class="text-red-500 focus:outline-none">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 )}
                             </div>
-                        ))}
-                        <div ref={messagesEndRef} />
-                    </div>
+                        ))
+                    )}
+                    <div ref={messagesEndRef} />
+                </div>
 
         <div class="border-t p-4 flex items-center space-x-3">
             <button class="text-gray-500 focus:outline-none">
