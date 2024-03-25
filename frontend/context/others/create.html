@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MergeMat Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+        @media (max-width: 768px) {
+            .responsive-wrap {
+                flex-wrap: wrap;
+            }
+            .responsive-wrap > div {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen responsive-wrap">
+        <!-- Sidebar -->
+        <div class="w-64 bg-white shadow-md">
+            <!-- Sidebar content here -->
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Bar -->
+            <div class="flex-shrink-0 flex items-center justify-between p-4 border-b">
+                <!-- Top bar content here -->
+            </div>
+
+            <!-- Main Panel -->
+            <div class="flex-grow overflow-auto p-6">
+                <div class="bg-white shadow rounded-lg p-6">
+                    <div class="mb-4">
+                        <h2 class="text-xl font-semibold">Create Group</h2>
+                    </div>
+                    <div class="grid grid-cols-1 gap-6">
+                        <label class="block">
+                            <span class="text-gray-700">Group Name:</span>
+                            <input type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="">
+                        </label>
+                        <label class="block">
+                            <span class="text-gray-700">Add Members</span>
+                            <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                <option>Member 1</option>
+                                <option>Member 2</option>
+                                <option>Member 3</option>
+                                <!-- Add more options as needed -->
+                            </select>
+                        </label>
+                        <label class="block cursor-pointer">
+                            <span class="text-gray-700">Upload Picture</span>
+                            <div class="mt-1 block w-full rounded-md border-2 border-dashed border-gray-300 p-6 text-center">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-gray-300"></i>
+                                <input type="file" class="hidden">
+                            </div>
+                        </label>
+                        <button class="bg-gray-800 text-white rounded-md px-4 py-2">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="w-64 bg-white shadow-md overflow-auto">
+            <!-- Right sidebar content here -->
+        </div>
+    </div>
+</body>
+</html>

@@ -1,28 +1,28 @@
-import { auth } from '../config/Firebase';
-import { createUserWithEmailAndPassword } from "firebase/auth"
-import { useState } from 'react';
+import {auth} from '../config/Firebase';
+import {createUserWithEmailAndPassword} from "firebase/auth"
+import {useState} from 'react';
 
-export const Auth = () => {
+export const Auth = () =>{
 
-  const [email, setemail] = useState("")
-  const [password, setpassword] = useState("")
+  const [email,setemail] = useState("")
+  const [password,setpassword] = useState("")
 
   const signup = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password)
     } catch (error) {
-      console.error("error")
+      console.error("error") 
     }
-
+    
   }
-  return (
+  return(
     <div>
-      <input placeholder="Email" onChange={(e) => setemail(e.target.value)}></input>
+      <input placeholder="Email" onChange={(e)=> setemail(e.target.value)}></input>
       <input placeholder="Firstname"></input>
       <input placeholder="Lastname"></input>
-      <input placeholder="Password" onChange={(e) => setpassword(e.target.value)}></input>
+      <input placeholder="Password" onChange={(e)=> setpassword(e.target.value)}></input>
       <button onClick={signup}> sign up </button>
     </div>
-
+    
   )
 }

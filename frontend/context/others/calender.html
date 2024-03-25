@@ -1,0 +1,116 @@
+import React from 'react'; function Calendar() { return (
+<div className="flex flex-col lg:flex-row h-screen">
+  {/* Sidebar */}
+  <div className="bg-white p-6 shadow-lg lg:w-64">
+    <div className="flex items-center space-x-2 mb-7">
+      <img
+        src="https://placehold.co/32x32"
+        alt="Company logo"
+        className="h-8 w-8"
+      />
+      <span className="font-semibold text-lg">MergeMat</span>
+    </div>
+    <div className="space-y-3">{/* Sidebar content here */}</div>
+  </div>
+
+  {/* Main content */}
+  <div className="flex-1 flex flex-col overflow-hidden">
+    {/* Top bar */}
+    <div
+      className="flex-shrink-0 flex items-center justify-between p-6 border-b"
+    >
+      {/* Top bar content here */}
+    </div>
+
+    {/* Calendar and activity section */}
+    <div className="flex-grow flex overflow-hidden">
+      {/* Calendar */}
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex justify-between items-center mb-6">
+          <div className="text-lg font-semibold">Calendar</div>
+          <div className="flex items-center">
+            <button className="text-gray-600 mr-4">
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            <span className="font-semibold text-lg">June 2019</span>
+            <button className="text-gray-600 ml-4">
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded">
+            Add Event
+          </button>
+        </div>
+        <div className="grid grid-cols-7 gap-4 text-center">
+          {/* Calendar dates and events here */}
+          <div className="py-2">1</div>
+          <div className="py-2">2</div>
+          <div className="py-2">3</div>
+          <div className="py-2">4</div>
+          <div className="py-2">5</div>
+          <div className="py-2">6</div>
+          <div className="py-2">7</div>
+          <div className="py-2">8</div>
+          <div className="py-2">
+            9
+            <span className="event-tag bg-yellow-200 text-yellow-800"
+              >Professor meeting about exam issue</span
+            >
+          </div>
+          <div className="py-2">10</div>
+          <div className="py-2">
+            11
+            <span className="event-tag bg-blue-200 text-blue-800"
+              >Exam - 1</span
+            >
+          </div>
+          <div className="py-2">12</div>
+          <div className="py-2">13</div>
+          <div className="py-2">14</div>
+          <div className="py-2">15</div>
+          <div className="py-2">16</div>
+          <div className="py-2">
+            17
+            <span className="event-tag bg-green-200 text-green-800"
+              >Day Meeting - COP18</span
+            >
+          </div>
+          <div className="py-2">18</div>
+          <div className="py-2">19</div>
+          <div className="py-2">20</div>
+          <div className="py-2">21</div>
+          <div className="py-2">22</div>
+          <div className="py-2">23</div>
+          <div className="py-2">24</div>
+          <div className="py-2">25</div>
+          <div className="py-2">26</div>
+          <div className="py-2">27</div>
+          <div className="py-2">
+            28
+            <span className="event-tag bg-purple-200 text-purple-800"
+              >Duo Meets</span
+            >
+          </div>
+          <div className="py-2">
+            29
+            <span className="event-tag bg-pink-200 text-pink-800"
+              >Taster SSON.</span
+            >
+          </div>
+          <div className="py-2">30</div>
+          <div className="py-2">31</div>
+          <div className="py-2">1</div>
+          <div className="py-2">2</div>
+          <div className="py-2">3</div>
+          <div className="py-2">4</div>
+        </div>
+      </div>
+
+      {/* Right sidebar */}
+      <div className="w-full lg:w-80 bg-white p-6 shadow-lg overflow-y-auto">
+        {/* Notifications and activities */}
+      </div>
+    </div>
+  </div>
+</div>
+); } export default Calendar;
