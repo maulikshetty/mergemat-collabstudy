@@ -64,7 +64,12 @@
     display: flex;
     align-items: center;
     padding: 10px;
-    gap: 20px;
+    gap: 10px;
+    cursor: pointer;
+    border: 10px;
+    margin-bottom: 3px;
+    border-radius: 10px;
+
 
 
     img {
@@ -74,4 +79,16 @@
         object-fit: cover;
         margin-right: 10px;
     }
+
+    .name {
+        font-family: system-ui;
+        font-weight: 500;
+        color: rgb(64, 61, 61);
+        font-size: 16px;
+
+    }
+}
+
+.search-inner:hover {
+    background-color: #dddada53;
 }

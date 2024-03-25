@@ -21,6 +21,8 @@ export default function topbar({ currentUser }) {
     const [isSearch, setIsSearch] = useState(false)
     const [searchInput, setSearchInput] = useState('')
 
+    const [filteredUsers, setFilteredUsers] = useState("")
+
     const goToRoute = (route) => {
         nav(route);
     }
@@ -38,10 +40,36 @@ export default function topbar({ currentUser }) {
         });
     };
 
+    const handleSearch = () => {
+
+        if (searchInput !== '') {
+            let searched = users.filter((user) => {
+                return Object.values(user).join('').toLowerCase().includes(searchInput.toLowerCase())
+            })
+
+            setFilteredUsers(searched);
+
+        } else {
+            setFilteredUsers(users);
+        }
+    }
+
+    useEffect(() => {
+        let debounced = setTimeout(() => {
+            handleSearch()
+
+        }, 1000)
+        return () => clearTimeout(debounced)
+
+
+    }, [searchInput])
+
+
+
+
     useEffect(() => {
         getAllUsers(setUsers)
     }, [])
-
 
 
 
@@ -74,17 +102,22 @@ export default function topbar({ currentUser }) {
             }
             <img className='user' src={currentUser?.imageLink} alt="User" onClick={displayPopup} />
 
-            {!searchInput.length === 0 ? <></> : <div className='search-result'>
-                {users.map((user) => (
-                    <div className='search-inner'>
-                        {user.imageLink ? <img src={user.imageLink} /> : <img src={Default} />}
-                        <p className='name'>{user.firstname} {user.lastname}</p>
+            {searchInput.length === 0 ? <></> : <div className='search-result'>
+                {filteredUsers.length === 0 ? (
+                    <div className='search-inner'> No Results Found...</div>) : (
+
+                    filteredUsers.map((user) => (
+                        <div className='search-inner'>
+                            {user.imageLink ? <img src={user.imageLink} /> : <img src={Default} />}
+                            <p className='name'>{user.firstname} {user.lastname}</p>
 
 
-                    </div>
-                ))}
+                        </div>
+                    ))
+                )}
 
             </div>}
+
 
 
         </div>
