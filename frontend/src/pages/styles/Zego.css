@@ -1,3 +1,8 @@
-.QajuHzlZleFtiTUp_E8u .VsTVUAD89KWleD0YRVsD {
+/* .QajuHzlZleFtiTUp_E8u .VsTVUAD89KWleD0YRVsD {
     background: black;
+} */
+
+.VsTVUAD89KWleD0YRVsD {
+    background: black !important;
+    /* background-color: black; */
 }

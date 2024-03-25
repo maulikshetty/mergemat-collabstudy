@@ -1,0 +1,18 @@
+.common-btn {
+    max-width: auto;
+    width: 300px;
+    height: auto;
+    cursor: pointer;
+    padding: 10px;
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 30px;
+    font-weight: 400;
+    color: white;
+    margin-top: 25px;
+
+}
+
+.common-btn:hover {
+    border-color: white;
+}

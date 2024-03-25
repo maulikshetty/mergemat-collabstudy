@@ -1,0 +1,312 @@
+@media screen and (min-width: 480px) {
+    .responsive-container {
+        width: 75%;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .responsive-container {
+        width: 66.66%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .responsive-container {
+        width: 50%;
+    }
+}
+
+
+
+
+
+#container {
+    border: 1px solid black;
+    border-radius: 10px;
+
+    width: 100%;
+
+    height: 100%;
+    display: flex;
+
+}
+
+.sidebar {
+
+    flex: 0.7;
+    border-right: 1px solid black;
+
+    .search {
+        border-bottom: 1px solid gray;
+
+        /* display: flex;
+        align-items: center; */
+        .searchForm {
+            padding: 10px;
+
+
+        }
+    }
+}
+
+
+
+.userChat {
+    margin-top: 20px;
+    padding-left: 10px;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+    color: gray;
+    cursor: pointer;
+
+    img {
+
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+
+    }
+
+    &:hover {
+        background-color: #e1dfdf;
+    }
+}
+
+
+
+
+
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    height: 50px;
+
+}
+
+
+.user {
+    display: flex;
+    gap: 10px;
+
+    .image {
+        background: #000;
+        height: 45px;
+        width: 45px;
+        border-radius: 50%;
+        object-fit: cover;
+
+    }
+
+
+
+
+}
+
+.chat {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    /* Distribute space between messages and input/button */
+
+
+    .chatInfo {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        color: black;
+        font-weight: bold;
+        font-size: 20px;
+        gap: 10px;
+        margin-top: 30px;
+        margin-bottom: 50px;
+
+        justify-content: space-between;
+
+
+        .image {
+            background: #000;
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+
+        }
+
+        .together {
+
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            gap: 10px;
+
+        }
+
+    }
+
+    .messages {
+        padding: 10px;
+        flex-grow: 1;
+        /* Allow messages to take up remaining space */
+        overflow-y: auto;
+        /* Add scrollbar when messages exceed container height */
+        margin-bottom: 20px;
+        /* Add space at the bottom */
+
+
+
+        .message {
+            display: flex;
+            margin-bottom: 20px;
+
+
+            gap: 20px;
+
+            .messageInfo {
+                display: flex;
+                flex-direction: column;
+                color: rgb(189, 187, 187);
+
+                font-size: 12px;
+
+
+
+
+                img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin-bottom: 5px;
+                }
+
+            }
+
+            .messageContent {
+                max-width: 80%;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                p {
+                    background-color: rgb(227, 224, 224);
+                    padding: 10px 20px;
+                    border-radius: 10px 10px 10px 0px;
+                    max-width: max-content;
+
+
+
+                }
+
+                img {
+                    width: 50%;
+                }
+            }
+
+            &.owner {
+                flex-direction: row-reverse;
+
+                .messageContent {
+                    align-items: flex-end;
+
+                    p {
+                        background-color:
+                            #b59ec9c9;
+                        border-radius: 10px 10px 0px 10px;
+
+
+                    }
+                }
+            }
+        }
+    }
+
+    .input {
+        height: 50px;
+        background-color: whitesmoke;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        border: 1px solid gray;
+    }
+
+    .input input {
+        flex: 1;
+        border: none;
+        outline: none;
+        color: #1a0830;
+        font-size: 18px;
+        padding: 8px;
+        margin-right: 10px;
+        /* Add some margin between input and icons */
+
+        &::placeholder {
+            color: lightgray;
+        }
+    }
+
+    .icons {
+        display: flex;
+        align-items: center;
+    }
+
+    .icon {
+        width: 30px;
+        /* Adjust the size as needed */
+        height: 50px;
+        margin-right: 10px;
+        /* Add some margin between icons */
+    }
+
+    .send-button {
+        background-color: #00000068;
+
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        border-radius: 10px;
+        /* Add transition for smooth hover effect */
+    }
+
+    .send-button:hover {
+        background-color: #000000;
+        /* Change to your desired light color */
+
+        font-weight: 300;
+        /* Change text color accordingly */
+    }
+
+
+    /* .input {
+        height: 50px;
+        background-color: whitesmoke;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        border-color: gray;
+
+        input {
+            width: 100%;
+            border: none;
+            outline: none;
+            color: #2f2d52;
+            font-size: 18px;
+
+            &::placeholder {
+                color: lightgray;
+            }
+        }
+    } */
+
+}
