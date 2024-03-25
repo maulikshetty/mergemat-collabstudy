@@ -150,6 +150,7 @@ export default function Content() {
     
                 // Refresh the page
                 window.location.reload();
+
             } catch (error) {
                 // Show error toast if there's a problem adding the project
                 console.error('Error adding project: ', error);

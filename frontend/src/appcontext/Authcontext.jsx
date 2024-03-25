@@ -16,6 +16,8 @@ export function AuthProvider({ children }) {
     function signup(email, password, firstName, lastName, username) {
         return auth.createUserWithEmailAndPassword(email, password)
           .then((userCredential) => {
+
+            userCredential.user.sendEmailVerification()
             // Use the UID from the userCredential to create the document in Firestore
             return setDoc(doc(db, 'users', userCredential.user.uid), {
               firstname: firstName,
@@ -28,14 +30,38 @@ export function AuthProvider({ children }) {
       }
       
 
+      function resendVerificationEmail() {
+        return auth.currentUser.sendEmailVerification()
+          .then(() => {
+            // Email verification sent
+            alert('Email verification link has been sent to your email address.');
+          })
+          .catch((error) => {
+            // Handle error
+            alert('Error resending email verification: ' + error.message);
+          });
+      }
 
 
 
     function login(email, password) {
         return auth.signInWithEmailAndPassword(email, password)
-
+        .then((userCredential) => {
+          // Check if the user's email is verified
+          if (userCredential.user.emailVerified) {
+            // Email is verified, allow login
+            return userCredential;
+          } else {
+            // Email is not verified, throw an error
+            alert('Please verify your email before logging in.');
+            resendVerificationEmail(email);
+            throw new Error('Please verify your email before logging in.');
+          }
+        });
 
     }
+
+ 
 
     function logout() {
         return auth.signOut()
@@ -51,7 +77,9 @@ export function AuthProvider({ children }) {
         
       
         return auth.currentUser.verifyBeforeUpdateEmail(email)
-         
+        
+        
+
           // Use the UID from the userCredential to create the document in Firestore
          
         
@@ -71,6 +99,8 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async user => {
           if (user) {
+
+            if (user.emailVerified) {
             // Set the user's auth details
             setCurrentUser(user);
       
@@ -85,6 +115,10 @@ export function AuthProvider({ children }) {
                 return {...prevUser, ...userData};
               });
             }
+          }else {
+            // Email is not verified, clear the currentUser state
+            setCurrentUser(null);
+          } 
           }
           setLoading(false);
         });
@@ -93,7 +127,7 @@ export function AuthProvider({ children }) {
       
 
     const value = {
-        currentUser, login, logout, resetPassword, updateEmail, updatePassword, signup
+        currentUser, login, logout, resetPassword, updateEmail, updatePassword, signup, resendVerificationEmail
     }
     return (
         <AuthContext.Provider value={value}>
