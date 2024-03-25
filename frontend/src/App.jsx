@@ -17,8 +17,6 @@ import ContentIn from './pages/Content-in'
 import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
 import Explore from './pages/Explore/ExploreLayout'
-import DirectM from './pages/DirectMessages/DirectM'
-import { ChatContextProvider } from './appcontext/Chatcontext'
 import ProfileLayout from './pages/Explore/ProfileLayout'
 import ConnectionLayout from './pages/Explore/ConnectionLayout'
 import Messages from './pages/Messages'
@@ -41,7 +39,6 @@ function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
-      <ChatContextProvider>
       <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
       <ChakraProvider position='bottom-right' toastOptions={{ duration: 2000 }} />
       <Routes>
@@ -71,7 +68,6 @@ function App() {
         <Route path='/connections' element={<PrivateRoute><ConnectionLayout /></PrivateRoute>} />
       </Routes>
       </NotificationProvider>
-      </ChatContextProvider>
     </AuthProvider>
   )
 }
