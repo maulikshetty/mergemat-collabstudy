@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDocs, query, collection, where, doc, setDoc, getDoc } from 'firebase/firestore';
+import { getDocs, query, collection, where, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../config/Firebase.jsx';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext.jsx';
 import { useToast } from "@chakra-ui/react";
@@ -17,6 +17,7 @@ export default function PersonalFiles() {
     const fileInputRef = useRef(null);
     const [buttonText, setButtonText] = useState('Upload');
     const [isLoading, setIsLoading] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const handleButtonClick = () => {
         if (buttonText === 'Upload') {
@@ -89,6 +90,37 @@ export default function PersonalFiles() {
         );
     }
 
+    const handleFileDelete = async (fileName) => {
+        setIsDeleting(true);
+        try {
+            const fileRef = ref(storage, 'personalFiles/' + fileName);
+            await deleteObject(fileRef);
+
+            const fileDoc = doc(db, 'personalFiles', fileName);
+            await deleteDoc(fileDoc);
+
+            toast({
+                title: "File deleted.",
+                description: "Your file has been successfully deleted.",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+            });
+
+            await fetchFiles();
+        } catch (error) {
+            console.error("Error deleting file:", error);
+            toast({
+                title: "Error deleting file.",
+                description: "An error occurred while deleting the file.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+            });
+        }
+        setIsDeleting(false);
+    };
+
     useEffect(() => {
         fetchFiles();
     }, []);
@@ -109,8 +141,8 @@ export default function PersonalFiles() {
                                 <i class="fas fa-bars"></i>
                             </button>
                             <div className="flex justify-between items-center">
-                        <h1 className="text-2xl font-semibold">My Files:</h1>
-                    </div>
+                                <h1 className="text-2xl font-semibold">My Files:</h1>
+                            </div>
                         </div>
                     </div>
                     <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
@@ -136,7 +168,7 @@ export default function PersonalFiles() {
                                                     Uploaded On
                                                 </th>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    Install
+                                                    Actions
                                                 </th>
                                             </tr>
                                         </thead>
@@ -153,11 +185,20 @@ export default function PersonalFiles() {
                                                         {file.uploadDate}
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
-                                                        <a href={file.url} download={file.name}>
-                                                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                                                Download
+                                                        <div className="flex space-x-2">
+                                                            <a href={file.url} download={file.name}>
+                                                                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                                                    Download
+                                                                </button>
+                                                            </a>
+                                                            <button
+                                                                onClick={() => handleFileDelete(file.name)}
+                                                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                                                disabled={isDeleting}
+                                                            >
+                                                                {isDeleting ? 'Deleting...' : 'Delete'}
                                                             </button>
-                                                        </a>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
