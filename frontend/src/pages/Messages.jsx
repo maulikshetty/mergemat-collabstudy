@@ -42,7 +42,6 @@ export default function Messages() {
 
     
 
-
     useEffect(() => {
         let unsubscribe;
     
@@ -167,7 +166,19 @@ export default function Messages() {
         }
     };
 
-    
+    const getLatestMessage = (chat) => {
+        const chatMessages = messages.filter(
+          (message) =>
+            message.users.includes(currentUser.username) &&
+            message.users.includes(chat.username)
+        );
+        if (chatMessages.length > 0) {
+          const latestMessage = chatMessages[chatMessages.length - 1];
+          return latestMessage.text;
+        }
+        return "";
+      };
+      
 
     return (
         <html lang="en">
@@ -223,17 +234,19 @@ export default function Messages() {
                                         ))}
                                 </div>
                             )}
-                            <div className="mt-2">
-                                <div className="font-medium text-gray-600 mb-2">Pinned</div>
-                                <div className="text-sm space-y-1">
-                                    {/* Pinned content */}
-                                </div>
-                            </div>
                         </div>
                         <div>
-                            <div className="font-medium text-gray-600 mb-2">Recent</div>
-                            <div className="space-y-4">
-                                {recentChats.map(chat => (
+                        <div className="font-medium text-gray-600 mb-2">Recent</div>
+                        <div className="space-y-4">
+                            {recentChats.map(chat => {
+                                const chatMessages = messages.filter(
+                                    (message) =>
+                                        message.users.includes(currentUser.username) &&
+                                        message.users.includes(chat.username)
+                                );
+                                const latestMessage = chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : null;
+
+                                return (
                                     <div
                                         key={chat.username}
                                         className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 px-2 py-2 rounded-md"
@@ -246,12 +259,15 @@ export default function Messages() {
                                         />
                                         <div>
                                             <div className="font-medium">{chat.firstname}</div>
-                                            <div className="text-xs text-gray-500">3/13/2024, 1:43:46 PM</div>
+                                            <div className="text-xs text-gray-500">
+                                                {latestMessage ? new Date(latestMessage.timestamp.seconds * 1000).toLocaleString() : ''}
+                                            </div>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
+                                );
+                            })}
                         </div>
+                    </div>
                     </div>
     
                     {/* Chat Window */}
@@ -277,15 +293,15 @@ export default function Messages() {
                                     )
                                     .map(message => (
                                         <div key={message.id} className={`flex space-x-2 ${message.senderUsername === currentUser.username ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                                        <img
-                                            src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                                            alt="Profile"
-                                            className="h-8 w-8 rounded-full"
-                                        />
-                                        <div className={`px-4 py-2 rounded-lg ${message.senderUsername === currentUser.username ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
-                                            <div>{message.text}</div>
-                                            <div className="text-xs mt-1">{new Date(message.timestamp.seconds * 1000).toLocaleString()}</div>
-                                        </div>
+                                            <img
+                                                src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                                                alt="Profile"
+                                                className="h-8 w-8 rounded-full"
+                                            />
+                                            <div className={`px-4 py-2 rounded-lg ${message.senderUsername === currentUser.username ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+                                                <div>{message.text}</div>
+                                                <div className="text-xs mt-1">{new Date(message.timestamp.seconds * 1000).toLocaleString()}</div>
+                                            </div>
                                         </div>
                                     ))
                                     }
@@ -315,4 +331,5 @@ export default function Messages() {
                 </div>
             </body>
         </html>
-    );}
+    );
+}

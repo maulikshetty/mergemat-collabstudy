@@ -81,12 +81,12 @@ export default function Groups() {
                     />
                     <div className="mt-4">
                         <div className="font-semibold">{group.groupName}</div>
-                        <div className="text-sm text-gray-500">Meeting in progress..</div>
+                        <div className="text-sm text-gray-500">Collaborate with your group</div>
                     </div>
                     <div className="flex justify-between items-center mt-4">
                         <div className="flex items-center">
-                        <img src="https://placehold.co/32x32" alt="Group icon" className="h-8 w-8 rounded-full" />
-                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-2">18</span>
+                        <img src="https://www.svgrepo.com/show/90343/multiple-user-profile-images.svg" alt="Group icon" className="h-8 w-8 rounded-full" />
+                        <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-2">New</span>
                         </div>
                         <button className="text-blue-500 hover:text-blue-600" onClick={() => window.location.href = `/group/${group.groupId}`}>View</button>
                     </div>
