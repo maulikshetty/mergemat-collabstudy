@@ -7,6 +7,8 @@ import PostsCard from "./PostsCard"
 import { getCurrentTimeStamp } from '../../helpers/useMoment';
 import getUniqueID from '../../helpers/getUniqueID';
 import Default from "../../imgs/default.jpg"
+import { uploadPostImage } from '../../api/ImageUpload';
+
 
 
 
@@ -19,6 +21,7 @@ export default function postUpdate({ currentUser }) {
 
     const [currentPost, setCurrentPost] = useState({})
 
+    const [postImage, setPostImage] = useState('')
 
 
 
@@ -30,6 +33,7 @@ export default function postUpdate({ currentUser }) {
             userName: currentUser.firstname + ' ' + currentUser.lastname,
             postID: getUniqueID(),
             userId: currentUser.uid,
+            postImage: postImage,
         }
         await postStatus(object)
         await setModalOpen(false)
@@ -50,7 +54,7 @@ export default function postUpdate({ currentUser }) {
 
     const updateStatus = () => {
 
-        updatePost(currentPost.id, status)
+        updatePost(currentPost.id, status, postImage)
         setModalOpen(false)
 
 
@@ -61,6 +65,7 @@ export default function postUpdate({ currentUser }) {
         getStatus(setAllStatus);
 
     }, [])
+
 
 
 
@@ -80,7 +85,12 @@ export default function postUpdate({ currentUser }) {
 
             </div>
 
-            <Modal setStatus={setStatus} modalOpen={modalOpen} setModalOpen={setModalOpen} status={status} sendStatus={sendStatus} isEdit={isEdit} updateStatus={updateStatus} />
+            <Modal setStatus={setStatus} modalOpen={modalOpen} setModalOpen={setModalOpen} status={status} sendStatus={sendStatus} isEdit={isEdit} updateStatus={updateStatus}
+                uploadPostImage={uploadPostImage}
+                setPostImage={setPostImage}
+                postImage={postImage}
+                currentPost={currentPost}
+                setCurrentPost={setCurrentPost} />
 
 
             <div>

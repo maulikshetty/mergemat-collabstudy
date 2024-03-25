@@ -27,7 +27,7 @@
             width: 170px;
             border-radius: 50%;
             height: 170px;
-            object-fit: contain;
+            object-fit: cover;
             border: 2px solid #d4d3d385;
             padding: 1px;
             cursor: pointer;

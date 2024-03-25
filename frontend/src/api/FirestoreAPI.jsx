@@ -13,6 +13,7 @@ let userRef = collection(db, "users")
 let connectionsRef = collection(db, "connections")
 
 
+
 export const postStatus = (object) => {
 
     addDoc(postsRef, object).then(() => {
@@ -64,6 +65,7 @@ export const editProfile = (uid, payload) => {
     }).catch((err) => {
         console.log(err)
     })
+
 }
 
 export const getSingleStatus = (setAllStatus, id) => {
@@ -182,12 +184,13 @@ export const getAllUsers = (setAllUsers) => {
 }
 
 
-export const updatePost = (id, status) => {
+export const updatePost = (id, status, postImage) => {
 
     let postToUpdate = doc(postsRef, id)
     try {
 
-        updateDoc(postToUpdate, { status })
+        updateDoc(postToUpdate, { status, postImage })
+        toast.success("Post has been updated!")
     } catch (err) {
         console.log(err)
     }
@@ -245,3 +248,5 @@ export const getConnections = (userId, targetId, setIsConnected) => {
         console.log(err)
     }
 }
+
+

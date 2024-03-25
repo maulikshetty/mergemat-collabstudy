@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import './topbar.css'
 import Logo from "../../imgs/merge.png"
 import { IoHome } from "react-icons/io5";
@@ -11,9 +11,10 @@ import Default from "../../imgs/default.jpg"
 import { useNavigate } from "react-router-dom"
 import ProfilePopup from './ProfilePopup';
 import SearchUsers from './SearchUsers';
-import { getAllUsers } from '../../api/FirestoreAPI';
+import { getAllUsers, getCurrentUser } from '../../api/FirestoreAPI';
+import { auth } from '../../config/Firebase';
 
-export default function topbar({ currentUser }) {
+export default function topbar() {
 
     const [popupVisible, setPopupVisible] = useState(false);
     const [users, setUsers] = useState([]);
@@ -22,6 +23,14 @@ export default function topbar({ currentUser }) {
     const [searchInput, setSearchInput] = useState('')
 
     const [filteredUsers, setFilteredUsers] = useState("")
+    const [recentUser, setRecentUser] = useState([])
+
+    useMemo(() => {
+
+        getCurrentUser(setRecentUser)
+
+    }, [])
+
 
     const goToRoute = (route) => {
         nav(route);
@@ -32,13 +41,15 @@ export default function topbar({ currentUser }) {
     };
 
     const openUser = (user) => {
-        navigate("/profile", {
+        nav("/profile", {
             state: {
                 id: user.id,
                 email: user.email,
             },
         });
     };
+
+
 
     const handleSearch = () => {
 
@@ -100,14 +111,14 @@ export default function topbar({ currentUser }) {
                     <IoIosNotifications className='react-icon' size={30} />
                 </div>
             }
-            <img className='user' src={currentUser?.imageLink} alt="User" onClick={displayPopup} />
+            <img className='user' src={recentUser?.imageLink} alt="User" onClick={displayPopup} />
 
             {searchInput.length === 0 ? <></> : <div className='search-result'>
                 {filteredUsers.length === 0 ? (
                     <div className='search-inner'> No Results Found...</div>) : (
 
                     filteredUsers.map((user) => (
-                        <div className='search-inner'>
+                        <div className='search-inner' onClick={() => openUser(user)}>
                             {user.imageLink ? <img src={user.imageLink} /> : <img src={Default} />}
                             <p className='name'>{user.firstname} {user.lastname}</p>
 

@@ -15,11 +15,13 @@ export default function ExploreLayout() {
 
     }, [])
 
+
+
     return (
         <div>
 
             <div className='topbar'>
-                <Topbar currentUser={currentUser} />
+                <Topbar />
             </div>
             {/* <div>
                 <link

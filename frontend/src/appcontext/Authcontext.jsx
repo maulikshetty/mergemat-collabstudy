@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { auth, db } from '../config/Firebase'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
+import Default from "../imgs/default.jpg"
 
 const AuthContext = React.createContext()
 
@@ -20,7 +21,8 @@ export function AuthProvider({ children }) {
           firstname: firstName,
           lastname: lastName,
           email: email,
-          uid: userCredential.user.uid
+          uid: userCredential.user.uid,
+          imageLink: Default
         });
       })
 

@@ -10,6 +10,7 @@ import FileUploadModal from './FileUploadModal'
 
 export default function ProfileCard({ currentUser, onEdit }) {
 
+
     let location = useLocation();
 
     const [allStatus, setAllStatus] = useState([]);

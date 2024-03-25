@@ -14,6 +14,7 @@ export default function ProfilePopup() {
     }, [])
 
 
+
     return (
         <div className='popupCard'>
             <div className='nameVP'>
@@ -28,4 +29,4 @@ export default function ProfilePopup() {
     )
 }
 
-// { state: { id: currentUser?.userId } }
+

@@ -55,8 +55,10 @@ export default function PostsCard({ posts, id, getEditData }) {
                 </div>
             </div >
 
+            {posts.postImage ? <img src={posts.postImage} alt="post-image" /> : <></>}
 
             <p className='status'>{posts.status}</p>
+
             <LikeButton userId={currentUser?.uid} postId={posts.postID} currentUser={currentUser} />
         </div >
     ) : (<></>)
