@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNotifications } from '../components/NotificationContext';
+import { db, auth } from '../config/Firebase.jsx';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 export default function NotificationBar() {
   const { notifications, deleteNotification, deleteAllNotifications } = useNotifications();
@@ -38,10 +40,32 @@ export default function NotificationBar() {
   }, []);
 
   useEffect(() => {
-    const storedRecentChats = localStorage.getItem('recentChats');
-    if (storedRecentChats) {
-      setRecentChats(JSON.parse(storedRecentChats));
-    }
+    const fetchRecentChats = () => {
+      if (auth.currentUser) {
+        const recentChatsRef = collection(db, 'recentChats');
+        const q = query(recentChatsRef, where('userId', '==', auth.currentUser.uid));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          if (!snapshot.empty) {
+            const recentChats = snapshot.docs.map(doc => doc.data());
+            const recentUsers = recentChats.flatMap(chat => chat.recentUsers);
+            setRecentChats(recentUsers);
+          } else {
+            setRecentChats([]);
+          }
+        });
+
+        return unsubscribe;
+      }
+    };
+
+    const unsubscribe = fetchRecentChats();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   return (
@@ -120,7 +144,7 @@ export default function NotificationBar() {
                 className="h-8 w-8 rounded-full"
                 src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
               />
-              <span>{chat.firstname}</span>
+              <span>{chat.firstname} ({chat.username})</span>
             </div>
           ))
         ) : (

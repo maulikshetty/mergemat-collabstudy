@@ -179,36 +179,16 @@ export default function usersettings() {
                     {/* Main content */}
                     <div className="flex-1 flex flex-col overflow-hidden">
                         {/* Top bar */}
-                        <header className="flex justify-between items-center p-6 bg-white shadow-sm">
-                            <div className="flex items-center space-x-4">
-                                <button className="text-gray-500 focus:outline-none md:hidden">
-                                    <i className="fas fa-bars"></i>
-                                </button>
-                                <div className="flex-1">
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            className="w-full pl-10 pr-4 py-2 border rounded-md focus:border-blue-500 focus:outline-none"
-                                            placeholder="Search"
-                                        />
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i className="fas fa-search text-gray-500"></i>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="flex justify-between items-center p-4 bg-white border-b">
+                        <div class="flex space-x-4">
+                            <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div className="flex justify-between items-center">
+                                <h1 className="text-2xl font-semibold">My Info:</h1>
                             </div>
-                            <div className="flex items-center space-x-4">
-                                <button className="text-gray-500 focus:outline-none">
-                                    <i className="fas fa-bell"></i>
-                                </button>
-                                <button className="text-gray-500 focus:outline-none">
-                                    <i className="fas fa-cog"></i>
-                                </button>
-                                <button className="text-gray-500 focus:outline-none">
-                                    <i className="fas fa-question-circle"></i>
-                                </button>
-                            </div>
-                        </header>
+                        </div>
+                    </div>
 
                         {/* Main section */}
                         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
