@@ -3,7 +3,7 @@
     justify-content: center;
     gap: 10px;
     padding: 0 10px;
-    margin-top: 25px;
+    margin-top: 10px;
     cursor: pointer;
     flex-direction: column;
 
@@ -106,7 +106,7 @@
         }
 
         p {
-            font-family: system-ui;
+            font-family: Inter, system-ui;
             font-weight: 400;
             color: #4b6681;
             font-size: 16px;

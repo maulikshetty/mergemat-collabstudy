@@ -1,8 +1,8 @@
 import { auth, db } from "../config/Firebase";
 import { useAuth } from "../appcontext/Authcontext";
 import { addDoc, collection, doc, onSnapshot, updateDoc, query, where, getDocs, setDoc, deleteDoc } from "firebase/firestore"
-import { toast } from "react-toastify"
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from "react-hot-toast"
+// import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -10,6 +10,7 @@ let postsRef = collection(db, "posts")
 let likeRef = collection(db, "likes")
 let commentRef = collection(db, "comments")
 let userRef = collection(db, "users")
+let connectionsRef = collection(db, "connections")
 
 
 export const postStatus = (object) => {
@@ -178,4 +179,69 @@ export const getAllUsers = (setAllUsers) => {
 
     })
 
+}
+
+
+export const updatePost = (id, status) => {
+
+    let postToUpdate = doc(postsRef, id)
+    try {
+
+        updateDoc(postToUpdate, { status })
+    } catch (err) {
+        console.log(err)
+    }
+
+
+}
+
+
+export const deletePost = (id) => {
+    let postToDelete = doc(postsRef, id);
+
+    try {
+        deleteDoc(postToDelete);
+        toast.success("Post has been Deleted")
+    } catch (err) {
+        console.log(err)
+    }
+
+}
+
+
+export const addConnection = (userId, targetId) => {
+
+    try {
+        let docToConnect = doc(connectionsRef, `${userId}_${targetId}`)
+
+        setDoc(docToConnect, { userId, targetId })
+        toast.success("Connection Added!")
+
+    }
+    catch (err) {
+        console.log(err)
+
+    }
+
+}
+
+
+
+export const getConnections = (userId, targetId, setIsConnected) => {
+
+    try {
+
+        let connectQuery = query(connectionsRef, where('targetId', '==', targetId))
+
+        onSnapshot(connectQuery, (response) => {
+            let connections = response.docs.map((doc) => doc.data())
+
+
+            const isConnected = connections.some((connection) => connection.userId === userId)
+
+            setIsConnected(isConnected)
+        })
+    } catch (err) {
+        console.log(err)
+    }
 }

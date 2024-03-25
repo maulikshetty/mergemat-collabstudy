@@ -12,6 +12,8 @@ export default function ProfilePopup() {
     useMemo(() => {
         getCurrentUser(setCurrentUser);
     }, [])
+
+
     return (
         <div className='popupCard'>
             <div className='nameVP'>
@@ -21,8 +23,9 @@ export default function ProfilePopup() {
             <p className='heading'>{currentUser.headline}</p>
 
 
-
-            <Button title="View Profile" onClick={() => nav("/profile", { state: { id: currentUser?.userId } })} />
+            <Button title="View Profile" onClick={() => nav("/profile", { state: { id: currentUser?.uid } })} />
         </div>
     )
 }
+
+// { state: { id: currentUser?.userId } }

@@ -68,7 +68,7 @@ export default function LikeButton({ userId, postId, currentUser }) {
                     {showCommentBox ? <FaRegCommentDots className='like-icon' size={22} /> : <FaRegCommentDots className='comment-icon' size={22} />}
 
 
-                    <p className={showCommentBox ? 'blue' : 'black'}>Comment</p>
+                    <p className={showCommentBox ? 'blue' : 'black'}>Comments</p>
                 </div>
             </div>
 

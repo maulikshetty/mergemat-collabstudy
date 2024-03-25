@@ -1,0 +1,41 @@
+.search-users {
+    width: 40%;
+    display: flex;
+    align-items: center;
+
+
+    .close-search {
+        cursor: pointer;
+        margin-left: -30px;
+        color: rgba(173, 171, 171, 0.945);
+    }
+
+    .close-search:hover {
+        color: rgba(255, 0, 0, 0.538);
+    }
+
+    input {
+        width: 100%;
+        height: 40px;
+        background-color: white;
+        margin-left: 15px;
+        border: 1px solid rgba(212, 211, 211, 0.945);
+        border-radius: 10px;
+        padding-left: 10px;
+
+    }
+
+    input:focus {
+        outline: 1px solid grey;
+        font-size: 15px;
+        font-weight: 400;
+        font-family: Intel, system-ui;
+    }
+
+    ::placeholder {
+        font-size: 15px;
+    }
+
+
+
+}

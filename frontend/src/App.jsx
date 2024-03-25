@@ -19,6 +19,7 @@ import Explore from './pages/Explore/ExploreLayout'
 import DirectM from './pages/DirectMessages/DirectM'
 import { ChatContextProvider } from './appcontext/Chatcontext'
 import ProfileLayout from './pages/Explore/ProfileLayout'
+import ConnectionLayout from './pages/Explore/ConnectionLayout'
 
 
 function App() {
@@ -42,6 +43,10 @@ function App() {
           <Route path='/explore' element={<Explore />} />
 
           <Route path='/profile' element={<ProfileLayout />} />
+
+          <Route path='/connections' element={<ConnectionLayout />} />
+
+
 
           <Route path='/directmessages' element={<PrivateRoute><DirectM /></PrivateRoute>} />
 

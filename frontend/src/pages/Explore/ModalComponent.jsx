@@ -3,7 +3,7 @@ import "./Modal.css"
 import { Modal, Button } from 'antd';
 
 
-const ModalComponent = ({ modalOpen, setModalOpen, setStatus, status, sendStatus }) => {
+const ModalComponent = ({ modalOpen, setModalOpen, setStatus, status, sendStatus, isEdit, updateStatus }) => {
 
     return (
         <>
@@ -11,16 +11,25 @@ const ModalComponent = ({ modalOpen, setModalOpen, setStatus, status, sendStatus
                 title="Create a post"
                 centered
                 open={modalOpen}
-                onOk={() => setModalOpen(false)}
-                onCancel={() => setModalOpen(false)}
+                onOk={() => {
+                    setStatus('')
+                    setModalOpen(false)
+                }}
+
+                onCancel={() => {
+                    setStatus('')
+                    setModalOpen(false)
+                }}
+
+
                 footer={[
                     <Button
-                        onClick={sendStatus}
+                        onClick={isEdit ? updateStatus : sendStatus}
                         disabled={status.length > 0 ? false : true}
 
                     >
 
-                        Post</Button >
+                        {isEdit ? 'Update' : 'Post'} </Button >
                 ]}
             >
                 <input className="modal-input" placeholder='what do you want to talk about?' onChange={(event) => setStatus(event.target.value)} value={status} />

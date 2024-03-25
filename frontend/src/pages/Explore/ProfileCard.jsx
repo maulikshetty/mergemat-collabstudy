@@ -58,7 +58,13 @@ export default function ProfileCard({ currentUser, onEdit }) {
                         )}
                         <div className='profileInfo'>
                             <div>
-                                <img className='profile-image' onClick={() => { setModalOpen(true) }} src={currentUser?.imageLink} alt='profile-image' />
+
+                                <img className='profile-image' onClick={() => { setModalOpen(true) }} src=
+                                    {Object.values(currentProfile).length === 0
+                                        ? currentUser.imageLink
+                                        : currentProfile?.imageLink} alt='profile-image' />
+
+
                                 <h3 className='username'>
                                     {Object.values(currentProfile).length === 0
                                         ? currentUser.firstname + ' ' + currentUser.lastname
