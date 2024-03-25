@@ -7,6 +7,8 @@ import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../appcontext/Authcontext'
+import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai'
+
 
 export default function Login() {
 
@@ -17,12 +19,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const nav = useNavigate()
   const toast = useToast()
- 
+  const [open, setOpen] = useState(false)
   // const [data,setData] = useState({
   //   email:'',
   //   password:'',
   // })
 
+  const toggle = () =>{
+    setOpen(!open)
+  }
   async function loginuser(e){
     e.preventDefault()
     
@@ -50,11 +55,11 @@ export default function Login() {
   setLoading(false)
   }
   return (
-    <div className = "bg-gray-50 relative ">
-  <div className="sm:w-1/2 absolute top-5 left-48 ">
-  <img alt="" src={mmlogo}/>
-  </div>
-<section className="bg-gray-50 min-h-screen flex items-center justify-center">
+    <div className="bg-gray-50 min-h-screen flex flex-col items-center justify-center">
+    <div className="sm:w-1/2">
+        <img alt="" src={mmlogo} />
+      </div>
+      <section className="flex items-center justify-center w-full">
 
   <div className = "flex rounded-2xl p-5 ">
  
@@ -68,11 +73,16 @@ export default function Login() {
         <input className="p-2 rounded-xl border" type="text" name="email" placeholder="Email" ref={emailref} required ></input>
         <div className="relative">
         <label htmlFor="Password" className="text-lg">Password</label>
-        <input className="mt-2 p-2  rounded-xl w-full border" type="password" name="password" ref={passwordref}  placeholder="Password" ></input>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye absolute top-1/2 right-3 -translate-y-1-3" viewBox="0 0 16 16">
-          <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
-        </svg>
+        <input className="mt-2 p-2  rounded-xl w-full border" type={(open === false)? 'password' :'text'} name="password" ref={passwordref}  placeholder="Password"></input>
+        <div className='text-2xl absolute top-11 right-5'>
+                      {
+                          (open === false)? <AiFillEye onClick={toggle}/>:
+                          <AiFillEyeInvisible onClick={toggle}/>
+
+                      }
+                      
+                      
+        </div>
         </div>
         <button type="submit" className="bg-black rounded-xl text-white py-2">Log in </button>
       <div className="flex justify-between">
@@ -82,7 +92,7 @@ export default function Login() {
       </div>
 
       <div>
-        <p className="text-xs flex items-center justify-center mt-3">Don't have an Account?  <a className="font-bold font-sans" href="/register"> Sign Up</a></p>
+        <p className="text-xs flex items-center justify-center mt-3 mb-4">Don't have an Account?  <a className="font-bold font-sans" href="/register"> Sign Up</a></p>
       </div>
       </form>
 
