@@ -240,9 +240,9 @@ export default function Messages() {
                                         onClick={() => handleUserClick(chat)}
                                     >
                                         <img
-                                            src="https://placehold.co/40x40"
+                                            src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
                                             alt="Profile"
-                                            className="h-10 w-10 rounded-full"
+                                            className="h-12 w-12 rounded-full"
                                         />
                                         <div>
                                             <div className="font-medium">{chat.firstname}</div>
@@ -271,23 +271,24 @@ export default function Messages() {
                             {selectedUser ? (
                                 <div className="flex flex-col space-y-4">
                                     {messages
-                                        .filter(message =>
-                                            message.users.includes(currentUser.username) &&
-                                            message.users.includes(selectedUser.username)
-                                        )
-                                        .map(message => (
-                                            <div key={message.id} className={`flex space-x-2 ${message.senderUsername === currentUser.username ? 'flex-row-reverse' : ''}`}>
-                                                <img
-                                                    src="https://placehold.co/40x40"
-                                                    alt="Profile"
-                                                    className="h-8 w-8 rounded-full"
-                                                />
-                                                <div className={`px-4 py-2 rounded-lg ${message.senderUsername === currentUser.username ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
-                                                    <div>{message.text}</div>
-                                                    <div className="text-xs mt-1">{new Date(message.timestamp.seconds * 1000).toLocaleString()}</div>
-                                                </div>
-                                            </div>
-                                        ))}
+                                    .filter(message =>
+                                        message.users.includes(currentUser.username) &&
+                                        message.users.includes(selectedUser.username)
+                                    )
+                                    .map(message => (
+                                        <div key={message.id} className={`flex space-x-2 ${message.senderUsername === currentUser.username ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                                        <img
+                                            src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                                            alt="Profile"
+                                            className="h-8 w-8 rounded-full"
+                                        />
+                                        <div className={`px-4 py-2 rounded-lg ${message.senderUsername === currentUser.username ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+                                            <div>{message.text}</div>
+                                            <div className="text-xs mt-1">{new Date(message.timestamp.seconds * 1000).toLocaleString()}</div>
+                                        </div>
+                                        </div>
+                                    ))
+                                    }
                                 </div>
                             ) : (
                                 <div className="text-center text-gray-500">Select a user to start messaging</div>
