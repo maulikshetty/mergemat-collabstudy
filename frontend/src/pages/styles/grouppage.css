@@ -1,0 +1,9 @@
+.group-card {
+max-width: 350px;
+max-height: 340px;
+}
+.group-cover {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
