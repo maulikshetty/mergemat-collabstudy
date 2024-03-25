@@ -70,17 +70,18 @@ export default function NotificationBar() {
 
   return (
     <div className="hidden lg:block fixed inset-y-0 right-0 lg:w-64 w-full h-screen overflow-y-auto bg-white shadow-lg">
-      <div className="p-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <div className="font-semibold text-lg mb-4">Notifications</div>
-          {notifications.length > 0 && (
-            <button onClick={handleDeleteAllNotifications} className="text-sm text-gray-600 hover:text-red-500">
-              Delete all
-            </button>
-          )}
-        </div>
-        <div className="space-y-4">
-          {notifications.map((notification) => (
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div className="font-semibold text-lg mb-1">Notifications</div>
+        {notifications.length > 0 && (
+          <button onClick={handleDeleteAllNotifications} className="text-sm text-gray-600 hover:text-red-500">
+            Delete all
+          </button>
+        )}
+      </div>
+      <div className="space-y-4">
+        {notifications.length > 0 ? (
+          notifications.map((notification) => (
             <div
               key={notification.id}
               className="p-2 bg-purple-200 rounded-lg hover:bg-purple-300 transition-colors duration-150 ease-in-out"
@@ -96,8 +97,11 @@ export default function NotificationBar() {
                 </button>
               </div>
             </div>
-          ))}
-        </div>
+          ))
+        ) : (
+          <div className="text-sm text-gray-500 mt-2">No notifications for now!</div>
+        )}
+      </div>
         <div className="font-semibold text-lg mb-4">Announcements</div>
 
 <div className="flex items-center space-x-2 text-sm">
