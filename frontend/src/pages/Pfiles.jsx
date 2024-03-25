@@ -1,20 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getDocs, query, collection, where, getDoc, doc, updateDoc, arrayRemove, arrayUnion, setDoc, deleteDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import { getDocs, query, collection, where, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../config/Firebase.jsx';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, listAll, list, deleteObject } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../appcontext/Authcontext.jsx';
 import { useToast } from "@chakra-ui/react";
 
-export default function Files() {
-    const { groupId } = useParams();
-    const [group, setGroup] = useState(null);
+export default function PersonalFiles() {
+    const [files, setFiles] = useState([]);
     const { currentUser } = useAuth();
     const navigate = useNavigate();
     const [file, setFile] = useState(null);
     const storage = getStorage();
-    const [files, setFiles] = useState([]);
     const toast = useToast();
     const fileInputRef = useRef(null);
     const [buttonText, setButtonText] = useState('Upload');
@@ -36,7 +34,7 @@ export default function Files() {
     };
 
     const fetchFiles = async () => {
-        const filesQuery = query(collection(db, 'files'), where('groupId', '==', groupId));
+        const filesQuery = query(collection(db, 'personalFiles'), where('userId', '==', auth.currentUser.uid));
         const filesSnapshot = await getDocs(filesQuery);
 
         const filesData = filesSnapshot.docs.map((doc) => {
@@ -44,7 +42,6 @@ export default function Files() {
             return {
                 name: data.name,
                 url: data.url,
-                uploadedBy: data.uploadedBy,
                 uploadDate: data.uploadDate ? data.uploadDate.toDate().toDateString() : ''
             };
         });
@@ -53,7 +50,7 @@ export default function Files() {
     };
 
     const handleFileUpload = async () => {
-        const storageRef = ref(storage, 'files/' + file.name);
+        const storageRef = ref(storage, 'personalFiles/' + file.name);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on('state_changed',
@@ -69,13 +66,12 @@ export default function Files() {
                 const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
                 console.log('File available at', downloadURL);
 
-                const fileDoc = doc(db, 'files', file.name);
+                const fileDoc = doc(db, 'personalFiles', file.name);
                 await setDoc(fileDoc, {
                     name: file.name,
                     url: downloadURL,
-                    uploadedBy: currentUser.firstname,
                     uploadDate: new Date(),
-                    groupId: groupId
+                    userId: auth.currentUser.uid
                 });
 
                 toast({
@@ -97,15 +93,15 @@ export default function Files() {
     const handleFileDelete = async (fileName) => {
         setIsDeleting(true);
         try {
-            const fileRef = ref(storage, 'files/' + fileName);
+            const fileRef = ref(storage, 'personalFiles/' + fileName);
             await deleteObject(fileRef);
 
-            const fileDoc = doc(db, 'files', fileName);
+            const fileDoc = doc(db, 'personalFiles', fileName);
             await deleteDoc(fileDoc);
 
             toast({
                 title: "File deleted.",
-                description: "The file has been successfully deleted.",
+                description: "Your file has been successfully deleted.",
                 status: "success",
                 duration: 5000,
                 isClosable: true,
@@ -126,43 +122,8 @@ export default function Files() {
     };
 
     useEffect(() => {
-        const fetchGroup = async () => {
-            try {
-                const groupQuery = query(collection(db, 'groups'), where('groupId', '==', groupId));
-                const groupSnapshot = await getDocs(groupQuery);
-
-                if (!groupSnapshot.empty) {
-                    const groupDoc = groupSnapshot.docs[0];
-                    const groupData = groupDoc.data();
-
-                    if (groupData.groupCreatedBy === auth.currentUser.uid || groupData.groupMembers.includes(currentUser.username)) {
-                        setGroup(groupData);
-                        console.log('Group ID:', groupId);
-                        console.log('Group Name:', groupData.groupName);
-                    } else {
-                        if (!hasShownToast) {
-                            toast({
-                                title: "Access Denied",
-                                description: "You don't have access to this group.",
-                                status: "error",
-                                duration: 5000,
-                                isClosable: true,
-                            });
-                            setHasShownToast(true);
-                        }
-                        navigate('/groups');
-                    }
-                } else {
-                    console.log('No such group!');
-                    navigate('/groups');
-                }
-            } catch (error) {
-                console.error('Error fetching group:', error);
-            }
-        };
-        fetchGroup();
         fetchFiles();
-    }, [groupId, navigate]);
+    }, []);
 
     return (
         <body className="bg-gray-100">
@@ -179,25 +140,9 @@ export default function Files() {
                             <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
                                 <i class="fas fa-bars"></i>
                             </button>
-                            <div class="flex items-center space-x-4">
-                                <div className="flex items-center space-x-3">
-                                    <i className="fas fa-users text-gray-800 text-lg"></i>
-                                    <span className="font-semibold text-lg">{group && group.groupName}</span>
-                                </div>
-                                <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}`)}>General</div>
-                                <div class="text-gray-500 cursor-pointer">Live Collaboration</div>
-                                <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/files`)}>File</div>
-                                <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
+                            <div className="flex justify-between items-center">
+                                <h1 className="text-2xl font-semibold">My Files:</h1>
                             </div>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="relative">
-                                <input type="text" class="border rounded px-2 py-1" placeholder="Search" />
-                                <i class="fas fa-search absolute right-2 top-2 text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-video custom-icon" onClick={() => window.open('/zego')}></i>
-                            <i class="fas fa-cog text-gray-600 cursor-pointer"></i>
-                            <i class="fas fa-bell text-gray-600 cursor-pointer"></i>
                         </div>
                     </div>
                     <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
@@ -205,7 +150,7 @@ export default function Files() {
                             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                                 <div class="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center">
                                     <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                        Group Files
+                                        Personal Files
                                     </h3>
                                     <input type="file" ref={fileInputRef} onChange={handleFileChange} value={file ? undefined : ''} style={{ display: 'none' }} />
                                     <button onClick={handleButtonClick} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -218,9 +163,6 @@ export default function Files() {
                                             <tr>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     File Name
-                                                </th>
-                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    Uploaded By
                                                 </th>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                     Uploaded On
@@ -238,9 +180,6 @@ export default function Files() {
                                                             <i class="fas fa-file text-yellow-500 mr-2"></i>
                                                             <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
                                                         </div>
-                                                    </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap">
-                                                        {file.uploadedBy}
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                         {file.uploadDate}

@@ -27,6 +27,9 @@ import Files from './pages/Files'
 import Contentwhite from './pages/Contentwhite'
 import Contenteditor from './pages/Contenteditor'
 import ContentRichText from './pages/ContentRichText'
+import Pfiles from './pages/Pfiles'
+import { NotificationProvider } from './components/NotificationContext';
+
 
 
 function App() {
@@ -34,6 +37,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <NotificationProvider>
       <Toaster position='bottom-right' toastOptions={{ duration: 2000 }} />
       <ChakraProvider position='bottom-right' toastOptions={{ duration: 2000 }} />
       <Routes>
@@ -57,7 +61,9 @@ function App() {
         <Route path='/contentwhite' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
         <Route path='/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
          <Route path='/content/doc/:groupId' element={<PrivateRoute><ContentRichText /></PrivateRoute>} />
+        <Route path='/personal-files' element={<PrivateRoute><Pfiles /></PrivateRoute>} />
       </Routes>
+      </NotificationProvider>
     </AuthProvider>
   )
 }

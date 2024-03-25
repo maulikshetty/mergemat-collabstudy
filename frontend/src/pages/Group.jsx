@@ -124,52 +124,68 @@ export default function Group() {
 
                 <div class="flex-1 flex flex-col overflow-hidden">
 
-                    <div class="flex justify-between items-center p-4 bg-white border-b">
-                        <div class="flex space-x-4">
-                            <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
-                                <i class="fas fa-bars"></i>
-                            </button>
-                            <div class="text-gray-800 font-bold">{group && group.groupName}</div>
-                            <div class="text-gray-500">General</div>
-                            <div class="text-gray-500">Live Collaboration</div>
-                            <div class="text-gray-500">Post</div>
-                            <div class="text-gray-500">File</div>
-                            <div class="text-gray-500" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
-                        </div>
+                <div class="flex justify-between items-center p-4 bg-white border-b">
+                    <div class="flex space-x-4">
+                        <button class="text-gray-500 md:hidden" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                        </button>
                         <div class="flex items-center space-x-4">
-                            <div class="relative">
-                                <input type="text" class="border rounded px-2 py-1" placeholder="Search" />
-                                <i class="fas fa-search absolute right-2 top-2 text-gray-400"></i>
-                            </div>
-                            <i class="fas fa-video custom-icon" onClick={() => window.open('/zego')}></i>
-                            <i class="fas fa-cog text-gray-600"></i>
-                            <i class="fas fa-bell text-gray-600"></i>
+                        <div className="flex items-center space-x-3">
+                            <i className="fas fa-users text-gray-800 text-lg"></i>
+                            <span className="font-semibold text-lg">{group && group.groupName}</span>
                         </div>
+                        <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}`)}>General</div>
+                        <div class="text-gray-500 cursor-pointer">Live Collaboration</div>
+                        <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/files`)}>File</div>
+                        <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                        <input type="text" class="border rounded px-2 py-1" placeholder="Search" />
+                        <i class="fas fa-search absolute right-2 top-2 text-gray-400"></i>
+                        </div>
+                        <i class="fas fa-video custom-icon" onClick={() => window.open('/zego')}></i>
+                        <i class="fas fa-cog text-gray-600 cursor-pointer"></i>
+                        <i class="fas fa-bell text-gray-600 cursor-pointer"></i>
+                    </div>
                     </div>
 
 
                     <div class="flex-1 flex flex-col">
 
                     <div class="flex-1 p-4 overflow-y-auto" style={{ maxHeight: '82vh' }}>
-                        {messages.map(message => (
+                    {messages.length === 0 ? (
+                        <div class="text-center text-gray-500 mt-8">
+                            Be the first to message the group!
+                        </div>
+                    ) : (
+                        messages.map(message => (
                             <div class="flex items-start space-x-2 mb-4">
                                 <div class="rounded-full bg-blue-500 text-white w-8 h-8 flex items-center justify-center">{message.user[0]}</div>
-                                <div class="flex-grow"> {/* Add 'flex-grow' class */}
+                                <div class="flex-grow">
                                     <div class="text-sm font-semibold">{message.user}</div>
                                     <div class="text-xs text-gray-500">{message.timestamp ? new Date(message.timestamp.seconds * 1000).toLocaleString() : 'Loading...'}</div>
-                                    <p class="mb-4">{message.text}</p>
+                                    <p class="mb-4">
+                                        {message.text.includes('http://') || message.text.includes('https://') ? (
+                                            <a href={message.text} target="_blank" rel="noopener noreferrer" class="text-blue-500">{message.text}</a>
+                                        ) : (
+                                            message.text
+                                        )}
+                                    </p>
                                 </div>
                                 {message.user === currentUser.username && (
-                                    <div class="flex-none"> {/* Add 'flex-none' class */}
+                                    <div class="flex-none">
                                         <button onClick={() => deleteMessage(message.id)} class="text-red-500 focus:outline-none">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 )}
                             </div>
-                        ))}
-                        <div ref={messagesEndRef} />
-                    </div>
+                        ))
+                    )}
+                    <div ref={messagesEndRef} />
+                </div>
 
         <div class="border-t p-4 flex items-center space-x-3">
             <button class="text-gray-500 focus:outline-none">

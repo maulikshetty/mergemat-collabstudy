@@ -96,7 +96,7 @@ export default function usersettings() {
             await updateEmail(email);
             toast({
                 title: 'Success',
-                description: 'User info has been updated',
+                description: 'User info has been updated upon verification',
                 status: 'success',
                 duration: 3000,
                 isClosable: true,
