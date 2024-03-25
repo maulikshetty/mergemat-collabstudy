@@ -4,7 +4,7 @@ import { useAuth } from "../appcontext/Authcontext";
 import '../pages/styles/message.css';
 import Sidebar from "../components/Sidebar";
 import { db, auth } from '../config/Firebase.jsx';
-import { collection, addDoc, getDocs, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 
 export default function Messages() {
     const [search, setSearch] = useState('');
@@ -26,12 +26,27 @@ export default function Messages() {
         };
     
         fetchUsers();
+
+        const unsubscribeRecentChats = onSnapshot(
+            query(collection(db, 'recentChats'), where('userId', '==', auth.currentUser.uid)),
+            (snapshot) => {
+                if (!snapshot.empty) {
+                    const recentUsers = snapshot.docs[0].data().recentUsers;
+                    setRecentChats(recentUsers);
+                } else {
+                    setRecentChats([]);
+                }
+            },
+            (error) => {
+                console.error('Error fetching recent chats:', error);
+            }
+        );
     
-        // Fetch recent chats from local storage
-        const storedRecentChats = localStorage.getItem('recentChats');
-        if (storedRecentChats) {
-            setRecentChats(JSON.parse(storedRecentChats));
-        }
+        // Clean up the listener when component unmounts
+        return () => {
+            unsubscribeRecentChats();
+        };
+
     }, []);
 
     useEffect(() => {
@@ -59,7 +74,7 @@ export default function Messages() {
 
     const handleSearchChange = (e) => {
         setSearch(e.target.value);
-        setShowNameList(e.target.value !== '');
+        setShowNameList(e.target.value.trim() !== '');
     };
 
     const handleUserClick = async (user) => {
@@ -67,10 +82,31 @@ export default function Messages() {
         setShowNameList(false);
         setSearch('');
     
-        // Add the selected user to recent chats if not already present
-        if (!recentChats.some(chat => chat.username === user.username)) {
-            setRecentChats(prevChats => [...prevChats, user]);
-            localStorage.setItem('recentChats', JSON.stringify([...recentChats, user]));
+        // Add the selected user to recent chats in Firebase
+        try {
+            const recentChatsRef = collection(db, 'recentChats');
+            const querySnapshot = await getDocs(query(recentChatsRef, where('userId', '==', auth.currentUser.uid)));
+    
+            if (querySnapshot.empty) {
+                // If no recent chats document exists for the current user, create a new one
+                await addDoc(recentChatsRef, {
+                    userId: auth.currentUser.uid,
+                    recentUsers: [user],
+                });
+            } else {
+                // If a recent chats document exists, update it with the new recent user
+                const docId = querySnapshot.docs[0].id;
+                const recentUsers = querySnapshot.docs[0].data().recentUsers;
+    
+                const updatedRecentUsers = recentUsers.filter(recentUser => recentUser.username !== user.username);
+                updatedRecentUsers.unshift(user);
+    
+                await updateDoc(doc(recentChatsRef, docId), {
+                    recentUsers: updatedRecentUsers,
+                });
+            }
+        } catch (error) {
+            console.error('Error adding recent user:', error);
         }
     
         // Fetch messages for the selected user
@@ -147,14 +183,25 @@ export default function Messages() {
             setNewMessage('');
     
             // Update recent chats and store in local storage
-            const updatedRecentChats = [...recentChats];
-            const existingChatIndex = updatedRecentChats.findIndex(chat => chat.username === selectedUser.username);
-            if (existingChatIndex !== -1) {
-                updatedRecentChats.splice(existingChatIndex, 1);
+            const recentChatsRef = collection(db, 'recentChats');
+            const querySnapshot = await getDocs(query(recentChatsRef, where('userId', '==', auth.currentUser.uid)));
+    
+            if (!querySnapshot.empty) {
+                const docId = querySnapshot.docs[0].id;
+                const recentUsers = querySnapshot.docs[0].data().recentUsers;
+    
+                const updatedRecentUsers = recentUsers.filter(user => user.username !== selectedUser.username);
+                updatedRecentUsers.unshift(selectedUser);
+    
+                await updateDoc(doc(recentChatsRef, docId), {
+                    recentUsers: updatedRecentUsers,
+                });
+            } else {
+                await addDoc(recentChatsRef, {
+                    userId: auth.currentUser.uid,
+                    recentUsers: [selectedUser],
+                });
             }
-            updatedRecentChats.unshift(selectedUser);
-            setRecentChats(updatedRecentChats);
-            localStorage.setItem('recentChats', JSON.stringify(updatedRecentChats));
         } catch (error) {
             console.error("Error sending message: ", error);
         }
@@ -221,7 +268,8 @@ export default function Messages() {
                                 <div className="mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
                                     {users
                                         .filter((user) =>
-                                            user.firstname.toLowerCase().includes(search.toLowerCase())
+                                            user.firstname.toLowerCase().includes(search.toLowerCase()) ||
+                                            (user.username && user.username.toLowerCase().includes(search.toLowerCase()))
                                         )
                                         .map((filteredUser) => (
                                             <div
@@ -229,7 +277,7 @@ export default function Messages() {
                                                 key={filteredUser.id}
                                                 onClick={() => handleUserClick(filteredUser)}
                                             >
-                                                {filteredUser.firstname}
+                                                {filteredUser.firstname} {filteredUser.username ? `(${filteredUser.username})` : ''}
                                             </div>
                                         ))}
                                 </div>
@@ -258,7 +306,7 @@ export default function Messages() {
                                             className="h-12 w-12 rounded-full"
                                         />
                                         <div>
-                                            <div className="font-medium">{chat.firstname}</div>
+                                            <div className="font-medium">{chat.firstname} ({chat.username})</div>
                                             <div className="text-xs text-gray-500">
                                                 {latestMessage ? new Date(latestMessage.timestamp.seconds * 1000).toLocaleString() : ''}
                                             </div>
@@ -286,30 +334,47 @@ export default function Messages() {
                         <div className="flex-1 overflow-y-auto p-5">
                             {selectedUser ? (
                                 <div className="flex flex-col space-y-4">
-                                    {messages
+                                {messages
                                     .filter(message =>
-                                        message.users.includes(currentUser.username) &&
-                                        message.users.includes(selectedUser.username)
+                                    message.users.includes(currentUser.username) &&
+                                    message.users.includes(selectedUser.username)
                                     )
                                     .map(message => (
-                                        <div key={message.id} className={`flex space-x-2 ${message.senderUsername === currentUser.username ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                                            <img
-                                                src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-                                                alt="Profile"
-                                                className="h-8 w-8 rounded-full"
-                                            />
-                                            <div className={`px-4 py-2 rounded-lg ${message.senderUsername === currentUser.username ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
-                                                <div>{message.text}</div>
-                                                <div className="text-xs mt-1">{new Date(message.timestamp.seconds * 1000).toLocaleString()}</div>
-                                            </div>
+                                    <div key={message.id} className={`flex space-x-2 ${message.senderUsername === currentUser.username ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                                        <img
+                                        src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                                        alt="Profile"
+                                        className="h-8 w-8 rounded-full"
+                                        />
+                                        <div className={`px-4 py-2 rounded-lg ${message.senderUsername === currentUser.username ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+                                        <div className="message-text">
+                                            {message.text.split(' ').map((word, index) => {
+                                            if (word.startsWith('http://') || word.startsWith('https://')) {
+                                                return (
+                                                <a
+                                                    key={index}
+                                                    href={word}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-yellow-400 hover:underline"
+                                                >
+                                                    {word}{' '}
+                                                </a>
+                                                );
+                                            }
+                                            return word + ' ';
+                                            })}
                                         </div>
+                                        <div className="text-xs mt-1">{new Date(message.timestamp.seconds * 1000).toLocaleString()}</div>
+                                        </div>
+                                    </div>
                                     ))
-                                    }
+                                }
                                 </div>
                             ) : (
                                 <div className="text-center text-gray-500">Select a user to start messaging</div>
                             )}
-                        </div>
+                            </div>
                         {selectedUser && (
                             <div className="p-5 border-t border-gray-200">
                                 <div className="flex items-center space-x-2">

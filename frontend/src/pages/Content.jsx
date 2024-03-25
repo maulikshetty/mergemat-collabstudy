@@ -240,7 +240,11 @@ export default function Content() {
                             id="whiteboardProjects"
                             className="grid grid-cols-1 md:grid-cols-3 gap-4"
                         >
-                            {projects.map((project) => (
+                            {projects.length === 0 ? (
+                                <p>No whiteboard projects created.</p>
+                            ) : (
+                            
+                            projects.map((project) => (
                                 <div key={project.name} className="bg-gray-100 p-4 rounded-lg">
                                     <img
                                         src={imgs}
@@ -263,7 +267,8 @@ export default function Content() {
                                          DELETE
                                     </button>
                                 </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
                     <div>
@@ -280,7 +285,10 @@ export default function Content() {
                             id="documentProjects"
                             className="grid grid-cols-1 md:grid-cols-3 gap-4"
                         >
-                            {documents.map((document) => (
+                                                        {documents.length === 0 ? (
+                                <p>No documents created.</p>
+                            ) : (
+                            documents.map((document) => (
                                 <div key={document.name} className="bg-gray-100 p-4 rounded-lg">
                                     <img
                                         src={imgs2}
@@ -303,7 +311,8 @@ export default function Content() {
                                          DELETE
                                     </button>
                                 </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>
