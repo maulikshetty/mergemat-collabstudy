@@ -135,7 +135,7 @@ export default function Group() {
                             <span className="font-semibold text-lg">{group && group.groupName}</span>
                         </div>
                         <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}`)}>General</div>
-                        <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/live`)}>Live Collaboration</div>
+                        <div class="text-gray-500 cursor-pointer">Live Collaboration</div>
                         <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/files`)}>File</div>
                         <div class="text-gray-500 cursor-pointer" onClick={() => navigate(`/group/${groupId}/members`)}>Members</div>
                         </div>
