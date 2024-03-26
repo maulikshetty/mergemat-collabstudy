@@ -18,12 +18,12 @@ const app = firebase.initializeApp({
     messagingSenderId: "1006670365144",
     appId: "1:1006670365144:web:0e5c061e1fec4aade9b2ad",
     measurementId: "G-8D19P5SWTC"
-//     apiKey: "AIzaSyA80ArSEJe7L_w_ntcgmNSIvtTYuWIagHw",
-//     authDomain: "auth-development-85126.firebaseapp.com",
-//     projectId: "auth-development-85126",
-//     storageBucket: "auth-development-85126.appspot.com",
-//     messagingSenderId: "981071185817",
-//     appId: "1:981071185817:web:aa986fb73261c1931db508"
+    // apiKey: "AIzaSyA80ArSEJe7L_w_ntcgmNSIvtTYuWIagHw",
+    // authDomain: "auth-development-85126.firebaseapp.com",
+    // projectId: "auth-development-85126",
+    // storageBucket: "auth-development-85126.appspot.com",
+    // messagingSenderId: "981071185817",
+    // appId: "1:981071185817:web:aa986fb73261c1931db508"
 })
 
 // Initialize Firebase
@@ -31,7 +31,7 @@ const app = firebase.initializeApp({
 export const auth = app.auth();
 //const analytics = getAnalytics(app);
 export const db = getFirestore();
-export const storage = getStorage();
+export const storage = getStorage(app);
 export { collection, doc, setDoc }
 export default app;
 
