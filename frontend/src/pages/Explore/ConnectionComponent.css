@@ -1,0 +1,84 @@
+.connections-main {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0px;
+    justify-content: center;
+    padding: 10px;
+    gap: 10px;
+    text-align: center;
+    border: 1px solid #cfcccca2;
+    background-color: rgba(255, 255, 255, 0.668);
+    border-radius: 5px;
+    align-items: center;
+    margin: 30px;
+
+
+
+    .grid-child {
+        border: 1px solid #cfcccca2;
+        width: 250px;
+        height: 235px;
+        padding: 10px;
+        margin: 10px;
+        background-color: rgba(255, 255, 255, 0.668);
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        cursor: pointer;
+
+
+        .connect-img {
+            width: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            height: 100px;
+            margin-left: 67px;
+            margin-top: 10px;
+            margin-bottom: 7px;
+
+        }
+
+        .text-name {
+            margin-top: 5px;
+        }
+
+        .text-headline {
+            font-size: 12px;
+        }
+
+
+        button {
+            border: 1px solid#0693e3;
+            border-radius: 20px;
+            position: absolute;
+            bottom: 1px;
+            width: 70%;
+            right: 36px;
+            margin-bottom: 10px;
+
+            color: #0693e3;
+            font-family: Intel, system-ui;
+            padding: 3px;
+            font-weight: 400;
+            justify-content: center;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+
+        }
+
+        button:hover {
+            border: 1px solid white;
+            background-color: #0692e3c7;
+            color: white;
+
+        }
+
+    }
+
+
+
+
+
+}

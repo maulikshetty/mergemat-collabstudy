@@ -1,0 +1,94 @@
+.topbar-main {
+    width: 100%;
+    height: 70px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+
+}
+
+.logo {
+    width: 50px;
+    margin-left: 70px;
+}
+
+.user {
+    width: 40px;
+    margin-left: 70px;
+    border-radius: 50%;
+    position: absolute;
+    right: 60px;
+    cursor: pointer;
+}
+
+.popup-position {
+    position: absolute;
+    right: 10px;
+    top: 65px;
+    z-index: 99;
+}
+
+.icons {
+    display: flex;
+    margin-left: 70px;
+    align-items: center;
+    justify-content: space-between;
+    width: 45%;
+
+}
+
+.react-icon {
+    cursor: pointer;
+    color: #212121ed;
+
+}
+
+.react-icon:hover {
+    color: #5e5e5e;
+}
+
+.search-result {
+    position: absolute;
+    left: 135px;
+    top: 60px;
+    width: 39%;
+    height: auto;
+    background-color: white;
+    border: 1px solid rgba(201, 196, 196, 0.812);
+    border-radius: 5px;
+    z-index: 999;
+
+}
+
+.search-inner {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    cursor: pointer;
+    border: 10px;
+    margin-bottom: 3px;
+    border-radius: 10px;
+
+
+
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+
+    .name {
+        font-family: system-ui;
+        font-weight: 500;
+        color: rgb(64, 61, 61);
+        font-size: 16px;
+
+    }
+}
+
+.search-inner:hover {
+    background-color: #dddada53;
+}

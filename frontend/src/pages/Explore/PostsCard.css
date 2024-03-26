@@ -1,0 +1,102 @@
+.posts-card {
+
+    width: 500px;
+    min-height: auto;
+    background-color: rgb(255, 255, 255);
+    margin-top: 30px;
+    border: 1px solid #b7b7b7;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+    position: relative;
+
+
+    .status {
+        text-align: left;
+        font-family: Inter, system-ui;
+        font-size: 18px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.9);
+        margin: 15px 0 0 10px;
+    }
+
+
+    .post-image-wrapper {
+        display: flex;
+        padding: 10px;
+        gap: 15px;
+
+        .action-container {
+            display: flex;
+            position: absolute;
+            gap: 14px;
+            margin-top: 15px;
+            right: 20px;
+            cursor: pointer;
+
+            .action-icon-edit {
+                color: rgba(52, 52, 54, 0.507);
+            }
+
+            .action-icon-delete {
+                color: #9b9999;
+            }
+
+            .action-icon-edit:hover {
+                color: #0693e3;
+            }
+
+            .action-icon-delete:hover {
+                color: red;
+            }
+
+
+        }
+
+
+    }
+
+    .post-image {
+        width: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        height: 70px;
+
+    }
+
+    .default-img {
+        width: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        height: 70px;
+
+    }
+
+    .name {
+        font-family: system-ui, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.651);
+        cursor: pointer;
+
+    }
+
+    .timeStamp {
+        font-family: system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0px 0 0 0px;
+
+    }
+
+    .headline {
+        font-family: Intel, system-ui;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.6);
+        margin: 0px 0 0 0px;
+
+    }
+}
