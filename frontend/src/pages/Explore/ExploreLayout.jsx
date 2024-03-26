@@ -4,6 +4,8 @@ import Topbar from './topbar'
 import "./ExploreLayout.css"
 import { getCurrentUser } from '../../api/FirestoreAPI'
 import Sidebar from "../../components/Sidebar"
+import NotificationBar from '../../components/Notificationbar'
+
 
 
 export default function ExploreLayout() {
@@ -18,11 +20,12 @@ export default function ExploreLayout() {
 
 
     return (
-        <div>
+        <div className='flex col'>
+<Sidebar/>
 
-            <div className='topbar'>
+            {/* <div className='topbar'>
                 <Topbar />
-            </div>
+            </div> */}
             {/* <div>
                 <link
                     rel="stylesheet"
@@ -32,9 +35,10 @@ export default function ExploreLayout() {
             </div> */}
 
 
-            <div className='explore'>
+            <div className='explore ml-96 p-8 pr-16'>
                 <Explore currentUser={currentUser} />
             </div>
+            <NotificationBar />
         </div>
     )
 }

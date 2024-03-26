@@ -8,7 +8,7 @@ import { getCurrentTimeStamp } from '../../helpers/useMoment';
 import getUniqueID from '../../helpers/getUniqueID';
 import Default from "../../imgs/default.jpg"
 import { uploadPostImage } from '../../api/ImageUpload';
-
+import { auth } from '../../config/Firebase';
 
 
 
@@ -32,7 +32,7 @@ export default function postUpdate({ currentUser }) {
             userEmail: currentUser.email,
             userName: currentUser.firstname + ' ' + currentUser.lastname,
             postID: getUniqueID(),
-            userId: currentUser.uid,
+            userId: auth.currentUser.uid,
             postImage: postImage,
         }
         await postStatus(object)
