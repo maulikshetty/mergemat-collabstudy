@@ -59,7 +59,7 @@ function App() {
         <Route path= '/group/:groupId/files' element={<PrivateRoute><Files/></PrivateRoute>}/>
         <Route path='/content/whiteboard/:groupId' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
         <Route path='/contentwhite' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
-        <Route path='/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
+        <Route path='/group/:groupId/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
          <Route path='/content/doc/:groupId' element={<PrivateRoute><ContentRichText /></PrivateRoute>} />
         <Route path='/personal-files' element={<PrivateRoute><Pfiles /></PrivateRoute>} />
       </Routes>
