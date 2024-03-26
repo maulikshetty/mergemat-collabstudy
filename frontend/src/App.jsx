@@ -6,7 +6,6 @@ import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
 import Login from '../src/pages/Login'
 import Register from './pages/Register'
-import axios from 'axios'
 import { Toaster } from 'react-hot-toast'
 import { ChakraProvider } from "@chakra-ui/react";
 import { AuthProvider } from './appcontext/Authcontext'
@@ -17,6 +16,9 @@ import Zego from './pages/Zego'
 import ContentIn from './pages/Content-in'
 import ForgotPassword from './pages/ForgotPassword'
 import PrivateRoute from './config/Privateroute'
+import Explore from './pages/Explore/ExploreLayout'
+import ProfileLayout from './pages/Explore/ProfileLayout'
+import ConnectionLayout from './pages/Explore/ConnectionLayout'
 import Messages from './pages/Messages'
 import Usersettings from './pages/User-info'
 import Calendar from './pages/Calender'
@@ -31,9 +33,8 @@ import Pfiles from './pages/Pfiles'
 import { NotificationProvider } from './components/NotificationContext';
 
 
-
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <AuthProvider>
@@ -59,9 +60,12 @@ function App() {
         <Route path= '/group/:groupId/files' element={<PrivateRoute><Files/></PrivateRoute>}/>
         <Route path='/content/whiteboard/:groupId' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
         <Route path='/contentwhite' element={<PrivateRoute><Contentwhite /></PrivateRoute>} />
-        <Route path='/contenteditor' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
+        <Route path='/group/:groupID/live' element={<PrivateRoute><Contenteditor /></PrivateRoute>} />
          <Route path='/content/doc/:groupId' element={<PrivateRoute><ContentRichText /></PrivateRoute>} />
-        <Route path='/personal-files' element={<PrivateRoute><Pfiles /></PrivateRoute>} />
+        <Route path='/personal-files' element={<PrivateRoute><Pfiles /></PrivateRoute>} />                                
+        <Route path='/explore' element={<PrivateRoute><Explore /></PrivateRoute>} />
+        <Route path='/profile' element={<PrivateRoute><ProfileLayout /></PrivateRoute>} />
+        <Route path='/connections' element={<PrivateRoute><ConnectionLayout /></PrivateRoute>} />
       </Routes>
       </NotificationProvider>
     </AuthProvider>
