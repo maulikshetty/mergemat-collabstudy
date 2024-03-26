@@ -3,7 +3,7 @@ import "./ProfilePopup.css"
 import { useNavigate } from 'react-router-dom'
 import { getCurrentUser } from '../../api/FirestoreAPI';
 import Button from './ButtonPopUp';
-import { auth } from '../../config/Firebase';
+
 
 export default function ProfilePopup() {
 
@@ -24,7 +24,7 @@ export default function ProfilePopup() {
             <p className='heading'>{currentUser.headline}</p>
 
 
-            <Button title="View Profile" onClick={() => nav("/profile", { state: { id: auth.currentUser?.uid } })} />
+            <Button title="View Profile" onClick={() => nav("/profile", { state: { id: currentUser?.uid } })} />
         </div>
     )
 }

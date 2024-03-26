@@ -6,7 +6,6 @@ import { getCurrentUser, getAllUsers, deletePost, getConnections } from '../../a
 import { GoPencil } from "react-icons/go";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import Default from "../../imgs/default.jpg"
-import { auth } from '../../config/Firebase';
 
 export default function PostsCard({ posts, id, getEditData }) {
     let nav = useNavigate()
@@ -24,18 +23,18 @@ export default function PostsCard({ posts, id, getEditData }) {
     // const newUser = () => { allUsers.filter((user) => user.uid === posts.userId)[0]; }
 
     useEffect(() => {
-        getConnections(auth.currentUser.uid, posts.userId, setIsConnected)
-    }, [auth.currentUser.uid, posts.userId])
+        getConnections(currentUser.uid, posts.userId, setIsConnected)
+    }, [currentUser.uid, posts.userId])
 
 
 
-    return isConnected || auth.currentUser.uid === posts.userId ? (
+    return isConnected || currentUser.uid === posts.userId ? (
 
         <div className='posts-card' key={id}>
             < div className='post-image-wrapper' >
 
                 {
-                    auth.currentUser.uid === posts.userId ? (<div className='action-container'>
+                    currentUser.uid === posts.userId ? (<div className='action-container'>
                         <GoPencil size={20} className='action-icon-edit' onClick={() => { getEditData(posts) }} />
                         <RiDeleteBin5Line size={20} className='action-icon-delete' onClick={() => {
                             deletePost(posts.id)
@@ -43,7 +42,6 @@ export default function PostsCard({ posts, id, getEditData }) {
                         }} />
                     </div>) : (<></>)
                 }
-                
                 {allUsers.filter((item) => item.id === posts.userId).map((item) => item.imageLink)[0] ? < img alt='profile-image'
                     className='post-image' src={allUsers.filter((item) => item.id === posts.userId).map((item) => item.imageLink)[0]} /> : <img className='default-img' src={Default} />}
                 <div>
@@ -52,7 +50,7 @@ export default function PostsCard({ posts, id, getEditData }) {
                             state: { id: posts?.userId, email: posts.userEmail },
                         })
                     }> {allUsers.filter((user) => user.uid === posts.userId)[0]?.firstname} {allUsers.filter((user) => user.uid === posts.userId)[0]?.lastname}</p >
-                    <p className='headline'>{posts.userName} </p>
+                    <p className='headline'>{allUsers.filter((user) => user.uid === posts.userId)[0]?.headline} </p>
                     <p className='timeStamp'>{posts.timeStamp}</p>
                 </div>
             </div >

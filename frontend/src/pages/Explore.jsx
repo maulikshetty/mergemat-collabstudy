@@ -1,7 +1,6 @@
 import React from 'react'
 import PostUpdate from './Explore/postUpdate'
 import "./styles/Explore.css"
-import Sidebar from '../components/Sidebar'
 
 
 
